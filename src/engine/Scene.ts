@@ -1,4 +1,5 @@
 import Instance from '../entities/Instance';
+import App from '../App';
 import Camera from './Camera';
 import Renderer from './Renderer';
 
@@ -11,11 +12,14 @@ interface MaterialsMap {
 }
 
 class Scene {
+    protected _app                : App;
     protected _renderer           : Renderer;
     protected _instances          : MaterialsMap;
     protected _camera             : Camera;
 
-    constructor() {
+    constructor(app: App, renderer: Renderer) {
+        this._app = app;
+        this._renderer = renderer;
         this._instances = {};
         this._camera = null;
     }

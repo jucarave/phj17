@@ -17,6 +17,7 @@ class PlayerComponent extends Component {
     private _keys           : Array<number>;
     private _callbackIds    : Array<string>
     private _camera         : Camera;
+    private _height         : number;
 
     constructor() {
         super();
@@ -24,6 +25,7 @@ class PlayerComponent extends Component {
         this._keys = [];
         this._callbackIds = [];
         this._camera = null;
+        this._height = 0.8;
     }
 
     private _getKeyId(keyCode: number): number {
@@ -83,11 +85,11 @@ class PlayerComponent extends Component {
         let pos = this._instance.position,
             rot = this._instance.rotation;
 
-        this._camera.setPosition(pos.x, pos.y, pos.z);
+        this._camera.setPosition(pos.x, pos.y + this._height, pos.z);
 
         let c = Math.cos(rot.x),
             xTo = pos.x + Math.cos(rot.y) * c,
-            yTo = pos.y + Math.sin(rot.x),
+            yTo = pos.y + this._height + Math.sin(rot.x),
             zTo = pos.z - Math.sin(rot.y) * c;
 
         this._camera.setTarget(xTo, yTo, zTo);

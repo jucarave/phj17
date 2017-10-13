@@ -9,8 +9,4 @@ export interface ShaderMap {
     [index: string]: Shader
 };
 
-export let ShaderType = {
-    BASIC: "BASIC"
-};
-
 export type ShadersNames = 'BASIC';

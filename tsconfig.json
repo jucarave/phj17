@@ -10,6 +10,8 @@
     "files": [
       "src/App.ts",
       "src/Constants.ts",
+      "src/Utils.ts",
+      "src/TexturesManager.ts",
 
       "src/engine/Camera.ts",
       "src/engine/Renderer.ts",
@@ -18,6 +20,7 @@
 
       "src/engine/geometries/CubeGeometry.ts",
       "src/engine/geometries/Geometry.ts",
+      "src/engine/geometries/SpriteGeometry.ts",
 
       "src/engine/materials/Material.ts",
       "src/engine/materials/BasicMaterial.ts",
@@ -35,6 +38,7 @@
       "src/math/Vector4.ts",
 
       "src/scenes/DemoScene.ts",
+      "src/scenes/HUDScene.ts",
 
       "src/components/Component.ts",
       "src/components/PlayerComponent.ts"
