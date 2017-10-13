@@ -34,6 +34,8 @@
       "src/math/Vector3.ts",
       "src/math/Vector4.ts",
 
+      "src/scenes/DemoScene.ts",
+
       "src/components/Component.ts",
       "src/components/PlayerComponent.ts"
     ]
