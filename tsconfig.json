@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+      "noImplicitAny": true,
+      "noEmitOnError": true,
+      "noUnusedParameters": true,
+      "noUnusedLocals": true,
+      "removeComments": true,
+      "target": "es5"
+    },
+    "files": [
+      "src/App.ts",
+      "src/Constants.ts",
+
+      "src/engine/Camera.ts",
+      "src/engine/Renderer.ts",
+      "src/engine/Scene.ts",
+      "src/engine/Texture.ts",
+
+      "src/engine/geometries/CubeGeometry.ts",
+      "src/engine/geometries/Geometry.ts",
+
+      "src/engine/materials/Material.ts",
+      "src/engine/materials/BasicMaterial.ts",
+
+      "src/engine/shaders/Basic.ts",
+      "src/engine/shaders/Shader.ts",
+      "src/engine/shaders/ShaderStruct.ts",
+
+      "src/entities/Instance.ts",
+
+      "src/factories/EntityFactory.ts",
+
+      "src/math/Matrix4.ts",
+      "src/math/Vector3.ts",
+      "src/math/Vector4.ts",
+
+      "src/components/Component.ts",
+      "src/components/PlayerComponent.ts"
+    ]
+  }
