@@ -20,7 +20,10 @@ class App {
         TexturesManager.init(this._renderer);
 
         this.camera = Camera.createPerspective(CAMERA_FOV, CAMERA_RATIO, CAMERA_ZNEAR, CAMERA_ZFAR);
+
         this.cameraOrtho = Camera.createOrthographic(CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT, CAMERA_ZNEAR, CAMERA_ZFAR);
+        this.cameraOrtho.setPosition(0, 0, 5);
+        this.cameraOrtho.setTarget(0, 0, 0);
 
         this._waitLoad();
     }

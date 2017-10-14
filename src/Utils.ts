@@ -1,3 +1,6 @@
+import { Vector3 } from './math/Vector3';
+import { CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT } from './Constants';
+
 export function createUUID(): string {
     let date = (new Date()).getTime(),
         ret = ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx').replace(/[xy]/g, (c: string): string => {
@@ -23,4 +26,12 @@ export function get2DVectorDir(x: number, y: number): number {
     if (x == -1 && y == 1) { return degToRad(225); }else
     if (x == 0 && y == 1) { return degToRad(270); }else
     if (x == 1 && y == 1) { return degToRad(315); }
+}
+
+export function coordsToOrtho(x: number, y: number): Vector3 {
+    return new Vector3(
+        x - CAMERA_ORTHO_WIDTH / 2.0,
+        (CAMERA_ORTHO_HEIGHT / 2.0) - y,
+        0.0
+    );
 }

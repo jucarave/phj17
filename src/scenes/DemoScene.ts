@@ -33,7 +33,7 @@ class DemoScene extends Scene {
         let camera = this._app.camera,
             player = EntityFactory.createPlayer(this._renderer, camera);
 
-        this.addCube(vec3(0.0, 1.0, 0.0), vec3(2.0));
+        this.addCube(vec3(0.0, 0.5, 0.0), vec3(1.0));
         
         this.addGameObject(player);
         this.setCamera(camera);
