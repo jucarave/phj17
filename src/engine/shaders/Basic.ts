@@ -22,12 +22,17 @@ let Basic: ShaderStruct = {
     fragmentShader: `
         precision mediump float;
         
+        uniform vec4 uUV;
+        uniform vec2 uRepeat;
         uniform sampler2D uTexture;
 
         varying vec2 vTexCoords;
 
         void main(void) {
-            gl_FragColor = texture2D(uTexture, vTexCoords);
+            // vec2 coords = (vTexCoords * uUV.zw) + uUV.xy;
+            vec2 coords = mod(vTexCoords * uRepeat, 1.0) * uUV.zw + uUV.xy;
+
+            gl_FragColor = texture2D(uTexture, coords);
         }
     `
 };

@@ -24,6 +24,9 @@ class DemoScene extends Scene {
         material = new BasicMaterial(texture, this._renderer),
         object = new Instance(this._renderer, geometry, material);
 
+        material.setUv(0, 0, 16/64, 16/32);
+        material.setRepeat(2, 2);
+
         object.translate(position.x, position.y, position.z);
 
         this.addGameObject(object);
@@ -33,7 +36,7 @@ class DemoScene extends Scene {
         let camera = this._app.camera,
             player = EntityFactory.createPlayer(this._renderer, camera);
 
-        this.addCube(vec3(0.0, 0.5, 0.0), vec3(1.0));
+        this.addCube(vec3(0.0, 1.0, 0.0), vec3(2.0));
         
         this.addGameObject(player);
         this.setCamera(camera);
