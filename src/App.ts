@@ -1,3 +1,5 @@
+declare var Stats: any;
+
 import Renderer from './engine/Renderer';
 import Input from './engine/Input';
 import Scene from './engine/Scene';
@@ -9,6 +11,8 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT, CAMERA_FOV, CAMERA_RATIO, CAMERA_ZFAR, CAM
 class App {
     private _renderer                   : Renderer;
     private _scene                      : Scene;
+    
+    private _stats = new Stats();
     
     public readonly camera              : Camera;
     public readonly cameraOrtho         : Camera;
@@ -33,6 +37,9 @@ class App {
             this._scene = new DemoScene(this, this._renderer);
             this._scene.init();
 
+            this._stats.showPanel(1);
+            document.body.appendChild(this._stats.dom);
+
             this._loop();
         } else {
             requestAnimationFrame(() => { this._waitLoad(); });
@@ -40,8 +47,12 @@ class App {
     }
 
     private _loop(): void {
+        this._stats.begin();
+        
         this._renderer.clear();
         this._scene.render();
+
+        this._stats.end();
 
         requestAnimationFrame(() => { this._loop(); });
     }
