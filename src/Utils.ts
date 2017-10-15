@@ -28,6 +28,17 @@ export function get2DVectorDir(x: number, y: number): number {
     if (x == 1 && y == 1) { return degToRad(315); }
 }
 
+export function get2DAngle(position1: Vector3, position2: Vector3): number {
+    let x = position2.x - position1.x,
+        y = position2.z - position1.z;
+
+    let ret = Math.atan2(-y, x);
+
+    return ret;
+}
+
+(<any>window).get2DAngle = get2DAngle;
+
 export function coordsToOrtho(x: number, y: number): Vector3 {
     return new Vector3(
         x - CAMERA_ORTHO_WIDTH / 2.0,

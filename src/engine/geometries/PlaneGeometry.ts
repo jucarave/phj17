@@ -1,24 +1,25 @@
 import Geometry from './Geometry';
 import Renderer from '../Renderer';
 
-class SpriteGeometry extends Geometry {
+class PlaneGeometry extends Geometry {
     constructor(renderer: Renderer, width: number, height: number) {
         super();
 
         this._renderer = renderer;
 
-        this._buildSprite(width, height);
+        this._buildPlane(width, height);
     }
 
-    private _buildSprite(width: number, height: number): void {
+    private _buildPlane(width: number, height: number): void {
         let w = width / 2,
             h = height / 2;
 
-        this.addVertice(-w, -h,  0);
-        this.addVertice( w, -h,  0);
-        this.addVertice(-w,  h,  0);
-        this.addVertice( w,  h,  0);
-        
+        // Top face
+        this.addVertice(-w,  0,  h);
+        this.addVertice( w,  0,  h);
+        this.addVertice(-w,  0, -h);
+        this.addVertice( w,  0, -h);
+
         this.addTriangle(0, 1, 2);
         this.addTriangle(1, 3, 2);
 
@@ -31,4 +32,4 @@ class SpriteGeometry extends Geometry {
     }
 }
 
-export default SpriteGeometry;
+export default PlaneGeometry;

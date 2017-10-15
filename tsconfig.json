@@ -20,7 +20,8 @@
 
       "src/engine/geometries/CubeGeometry.ts",
       "src/engine/geometries/Geometry.ts",
-      "src/engine/geometries/SpriteGeometry.ts",
+      "src/engine/geometries/PlaneGeometry.ts",
+      "src/engine/geometries/WallGeometry.ts",
 
       "src/engine/materials/Material.ts",
       "src/engine/materials/BasicMaterial.ts",

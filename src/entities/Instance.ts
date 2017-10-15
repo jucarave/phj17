@@ -7,6 +7,7 @@ import Shader from '../engine/shaders/Shader';
 import Component from '../components/Component';
 import Matrix4 from '../math/Matrix4';
 import { Vector3, vec3 } from '../math/Vector3';
+import { get2DAngle } from '../Utils';
 
 class Instance {
     private _renderer           : Renderer;
@@ -19,12 +20,15 @@ class Instance {
     private _scene              : Scene;
     private _components         : Array<Component>;
     private _needsUpdate        : boolean;
+
+    public isBillboard         : boolean;
     
     constructor(renderer: Renderer, geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
         this._uPosition = Matrix4.createIdentity();
         this._position = vec3(0.0);
         this._rotation = vec3(0.0);
+        this.isBillboard = false;
         this._needsUpdate = true;
         this._geometry = geometry;
         this._material = material;
@@ -110,6 +114,10 @@ class Instance {
 
         let gl = this._renderer.GL,
             shader = Shader.lastProgram;
+
+        if (this.isBillboard) {
+            this.rotate(0, get2DAngle(this.position, camera.getPosition()) + Math.PI / 2, 0);
+        }
 
         this._uPosition = Matrix4.setIdentity(this._uPosition);
         this._uPosition = Matrix4.multiply(this._uPosition, this.getTransformation());

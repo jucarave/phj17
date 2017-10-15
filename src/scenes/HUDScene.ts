@@ -1,7 +1,7 @@
 import Scene from '../engine/Scene';
 import Renderer from '../engine/Renderer';
 import BasicMaterial from '../engine/materials/BasicMaterial';
-import SpriteGeometry from '../engine/geometries/SpriteGeometry';
+import WallGeometry from '../engine/geometries/WallGeometry';
 import Texture from '../engine/Texture';
 import TextureManager from '../TexturesManager';
 import Instance from '../entities/Instance';
@@ -19,7 +19,7 @@ class HUDScene extends Scene {
     }
 
     private _createSprite(texture: Texture, width: number, height: number, position: Vector3): void {
-        let geometry = new SpriteGeometry(this._renderer, width, height),
+        let geometry = new WallGeometry(this._renderer, width, height),
             material = new BasicMaterial(texture, this._renderer),
             object = new Instance(this._renderer, geometry, material);
         

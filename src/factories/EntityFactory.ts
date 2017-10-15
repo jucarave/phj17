@@ -8,7 +8,6 @@ class EntityFactory {
         let ret: Instance = new Instance(renderer),
         playerComponent = new PlayerComponent();
 
-        ret.translate(0, 0, 5);
         playerComponent.setCamera(camera);
 
         ret.addComponent(playerComponent);
