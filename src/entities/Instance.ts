@@ -10,16 +10,16 @@ import { Vector3, vec3 } from '../math/Vector3';
 import { get2DAngle } from '../Utils';
 
 class Instance {
-    private _renderer           : Renderer;
-    private _geometry           : Geometry;
-    private _material           : Material;
-    private _position           : Vector3;
-    private _rotation           : Vector3;
-    private _transform          : Matrix4;
-    private _uPosition          : Matrix4;
-    private _scene              : Scene;
-    private _components         : Array<Component>;
-    private _needsUpdate        : boolean;
+    protected _renderer           : Renderer;
+    protected _geometry           : Geometry;
+    protected _material           : Material;
+    protected _position           : Vector3;
+    protected _rotation           : Vector3;
+    protected _transform          : Matrix4;
+    protected _uPosition          : Matrix4;
+    protected _scene              : Scene;
+    protected _components         : Array<Component>;
+    protected _needsUpdate        : boolean;
 
     public isBillboard         : boolean;
     

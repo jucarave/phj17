@@ -51,3 +51,13 @@ export function coordsToOrtho(x: number, y: number): Vector3 {
         0.0
     );
 }
+
+export function roundUpPowerOf2(x: number): number {
+    let ret = 2;
+
+    while (ret < x) {
+        ret *= 2;
+    }
+
+    return ret;
+}

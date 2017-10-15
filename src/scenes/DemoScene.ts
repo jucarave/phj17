@@ -7,6 +7,7 @@ import WallGeometry from '../engine/geometries/WallGeometry';
 import Material from '../engine/materials/Material';
 import BasicMaterial from '../engine/materials/BasicMaterial';
 import Instance from '../entities/Instance';
+import Text from '../entities/Text';
 import EntityFactory from '../factories/EntityFactory';
 import TexturesManager from '../TexturesManager';
 import { Vector3, vec3 } from '../math/Vector3';
@@ -113,8 +114,11 @@ class DemoScene extends Scene {
         // Props
         this._addSprite(vec3(2.5, (11/16)/2, 1.0), vec3(10/16, 11/16), matSign);
         this._addSprite(vec3(3.5, (11/16)/2, 1.0), vec3(10/16, 11/16), matSign);
+
+        let text = new Text(this._renderer, "pixelhorrorjam2017", "retganon", {size: "36px", position: vec3(8.0, 1.8, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)});
         
         this.addGameObject(player.translate(1.0, 0.0, 0.0));
+        this.addGameObject(text);
         this.setCamera(camera);
 
         this._hud = new HUDScene(this._app, this._renderer);
