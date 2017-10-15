@@ -37,6 +37,12 @@ class BasicMaterial extends Material {
         gl.uniform4fv(shader.uniforms["uUV"], this._uv);
         gl.uniform2fv(shader.uniforms["uRepeat"], this._repeat);
 
+        if (this._renderBothFaces) {
+            gl.disable(gl.CULL_FACE);
+        } else {
+            gl.enable(gl.CULL_FACE);
+        }
+
         Material.lastRendered = this;
     }
 

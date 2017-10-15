@@ -37,7 +37,12 @@ export function get2DAngle(position1: Vector3, position2: Vector3): number {
     return ret;
 }
 
-(<any>window).get2DAngle = get2DAngle;
+export function getSquaredDistance(position1: Vector3, position2: Vector3): number {
+    let x = position1.x - position2.x,
+        y = position1.x - position2.x,
+        z = position1.x - position2.x;
+    return x*x + y*y + z*z;
+}
 
 export function coordsToOrtho(x: number, y: number): Vector3 {
     return new Vector3(

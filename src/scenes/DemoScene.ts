@@ -90,17 +90,17 @@ class DemoScene extends Scene {
             matbackWall = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [3, 2]),
             matWallL = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [9, 8]),
             matWallR = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [9, 3]),
-            matFence = this._createMaterial(texCity, this._getUVS(texCity, 19, 1, 16, 24), [3, 1]),
+            matFence = this._createMaterial(texCity, this._getUVS(texCity, 19, 1, 16, 24), [3, 1]).setOpaque(false).setCulling(true),
             matCube = this._createMaterial(texture, this._getUVS(texture, 37, 1, 16, 16), [1, 1]),
             
-            matSign = this._createMaterial(texProps, this._getUVS(texProps, 1, 1, 16, 16), [1, 1]);
+            matSign = this._createMaterial(texProps, this._getUVS(texProps, 1, 1, 10, 11), [1, 1]).setOpaque(false);
 
         this._addPlane(vec3(4.5, 0.0, 0.0), vec3(9.0, 3.0), matFloor);
         
+        this._addWall(vec3(8.0, 0.75, 0.0), vec3(0.0, 3/2*Math.PI, 0.0), vec3(3.0, 1.5), matFence);
         this._addWall(vec3(0.0, 1.0, 0.0), vec3(0.0, Math.PI/2, 0.0), vec3(3.0, 2.0), matbackWall);
         this._addWall(vec3(4.5, 4.0, -1.5), vec3(0.0, 0.0, 0.0), vec3(9.0, 8.0), matWallL);
         this._addWall(vec3(4.5, 1.5, 1.5), vec3(0.0, Math.PI, 0.0), vec3(9.0, 3.0), matWallR);
-        this._addWall(vec3(8.0, 0.75, 0.0), vec3(0.0, 3/2*Math.PI, 0.0), vec3(3.0, 1.5), matFence);
 
         // Dumpster
         this._addCube(vec3(0.5, 0.5, 0.5), vec3(1.0, 1.0, 1.0), matCube);
@@ -111,7 +111,8 @@ class DemoScene extends Scene {
         this._addCube(vec3(5.5, 0.5, -1.0), vec3(1.0, 1.0, 1.0), matCube);
 
         // Props
-        this._addSprite(vec3(2.5, 0.5, 1.0), vec3(1.0, 1.0), matSign);
+        this._addSprite(vec3(2.5, (11/16)/2, 1.0), vec3(10/16, 11/16), matSign);
+        this._addSprite(vec3(3.5, (11/16)/2, 1.0), vec3(10/16, 11/16), matSign);
         
         this.addGameObject(player.translate(1.0, 0.0, 0.0));
         this.setCamera(camera);

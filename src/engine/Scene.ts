@@ -2,6 +2,7 @@ import Instance from '../entities/Instance';
 import App from '../App';
 import Camera from './Camera';
 import Renderer from './Renderer';
+import { getSquaredDistance } from '../Utils';
 
 interface InstancesMap {
     [index: string] : Array<Instance>;
@@ -9,6 +10,11 @@ interface InstancesMap {
 
 interface MaterialsMap {
     [index: string] : InstancesMap;
+}
+
+interface TransparentInstance {
+    instance: Instance,
+    distance: number
 }
 
 class Scene {
@@ -64,7 +70,8 @@ class Scene {
     }
 
     public render(): void {
-        let opaques: Array<Instance> = [];
+        let opaques: Array<Instance> = [],
+            transparents: Array<TransparentInstance> = [];
 
         for (let i in this._instances) {
             for (let j in this._instances[i]) {
@@ -72,13 +79,36 @@ class Scene {
 
                 for (let k=0,ins;ins=instances[k];k++) {
                     ins.update();
-                    opaques.push(ins);
+                    if (ins.material) {
+                        if (ins.material.isOpaque) {
+                            opaques.push(ins);
+                        } else {
+                            let dis = getSquaredDistance(ins.position, this._camera.getPosition()),
+                                add = false;
+
+                            for (let m=0,trans;trans=transparents[m];m++) {
+                                if (dis > trans.distance) {
+                                    transparents.splice(m, 0, {instance: ins, distance: dis});
+                                    add = true;
+                                    m = transparents.length;
+                                }
+                            }
+
+                            if (!add) {
+                                transparents.push({instance: ins, distance: dis});
+                            }
+                        }
+                    }
                 }
             }
         }
 
         for (let i=0,ins;ins=opaques[i];i++) {
             ins.render(this._camera);
+        }
+        
+        for (let i=0,ins;ins=transparents[i];i++) {
+            ins.instance.render(this._camera);
         }
     }
 }

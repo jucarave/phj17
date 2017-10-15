@@ -5,6 +5,8 @@ import { createUUID } from '../../Utils';
 
 abstract class Material {
     protected _renderer                : Renderer;
+    protected _isOpaque                : boolean;
+    protected _renderBothFaces         : boolean;
     
     public readonly shaderName        : ShadersNames;
     public readonly uuid              : string;
@@ -15,6 +17,8 @@ abstract class Material {
         this._renderer = renderer;
         this.shaderName = shaderName;
         this.uuid = createUUID();
+        this._isOpaque = true;
+        this._renderBothFaces = false;
     }
 
     public getShader(): Shader {
@@ -23,6 +27,20 @@ abstract class Material {
 
     public abstract render(): void;
     public abstract get isReady(): boolean;
+
+    public get isOpaque(): boolean {
+        return this._isOpaque;
+    }
+
+    public setOpaque(opaque: boolean): Material {
+        this._isOpaque = opaque;
+        return this;
+    }
+
+    public setCulling(bothFaces: boolean): Material {
+        this._renderBothFaces = bothFaces;
+        return this;
+    }
 }
 
 export default Material;
