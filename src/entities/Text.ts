@@ -7,8 +7,7 @@ import { roundUpPowerOf2 } from '../Utils';
 import Instance from './Instance';
 
 interface TextOptions {
-    size?: string;
-    sizeNum?: number;
+    size?: number;
     stroke?: boolean;
     fill?: boolean;
     fillColor?: string;
@@ -18,8 +17,7 @@ interface TextOptions {
 }
 
 const OptionsDefault: TextOptions = {
-    size: '12px',
-    sizeNum: 12,
+    size: 12,
     stroke: false,
     fill: true,
     fillColor: '#FFFFFF',
@@ -54,8 +52,6 @@ class Text extends Instance {
         if (!options.position) { options.position = OptionsDefault.position; }
         if (!options.rotation) { options.rotation = OptionsDefault.rotation; }
 
-        options.sizeNum = parseInt(options.size.replace("px", ""));
-
         return options;
     }
 
@@ -63,27 +59,27 @@ class Text extends Instance {
         let canvas = document.createElement("canvas"),
             ctx = canvas.getContext("2d");
 
-        ctx.font = this._options.size + " " + this._font;
+        ctx.font = this._options.size + "px " + this._font;
         let size = ctx.measureText(this._text);
-        
+
         canvas.width = roundUpPowerOf2(size.width);
-        canvas.height = roundUpPowerOf2(this._options.sizeNum);
-        ctx.font = this._options.size + " " + this._font;
+        canvas.height = roundUpPowerOf2(this._options.size);
+        ctx.font = this._options.size + "px " + this._font;
 
         if (this._options.fill) {
             ctx.fillStyle = this._options.fillColor;
-            ctx.fillText(this._text, 4, this._options.sizeNum);
+            ctx.fillText(this._text, 4, this._options.size);
         }
 
         if (this._options.stroke) {
             ctx.strokeStyle = this._options.strokeColor;
-            ctx.strokeText(this._text, 4, this._options.sizeNum);
+            ctx.strokeText(this._text, 4, this._options.size);
         }
 
-        let uvs = [0, 0, (size.width + 4) / canvas.width, (this._options.sizeNum + 8) / canvas.height],
+        let uvs = [0, 0, (size.width + 4) / canvas.width, (this._options.size + 8) / canvas.height],
             texture = new Texture(canvas, this._renderer),
             material = new BasicMaterial(texture, this._renderer),
-            geometry = new WallGeometry(this._renderer, size.width / 100, this._options.sizeNum / 100);
+            geometry = new WallGeometry(this._renderer, size.width / 100, this._options.size / 100);
 
         material.setUv(uvs[0], uvs[1], uvs[2], uvs[3]);
         material.setOpaque(false);

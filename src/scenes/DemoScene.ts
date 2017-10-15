@@ -115,7 +115,7 @@ class DemoScene extends Scene {
         this._addSprite(vec3(2.5, (11/16)/2, 1.0), vec3(10/16, 11/16), matSign);
         this._addSprite(vec3(3.5, (11/16)/2, 1.0), vec3(10/16, 11/16), matSign);
 
-        let text = new Text(this._renderer, "pixelhorrorjam2017", "retganon", {size: "36px", position: vec3(8.0, 1.8, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)});
+        let text = new Text(this._renderer, "pixelhorrorjam2017", "retganon", {size: 36, position: vec3(7.0, 1.0, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)});
         
         this.addGameObject(player.translate(1.0, 0.0, 0.0));
         this.addGameObject(text);
