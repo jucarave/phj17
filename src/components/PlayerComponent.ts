@@ -1,6 +1,7 @@
 import Input from '../engine/Input';
 import Camera from '../engine/Camera';
 import Component from './Component';
+import { vec3 } from '../math/Vector3';
 import { degToRad, get2DVectorDir } from '../Utils';
 import { PI_2 } from '../Constants';
 
@@ -73,9 +74,12 @@ class PlayerComponent extends Component {
                 angVar = get2DVectorDir(x, y) - PI_2,
             
                 xTo = Math.cos(rot.y + angVar) * spd,
-                zTo = -Math.sin(rot.y + angVar) * spd;
+                zTo = -Math.sin(rot.y + angVar) * spd,
+                
+                collision = this._instance.scene.testCollision(this._instance.position, vec3(xTo, 0, zTo));
 
-            this._instance.translate(xTo, 0, zTo, true);
+            
+            this._instance.translate(collision.x, 0, collision.z, true);
         }
     }
     

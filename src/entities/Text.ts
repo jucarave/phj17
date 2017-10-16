@@ -60,11 +60,22 @@ class Text extends Instance {
             ctx = canvas.getContext("2d");
 
         ctx.font = this._options.size + "px " + this._font;
+        
+        ctx.imageSmoothingEnabled = false;
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.oImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+
         let size = ctx.measureText(this._text);
 
         canvas.width = roundUpPowerOf2(size.width);
         canvas.height = roundUpPowerOf2(this._options.size);
         ctx.font = this._options.size + "px " + this._font;
+
+        ctx.imageSmoothingEnabled = false;
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.oImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
 
         if (this._options.fill) {
             ctx.fillStyle = this._options.fillColor;

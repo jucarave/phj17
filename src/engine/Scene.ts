@@ -1,7 +1,9 @@
+import Collision from './collisions/Collision';
 import Instance from '../entities/Instance';
 import App from '../App';
 import Camera from './Camera';
 import Renderer from './Renderer';
+import { Vector3 } from '../math/Vector3';
 import { getSquaredDistance } from '../Utils';
 
 interface InstancesMap {
@@ -22,11 +24,13 @@ class Scene {
     protected _renderer           : Renderer;
     protected _instances          : MaterialsMap;
     protected _camera             : Camera;
+    protected _collisions         : Array<Collision>;
 
     constructor(app: App, renderer: Renderer) {
         this._app = app;
         this._renderer = renderer;
         this._instances = {};
+        this._collisions = [];
         this._camera = null;
     }
 
@@ -50,7 +54,20 @@ class Scene {
 
         this._instances[shduuid][matuuid].push(instance);
 
+        if (instance.collision) {
+            this.registerCollision(instance.collision);
+        }
+
         instance.setScene(this);
+    }
+
+    public registerCollision(collision: Collision): void {
+        collision.setScene(this);
+        this._collisions.push(collision);
+    }
+
+    public testCollision(position: Vector3, direction: Vector3): Vector3 {
+        return this._collisions[0].test(position, direction);
     }
 
     public setCamera(camera: Camera): void {

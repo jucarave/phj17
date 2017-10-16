@@ -1,10 +1,11 @@
 import Renderer from '../engine/Renderer';
 import Texture from '../engine/Texture';
+import BoxCollision from '../engine/collisions/BoxCollision';
 import Material from '../engine/materials/Material';
 import BasicMaterial from '../engine/materials/BasicMaterial';
 import WallGeometry from '../engine/geometries/WallGeometry';
 import Instance from '../entities/Instance';
-import { Vector3 } from '../math/Vector3';
+import { Vector3, vec3 } from '../math/Vector3';
 import TexturesManager from '../TexturesManager';
 
 abstract class PropsFactory {
@@ -35,6 +36,8 @@ abstract class PropsFactory {
 
         object.translate(position.x, position.y + height / 32, position.z);
         object.isBillboard = true;
+
+        object.setCollision(new BoxCollision(vec3(position.x-width/32, position.y, position.z-width/32), vec3(width/16, height/16, width/16)));
 
         return object;
     }

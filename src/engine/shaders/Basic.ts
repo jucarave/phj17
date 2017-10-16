@@ -32,7 +32,7 @@ let Basic: ShaderStruct = {
             vec2 coords = mod(clamp(vTexCoords, 0.0, 1.0) * uRepeat, 1.0) * uUV.zw + uUV.xy;
 
             //gl_FragColor = vec4(texture2D(uTexture, coords).rgb, 1.0);
-            gl_FragColor = texture2D(uTexture, coords);
+            gl_FragColor = texture2D(uTexture, coords);;
         }
     `
 };

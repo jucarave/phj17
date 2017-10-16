@@ -61,3 +61,16 @@ export function roundUpPowerOf2(x: number): number {
 
     return ret;
 }
+
+export function httpRequest(url: string, callback: Function): void {
+    let http = new XMLHttpRequest();
+
+    http.open('GET', url, true);
+    http.onreadystatechange = function() {
+          if (http.readyState == 4 && http.status == 200) {
+            callback(http.responseText);
+        }
+    };
+
+    http.send();
+}

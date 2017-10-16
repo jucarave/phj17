@@ -1,6 +1,7 @@
 import Renderer from '../engine/Renderer';
 import Camera from '../engine/Camera';
 import Scene from '../engine/Scene';
+import Collision from '../engine/collisions/Collision';
 import Geometry from '../engine/geometries/Geometry';
 import Material from '../engine/materials/Material';
 import Shader from '../engine/shaders/Shader';
@@ -19,6 +20,7 @@ class Instance {
     protected _uPosition          : Matrix4;
     protected _scene              : Scene;
     protected _components         : Array<Component>;
+    protected _collision          : Collision;
     protected _needsUpdate        : boolean;
 
     public isBillboard         : boolean;
@@ -35,6 +37,7 @@ class Instance {
         this._renderer = renderer;
         this._scene = null;
         this._components = [];
+        this._collision = null;
     }
     
     public translate(x: number, y: number, z: number, relative: boolean = false): Instance {
@@ -86,6 +89,10 @@ class Instance {
         this._needsUpdate = false;
 
         return this._transform;
+    }
+
+    public setCollision(collision: Collision): void {
+        this._collision = collision;
     }
 
     public awake(): void {
@@ -141,6 +148,14 @@ class Instance {
     
     public get rotation(): Vector3 {
         return this._rotation;
+    }
+
+    public get collision(): Collision {
+        return this._collision;
+    }
+
+    public get scene(): Scene {
+        return this._scene;
     }
 }
 

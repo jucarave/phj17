@@ -5,6 +5,7 @@ import Input from './engine/Input';
 import Scene from './engine/Scene';
 import Camera from './engine/Camera';
 import TexturesManager from './TexturesManager';
+import ModelsManager from './ModelsManager';
 import DemoScene from './scenes/DemoScene';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, CAMERA_FOV, CAMERA_RATIO, CAMERA_ZFAR, CAMERA_ZNEAR, CAMERA_ORTHO_HEIGHT, CAMERA_ORTHO_WIDTH } from './Constants';
 
@@ -22,6 +23,7 @@ class App {
 
         Input.init(this._renderer.canvas);
         TexturesManager.init(this._renderer);
+        ModelsManager.init(this._renderer);
 
         this.camera = Camera.createPerspective(CAMERA_FOV, CAMERA_RATIO, CAMERA_ZNEAR, CAMERA_ZFAR);
 
@@ -33,7 +35,7 @@ class App {
     }
 
     private _waitLoad(): void {
-        if (TexturesManager.isReady()) {
+        if (TexturesManager.isReady() && ModelsManager.isReady()) {
             this._scene = new DemoScene(this, this._renderer);
             this._scene.init();
 

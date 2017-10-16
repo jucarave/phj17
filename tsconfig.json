@@ -12,11 +12,15 @@
       "src/Constants.ts",
       "src/Utils.ts",
       "src/TexturesManager.ts",
+      "src/ModelsManager.ts",
 
       "src/engine/Camera.ts",
       "src/engine/Renderer.ts",
       "src/engine/Scene.ts",
       "src/engine/Texture.ts",
+
+      "src/engine/collisions/Collision.ts",
+      "src/engine/collisions/BoxCollision.ts",
 
       "src/engine/geometries/CubeGeometry.ts",
       "src/engine/geometries/Geometry.ts",

@@ -12,6 +12,7 @@ import EntityFactory from '../factories/EntityFactory';
 import PropsFactory from '../factories/PropsFactory';
 import { Vector3, vec3 } from '../math/Vector3';
 import TexturesManager from '../TexturesManager';
+import ModelsManager from '../ModelsManager';
 import App from '../App';
 import HUDScene from './HUDScene';
 
@@ -61,11 +62,11 @@ class DemoScene extends Scene {
         ];
     }
 
-    private _createMaterial(texture: Texture, uv: Array<number>, repeat: Array<number>): Material {
+    private _createMaterial(texture: Texture, uv?: Array<number>, repeat?: Array<number>): Material {
         let ret = new BasicMaterial(texture, this._renderer);
 
-        ret.setRepeat(repeat[0], repeat[1]);
-        ret.setUv(uv[0], uv[1], uv[2], uv[3]);
+        if (repeat) ret.setRepeat(repeat[0], repeat[1]);
+        if (uv) ret.setUv(uv[0], uv[1], uv[2], uv[3]);
 
         return ret;
     }
@@ -100,10 +101,21 @@ class DemoScene extends Scene {
         this._addCube(vec3(5.5, 0.5, -1.0), vec3(1.0, 1.0, 1.0), matCube);
 
         // Props
-        this.addGameObject(PropsFactory.createBarFloorSign(this._renderer, vec3(2.5, 0.0, 1.0)));
+        this.addGameObject(PropsFactory.createBarFloorSign(this._renderer, vec3(2.0, 0.0, 1.0)));
 
         // Text
-        this.addGameObject(new Text(this._renderer, "pixelhorrorjam2017", "retganon", {size: 36, position: vec3(7.0, 1.0, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)}));
+        this.addGameObject(new Text(this._renderer, "A Game By", "retganon", {size: 36, position: vec3(3.0, 1.0, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)}));
+        this.addGameObject(new Text(this._renderer, "Jucarave", "retganon", {size: 36, position: vec3(5.0, 1.0, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)}));
+        //this.addGameObject(new Text(this._renderer, "pixelhorrorjam2017", "retganon", {size: 36, position: vec3(7.0, 1.0, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)}));
+
+        // Sign
+        let model = ModelsManager.getModel("BarSign"),
+            modMat = this._createMaterial(texture),
+            sign = new Instance(this._renderer, model.geometry, modMat);
+
+        modMat.setCulling(true);
+        this.addGameObject(sign.translate(3.0, 1.5, 1.5).rotate(0, Math.PI/2, 0));
+        
         
         this.addGameObject(player.translate(1.0, 0.0, 0.0));
         this.setCamera(camera);
