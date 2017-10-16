@@ -59,6 +59,14 @@ class Geometry {
         this._triangles = null;
     }
 
+    public destroy(): void {
+        let gl = this._renderer.GL;
+
+        gl.deleteBuffer(this._vertexBuffer);
+        gl.deleteBuffer(this._texBuffer);
+        gl.deleteBuffer(this._indexBuffer);
+    }
+
     public render(): void {
         let gl = this._renderer.GL,
             shader = Shader.lastProgram;

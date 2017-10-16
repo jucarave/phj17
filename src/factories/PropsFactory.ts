@@ -6,7 +6,9 @@ import BasicMaterial from '../engine/materials/BasicMaterial';
 import WallGeometry from '../engine/geometries/WallGeometry';
 import Instance from '../entities/Instance';
 import { Vector3, vec3 } from '../math/Vector3';
-import TexturesManager from '../TexturesManager';
+import TexturesManager from '../managers/TexturesManager';
+
+export type PropsNames = 'BarFloorSign';
 
 abstract class PropsFactory {
     private static _createMaterial(renderer: Renderer, texture: Texture, uv: Array<number>, repeat: Array<number>): Material {
@@ -40,6 +42,24 @@ abstract class PropsFactory {
         object.setCollision(new BoxCollision(vec3(position.x-width/32, position.y, position.z-width/32), vec3(width/16, height/16, width/16)));
 
         return object;
+    }
+
+    public static createProp(renderer: Renderer, propName: string, position: Vector3, rotation?: Vector3): Instance {
+        let name = <PropsNames>propName,
+            obj: Instance;
+
+        rotation;
+
+        switch (name) {
+            case 'BarFloorSign':
+                obj = PropsFactory.createBarFloorSign(renderer, position);
+                break;
+
+            default:
+                throw new Error("Prop [" + propName + "] not found!");
+        }
+
+        return obj;
     }
 }
 

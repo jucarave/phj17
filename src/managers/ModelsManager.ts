@@ -1,8 +1,8 @@
-import Renderer from './engine/Renderer';
-import Geometry from './engine/geometries/Geometry';
-import Material from './engine/materials/Material';
-import { Vector3, vec3 } from './math/Vector3';
-import { httpRequest } from './Utils';
+import Renderer from '../engine/Renderer';
+import Geometry from '../engine/geometries/Geometry';
+import Material from '../engine/materials/Material';
+import { Vector3, vec3 } from '../math/Vector3';
+import { httpRequest } from '../Utils';
 
 interface Model {
     geometry: Geometry,

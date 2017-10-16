@@ -3,7 +3,7 @@ import Renderer from '../engine/Renderer';
 import BasicMaterial from '../engine/materials/BasicMaterial';
 import WallGeometry from '../engine/geometries/WallGeometry';
 import Texture from '../engine/Texture';
-import TextureManager from '../TexturesManager';
+import TextureManager from '../managers/TexturesManager';
 import Instance from '../entities/Instance';
 import { Vector3 } from '../math/Vector3';
 import App from '../App';

@@ -4,8 +4,9 @@ import Renderer from './engine/Renderer';
 import Input from './engine/Input';
 import Scene from './engine/Scene';
 import Camera from './engine/Camera';
-import TexturesManager from './TexturesManager';
-import ModelsManager from './ModelsManager';
+import TexturesManager from './managers/TexturesManager';
+import ModelsManager from './managers/ModelsManager';
+import SectorsManager from './managers/SectorsManager';
 import DemoScene from './scenes/DemoScene';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, CAMERA_FOV, CAMERA_RATIO, CAMERA_ZFAR, CAMERA_ZNEAR, CAMERA_ORTHO_HEIGHT, CAMERA_ORTHO_WIDTH } from './Constants';
 
@@ -24,6 +25,7 @@ class App {
         Input.init(this._renderer.canvas);
         TexturesManager.init(this._renderer);
         ModelsManager.init(this._renderer);
+        SectorsManager.init(this._renderer);
 
         this.camera = Camera.createPerspective(CAMERA_FOV, CAMERA_RATIO, CAMERA_ZNEAR, CAMERA_ZFAR);
 
@@ -51,6 +53,8 @@ class App {
     private _loop(): void {
         this._stats.begin();
         
+        this._scene.update();
+
         this._renderer.clear();
         this._scene.render();
 

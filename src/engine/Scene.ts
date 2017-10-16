@@ -86,6 +86,10 @@ class Scene {
         }
     }
 
+    public update(): void {
+        
+    }
+
     public render(): void {
         let opaques: Array<Instance> = [],
             transparents: Array<TransparentInstance> = [];
@@ -95,7 +99,13 @@ class Scene {
                 var instances = this._instances[i][j];
 
                 for (let k=0,ins;ins=instances[k];k++) {
+                    if (ins.isDestroyed) {
+                        this._instances[i][j].splice(k, 1);
+                        continue;
+                    }
+
                     ins.update();
+
                     if (ins.material) {
                         if (ins.material.isOpaque) {
                             opaques.push(ins);

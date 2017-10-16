@@ -79,7 +79,10 @@ class PlayerComponent extends Component {
                 collision = this._instance.scene.testCollision(this._instance.position, vec3(xTo, 0, zTo));
 
             
-            this._instance.translate(collision.x, 0, collision.z, true);
+            if (collision.x != 0 || collision.z != 0) {
+                this._instance.translate(collision.x, 0, collision.z, true);
+                this._instance.moved = true;
+            }
         }
     }
     

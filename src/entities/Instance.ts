@@ -22,8 +22,10 @@ class Instance {
     protected _components         : Array<Component>;
     protected _collision          : Collision;
     protected _needsUpdate        : boolean;
-
+    protected _destroyed          : boolean;
+    
     public isBillboard         : boolean;
+    public moved               : boolean;
     
     constructor(renderer: Renderer, geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
@@ -38,6 +40,7 @@ class Instance {
         this._scene = null;
         this._components = [];
         this._collision = null;
+        this._destroyed = false;
     }
     
     public translate(x: number, y: number, z: number, relative: boolean = false): Instance {
@@ -102,6 +105,8 @@ class Instance {
     }
 
     public update(): void {
+        this.moved = false;
+
         for (let i=0,component;component=this._components[i];i++) {
             component.update();
         }
@@ -111,6 +116,10 @@ class Instance {
         for (let i=0,component;component=this._components[i];i++) {
             component.destroy();
         }
+
+        this._geometry.destroy();
+
+        this._destroyed = true;
     }
 
     public render(camera: Camera): void {
@@ -156,6 +165,10 @@ class Instance {
 
     public get scene(): Scene {
         return this._scene;
+    }
+
+    public get isDestroyed(): boolean {
+        return this._destroyed;
     }
 }
 

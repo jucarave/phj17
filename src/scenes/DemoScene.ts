@@ -1,5 +1,6 @@
 import Scene from '../engine/Scene';
 import Renderer from '../engine/Renderer';
+import Sector from '../engine/Sector';
 import Texture from '../engine/Texture';
 import CubeGeometry from '../engine/geometries/CubeGeometry';
 import PlaneGeometry from '../engine/geometries/PlaneGeometry';
@@ -9,19 +10,30 @@ import BasicMaterial from '../engine/materials/BasicMaterial';
 import Instance from '../entities/Instance';
 import Text from '../entities/Text';
 import EntityFactory from '../factories/EntityFactory';
-import PropsFactory from '../factories/PropsFactory';
+//import PropsFactory from '../factories/PropsFactory';
 import { Vector3, vec3 } from '../math/Vector3';
-import TexturesManager from '../TexturesManager';
-import ModelsManager from '../ModelsManager';
+import TexturesManager from '../managers/TexturesManager';
+import ModelsManager from '../managers/ModelsManager';
+import SectorsManager from '../managers/SectorsManager';
 import App from '../App';
 import HUDScene from './HUDScene';
 
+interface SectorTrigger {
+    position: Vector3;
+    size: Vector3;
+    sector: Sector;
+    destroy: boolean;
+}
+
 class DemoScene extends Scene {
-    private _hud: HUDScene;
+    private _hud                : HUDScene;
+    private _triggers           : Array<SectorTrigger>;
+    private _player             : Instance;
 
     constructor(app: App, renderer: Renderer) {
         super(app, renderer);
 
+        this._triggers = [];
         this._buildScene();
     }
 
@@ -71,6 +83,23 @@ class DemoScene extends Scene {
         return ret;
     }
 
+    private _addTrigger(position: Vector3, size: Vector3, sector: Sector, destroy: boolean): void {
+        this._triggers.push({
+            position,
+            size,
+            sector,
+            destroy
+        });
+    }
+
+    private _addSectorInstances(sector: Sector): void {
+        let instances = sector.build();
+
+        for (let i=0,ins;ins=instances[i];i++) {
+            this.addGameObject(ins);
+        }
+    }
+
     private _buildScene(): void {
         let camera = this._app.camera,
             player = EntityFactory.createPlayer(this._renderer, camera),
@@ -100,8 +129,14 @@ class DemoScene extends Scene {
         this._addCube(vec3(4.5, 0.5, -1.0), vec3(1.0, 1.0, 1.0), matCube);
         this._addCube(vec3(5.5, 0.5, -1.0), vec3(1.0, 1.0, 1.0), matCube);
 
+        // Sectors
+        let sector = SectorsManager.getSector("ALLEY");
+        this._addSectorInstances(sector);
+        this._addTrigger(vec3(0.0, 0.0, 1.5), vec3(9.0, 10.0, 4.5), sector, false); //Activate
+        this._addTrigger(vec3(0.0, 0.0, 6.0), vec3(9.0, 10.0, 4.0), sector, true); //Deactivate
+
         // Props
-        this.addGameObject(PropsFactory.createBarFloorSign(this._renderer, vec3(2.0, 0.0, 1.0)));
+        //this.addGameObject(PropsFactory.createBarFloorSign(this._renderer, vec3(2.0, 0.0, 1.0)));
 
         // Text
         this.addGameObject(new Text(this._renderer, "A Game By", "retganon", {size: 36, position: vec3(3.0, 1.0, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)}));
@@ -121,6 +156,33 @@ class DemoScene extends Scene {
         this.setCamera(camera);
 
         this._hud = new HUDScene(this._app, this._renderer);
+
+        this._player = player;
+    }
+
+    public update(): void {
+        super.update();
+
+        if (!this._player.moved) { return; }
+
+        let p = this._player.position;
+        for (let i=0,trig;trig=this._triggers[i];i++) {
+            let tp = trig.position,
+                ts = trig.size;
+
+            if (p.x < tp.x || p.x >= tp.x+ts.x || p.y < tp.y || p.y >= tp.y+ts.y || p.z < tp.z || p.z >= tp.z+ts.z) {
+                continue;
+            }
+
+            if (trig.destroy) {
+                trig.sector.destroy();
+            } else {
+                trig.sector.build();
+                this._addSectorInstances(trig.sector);
+            }
+
+            break;
+        }
     }
 
     public render(): void {
