@@ -96,6 +96,7 @@ class Instance {
 
     public setCollision(collision: Collision): void {
         this._collision = collision;
+        collision.setInstance(this);
     }
 
     public awake(): void {

@@ -67,7 +67,17 @@ class Scene {
     }
 
     public testCollision(position: Vector3, direction: Vector3): Vector3 {
-        return this._collisions[0].test(position, direction);
+        for (let i=0,col;col=this._collisions[i];i++) {
+            if (col.instance.isDestroyed){
+                this._collisions.splice(i, 1);
+                i--;
+                continue;
+            }
+
+            direction = col.test(position, direction);
+        }
+
+        return direction;
     }
 
     public setCamera(camera: Camera): void {
@@ -101,6 +111,7 @@ class Scene {
                 for (let k=0,ins;ins=instances[k];k++) {
                     if (ins.isDestroyed) {
                         this._instances[i][j].splice(k, 1);
+                        k--;
                         continue;
                     }
 

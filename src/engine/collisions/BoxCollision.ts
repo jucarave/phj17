@@ -39,17 +39,22 @@ class BoxCollision extends Collision {
     public test(position: Vector3, direction: Vector3): Vector3 {
         let width = 0.3,
             height = 0.8,
+            x = position.x,
+            y = position.y,
+            z = position.z,
             xTo = direction.x,
             zTo = direction.z,
             sign = (direction.x > 0)? 1 : -1,
-            box = this._reorderBox([position.x - width * sign, position.y, position.z - width, position.x + width * sign + direction.x, position.y + height, position.z + width]);
+            box = this._reorderBox([x - width * sign, y, z - width, x + width * sign + direction.x, y + height, z + width]);
 
         if (this._boxCollision(box)) {
             xTo = 0;
         }
+
+        x += xTo;
         
         sign = (direction.z > 0)? 1 : -1;
-        box = this._reorderBox([position.x - width, position.y, position.z - width * sign, position.x + width, position.y + height, position.z + width * sign + direction.z]);
+        box = this._reorderBox([x - width, y, z - width * sign, x + width, y + height, z + width * sign + direction.z]);
         if (this._boxCollision(box)) {
             zTo = 0;
         }
