@@ -49,7 +49,7 @@ abstract class PropsFactory {
     public static createDumpster(renderer: Renderer, position: Vector3, rotation?: Vector3): Instance {
         let width = 16, height = 16, length = 32,
             texture = TexturesManager.getTexture("CITY"),
-            material = this._createMaterial(renderer, texture),
+            material = this._createMaterial(renderer, texture).setCulling(true),
             model = ModelsManager.getModel("Dumpster"),
             object = new Instance(renderer, model.geometry, material);
 

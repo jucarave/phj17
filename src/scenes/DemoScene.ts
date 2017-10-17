@@ -108,9 +108,9 @@ class DemoScene extends Scene {
 
         // Create materials for this scene
         let matFloor = this._createMaterial(texCity, this._getUVS(texCity, 1, 1, 16, 16), [9, 3]),
-            matbackWall = this._createMaterial(texCity, this._getUVS(texCity, 1, 19, 16, 32), [3, 1]).setCulling(true).setOpaque(false),
+            matbackWall = this._createMaterial(texCity, this._getUVS(texCity, 1, 19, 16, 32), [3, 1]).setOpaque(false),
             matWallL = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [9, 8]),
-            matWallR = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [9, 3]),
+            matWallR = this._createMaterial(texCity, this._getUVS(texCity, 1, 53, 16, 48), [9, 1]),
             matFence = this._createMaterial(texCity, this._getUVS(texCity, 19, 1, 16, 24), [3, 1]).setOpaque(false).setCulling(true),
             matCube = this._createMaterial(texture, this._getUVS(texture, 37, 1, 16, 16), [1, 1]);
 
