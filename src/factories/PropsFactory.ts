@@ -33,8 +33,8 @@ abstract class PropsFactory {
 
     public static createBarFloorSign(renderer: Renderer, position: Vector3): Instance {
         let width = 10, height = 11,
-            texture = TexturesManager.getTexture("PROPS"),
-            material = this._createMaterial(renderer, texture, this._getUVS(texture, 1, 1, width, height), [1, 1]).setOpaque(false),
+            texture = TexturesManager.getTexture("CITY"),
+            material = this._createMaterial(renderer, texture, this._getUVS(texture, 1, 19, width, height), [1, 1]).setOpaque(false),
             geometry = new WallGeometry(renderer, width/16, height/16),
             object = new Instance(renderer, geometry, material);
 
