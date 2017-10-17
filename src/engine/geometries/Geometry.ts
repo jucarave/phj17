@@ -12,11 +12,14 @@ class Geometry {
     private _indexLength             : number;
     
     protected _renderer              : Renderer;
+    protected _dynamic               : boolean;
 
     constructor() {
         this._vertices = [];
         this._texCoords = [];
         this._triangles = [];
+
+        this._dynamic = false;
     }
 
     public addVertice(x: number, y: number, z: number): void {
@@ -80,6 +83,10 @@ class Geometry {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
 
         gl.drawElements(gl.TRIANGLES, this._indexLength, gl.UNSIGNED_SHORT, 0);
+    }
+
+    public get isDynamic(): boolean {
+        return this._dynamic;
     }
 }
 

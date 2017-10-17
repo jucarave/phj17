@@ -1,4 +1,5 @@
 import { createUUID } from '../Utils';
+import { PLAY_FULLSCREEN } from '../Constants';
 
 interface Callback {
     id: string;
@@ -80,7 +81,11 @@ class Input {
         document.addEventListener('mozpointerlockchange', () => { this._handlePointerLockChange(); }, false);
         document.addEventListener('webkitpointerlockchange', () => { this._handlePointerLockChange(); }, false);
 
+        this._element.requestFullscreen = this._element.requestFullscreen || this._element.webkitRequestFullScreen || (<any>this._element).mozRequestFullScreen;
+
         this._element.addEventListener("click", () => {
+            if (PLAY_FULLSCREEN && this._element.requestFullscreen) this._element.requestFullscreen();
+
             this._element.requestPointerLock();
         });
     } 

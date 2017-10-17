@@ -13,7 +13,7 @@ interface ModelMap {
     [index: string]: Model;
 }
 
-type ModelNames = 'BarSign';
+type ModelNames = 'BarSign' | 'Dumpster';
 
 class ModelsManager {
     private _models                 : ModelMap;
@@ -74,6 +74,7 @@ class ModelsManager {
 
     public init(renderer: Renderer): void {
         this._loadModel("BarSign", renderer);
+        this._loadModel("Dumpster", renderer);
     }
 
     public getModel(name: ModelNames): Model {

@@ -5,7 +5,7 @@ interface TexturesMap {
     [index: string] : Texture
 }
 
-type TexturesNames = 'TEXTURE_16' | 'MOCKGUN' | 'PROPS' | 'CITY';
+type TexturesNames = 'TEXTURE_16' | 'MOCKGUN' | 'PROPS' | 'CITY' | 'DEFAULT';
 
 class TexturesManager {
     private _textures           : TexturesMap;
@@ -24,13 +24,14 @@ class TexturesManager {
 
     public init(renderer: Renderer): void {
         this._textures['TEXTURE_16'] = new Texture("img/texture.png", renderer, () => { this._onTextureLoad(); });
+        this._textures['DEFAULT'] = new Texture("img/default.png", renderer, () => { this._onTextureLoad(); });
         this._textures['CITY'] = new Texture("img/city.png", renderer, () => { this._onTextureLoad(); });
         
         this._textures['MOCKGUN'] = new Texture("img/mockGun.png", renderer, () => { this._onTextureLoad(); });
 
         this._textures['PROPS'] = new Texture("img/props.png", renderer, () => { this._onTextureLoad(); });
 
-        this._texturesCount = 4;
+        this._texturesCount = 5;
     }
 
     public getTexture(textureName: TexturesNames): Texture {

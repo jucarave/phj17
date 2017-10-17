@@ -8,6 +8,7 @@ interface Prop {
     name: string;
     position: Vector3;
     rotation?: Vector3;
+    options?: any;
 }
 
 class Sector {
@@ -24,11 +25,12 @@ class Sector {
         this._propList = [];
     }
 
-    public addProp(propName: PropsNames, position: Vector3, rotation?: Vector3): void {
+    public addProp(propName: PropsNames, position: Vector3, rotation?: Vector3, options?: any): void {
         this._propList.push({
             name: propName,
             position: position,
-            rotation: rotation
+            rotation: rotation,
+            options: options
         });
     }
 
@@ -38,7 +40,7 @@ class Sector {
         let ret: Array<Instance> = [];
 
         for (let i=0,prop;prop=this._propList[i];i++) {
-            ret.push(PropsFactory.createProp(this._renderer, prop.name, prop.position, prop.rotation));
+            ret.push(PropsFactory.createProp(this._renderer, prop.name, prop.position, prop.rotation, prop.options));
         }
 
         this._instances = ret;

@@ -118,7 +118,9 @@ class Instance {
             component.destroy();
         }
 
-        this._geometry.destroy();
+        if (this._geometry.isDynamic) {
+            this._geometry.destroy();
+        }
 
         this._destroyed = true;
     }

@@ -11,3 +11,5 @@ export const CAMERA_ORTHO_WIDTH     = (CANVAS_WIDTH / 4) << 0;
 export const CAMERA_ORTHO_HEIGHT    = (CANVAS_HEIGHT / 4) << 0;
 
 export const PI_2                   = Math.PI / 2;
+
+export const PLAY_FULLSCREEN        = false;

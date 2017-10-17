@@ -6,7 +6,7 @@ import { Vector3 } from '../math/Vector3';
 import { roundUpPowerOf2 } from '../Utils';
 import Instance from './Instance';
 
-interface TextOptions {
+export interface TextOptions {
     size?: number;
     stroke?: boolean;
     fill?: boolean;

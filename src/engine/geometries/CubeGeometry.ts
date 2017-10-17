@@ -6,6 +6,7 @@ class CubeGeometry extends Geometry {
         super();
 
         this._renderer = renderer;
+        this._dynamic = true;
 
         this._buildCube(width, height, length);
     }

@@ -26,7 +26,7 @@ class PlayerComponent extends Component {
         this._keys = [];
         this._callbackIds = [];
         this._camera = null;
-        this._height = 0.8;
+        this._height = 1.0;
     }
 
     private _getKeyId(keyCode: number): number {

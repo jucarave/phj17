@@ -20,6 +20,10 @@ class SectorsManager {
             sectorName: SectorNames = 'ALLEY';
 
         sector.addProp("BarFloorSign", vec3(2.0, 0.0, 1.0));
+        sector.addProp("Dumpster", vec3(0.5, 0.0, 0.0));
+        sector.addProp("BarSign", vec3(3.0, 1.7, 1.2), vec3(0, Math.PI/2, 0));
+        sector.addProp("Text", vec3(5.0, 1.0, 0.0), vec3(0, Math.PI/2, 0), {text: "A Game By", font: 'retganon', size: 36});
+        sector.addProp("Text", vec3(3.0, 1.5, 0.0), vec3(0, Math.PI/2, 0), {text: "Jucarave", font: 'retganon', size: 36});
 
         this._sectors[sectorName] = sector;
     }

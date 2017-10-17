@@ -6,6 +6,7 @@ class PlaneGeometry extends Geometry {
         super();
 
         this._renderer = renderer;
+        this._dynamic = true;
 
         this._buildPlane(width, height);
     }
