@@ -35,7 +35,7 @@ class Sector {
     }
 
     public build(): Array<Instance> {
-        if (this._instances != null) { return this._instances; }
+        if (this._instances != null) { return null; }
 
         let ret: Array<Instance> = [];
 

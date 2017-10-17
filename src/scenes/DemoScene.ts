@@ -108,7 +108,7 @@ class DemoScene extends Scene {
 
         // Create materials for this scene
         let matFloor = this._createMaterial(texCity, this._getUVS(texCity, 1, 1, 16, 16), [9, 3]),
-            matbackWall = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [3, 2]),
+            matbackWall = this._createMaterial(texCity, this._getUVS(texCity, 1, 19, 16, 32), [3, 1]).setCulling(true).setOpaque(false),
             matWallL = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [9, 8]),
             matWallR = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [9, 3]),
             matFence = this._createMaterial(texCity, this._getUVS(texCity, 19, 1, 16, 24), [3, 1]).setOpaque(false).setCulling(true),
@@ -161,8 +161,10 @@ class DemoScene extends Scene {
             if (trig.destroy) {
                 trig.sector.destroy();
             } else {
-                trig.sector.build();
-                this._addSectorInstances(trig.sector);
+                let ret = trig.sector.build();
+                if (ret != null) {
+                    this._addSectorInstances(trig.sector);
+                }
             }
 
             break;
