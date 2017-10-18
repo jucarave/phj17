@@ -57,6 +57,10 @@ class Sector {
 
         this._instances = null;
     }
+
+    public get instances(): Array<Instance> {
+        return this._instances;
+    }
 }
 
 export default Sector;

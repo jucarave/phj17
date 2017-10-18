@@ -22,6 +22,9 @@ class SectorsManager {
         sector.addProp("BarFloorSign", vec3(2.0, 0.0, 1.0));
         sector.addProp("Dumpster", vec3(0.5, 0.0, 0.0));
         sector.addProp("BarSign", vec3(3.0, 1.7, 1.2), vec3(0, Math.PI/2, 0));
+        sector.addProp("BarDoorFrame", vec3(3.0, 0.0, 1.5), vec3(0, Math.PI/2, 0));
+        sector.addProp("BarWindow", vec3(5.5, 0.0, 1.5), vec3(0, Math.PI/2, 0));
+        sector.addProp("BarWindow", vec3(7.5, 0.0, 1.5), vec3(0, Math.PI/2, 0));
         sector.addProp("Text", vec3(5.0, 1.0, 0.0), vec3(0, Math.PI/2, 0), {text: "A Game By", font: 'retganon', size: 36});
         sector.addProp("Text", vec3(3.0, 1.5, 0.0), vec3(0, Math.PI/2, 0), {text: "Jucarave", font: 'retganon', size: 36});
 

@@ -9,8 +9,9 @@ import Text from '../entities/Text';
 import { Vector3, vec3 } from '../math/Vector3';
 import TexturesManager from '../managers/TexturesManager';
 import ModelsManager from '../managers/ModelsManager';
+import { ModelNames } from '../managers/ModelsManager';
 
-export type PropsNames = 'BarFloorSign' | 'Dumpster' | 'BarSign' | 'Text';
+export type PropsNames = 'BarFloorSign' | 'Dumpster' | 'BarSign' | 'BarWindow' | 'Text' | 'BarDoorFrame';
 
 abstract class PropsFactory {
     private static _createMaterial(renderer: Renderer, texture: Texture, uv?: Array<number>, repeat?: Array<number>): Material {
@@ -61,10 +62,10 @@ abstract class PropsFactory {
         return object;
     }
     
-    public static createBarSign(renderer: Renderer, position: Vector3, rotation?: Vector3): Instance {
+    public static create3DModel(renderer: Renderer, modelName: ModelNames, culling: boolean, opaque: boolean, position: Vector3, rotation?: Vector3): Instance {
         let texture = TexturesManager.getTexture("CITY"),
-            material = this._createMaterial(renderer, texture).setCulling(true),
-            model = ModelsManager.getModel("BarSign"),
+            material = this._createMaterial(renderer, texture).setCulling(culling).setOpaque(opaque),
+            model = ModelsManager.getModel(modelName),
             object = new Instance(renderer, model.geometry, material);
 
         object.translate(position.x, position.y, position.z);
@@ -93,7 +94,15 @@ abstract class PropsFactory {
                 break;
                 
             case 'BarSign':
-                obj = PropsFactory.createBarSign(renderer, position, rotation);
+                obj = PropsFactory.create3DModel(renderer, "BarSign", true, true, position, rotation);
+                break;
+                
+            case 'BarWindow':
+                obj = PropsFactory.create3DModel(renderer, "BarWindow", false, true, position, rotation);
+                break;
+                
+            case 'BarDoorFrame':
+                obj = PropsFactory.create3DModel(renderer, "BarDoorFrame", false, true, position, rotation);
                 break;
                 
             case 'Text':

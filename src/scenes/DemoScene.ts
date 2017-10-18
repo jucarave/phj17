@@ -93,7 +93,8 @@ class DemoScene extends Scene {
     }
 
     private _addSectorInstances(sector: Sector): void {
-        let instances = sector.build();
+        sector.build();
+        let instances = sector.instances;
 
         for (let i=0,ins;ins=instances[i];i++) {
             this.addGameObject(ins);
@@ -110,7 +111,8 @@ class DemoScene extends Scene {
         let matFloor = this._createMaterial(texCity, this._getUVS(texCity, 1, 1, 16, 16), [9, 3]),
             matbackWall = this._createMaterial(texCity, this._getUVS(texCity, 1, 19, 16, 32), [3, 1]).setOpaque(false),
             matWallL = this._createMaterial(texture, this._getUVS(texture, 19, 1, 16, 16), [9, 8]),
-            matWallR = this._createMaterial(texCity, this._getUVS(texCity, 1, 53, 16, 48), [9, 1]),
+            //matWallR = this._createMaterial(texCity, this._getUVS(texCity, 1, 53, 16, 48), [5, 1]),
+
             matFence = this._createMaterial(texCity, this._getUVS(texCity, 19, 1, 16, 24), [3, 1]).setOpaque(false).setCulling(true),
             matCube = this._createMaterial(texture, this._getUVS(texture, 37, 1, 16, 16), [1, 1]);
 
@@ -119,7 +121,7 @@ class DemoScene extends Scene {
         this._addWall(vec3(8.0, 0.75, 0.0), vec3(0.0, 3/2*Math.PI, 0.0), vec3(3.0, 1.5), matFence);
         this._addWall(vec3(0.0, 1.0, 0.0), vec3(0.0, Math.PI/2, 0.0), vec3(3.0, 2.0), matbackWall);
         this._addWall(vec3(4.5, 4.0, -1.5), vec3(0.0, 0.0, 0.0), vec3(9.0, 8.0), matWallL);
-        this._addWall(vec3(4.5, 1.5, 1.5), vec3(0.0, Math.PI, 0.0), vec3(9.0, 3.0), matWallR);
+        //this._addWall(vec3(2.5, 1.5, 1.5), vec3(0.0, Math.PI, 0.0), vec3(5.0, 3.0), matWallR);
 
         // Canisters
         this._addCube(vec3(4.5, 0.5, -1.0), vec3(1.0, 1.0, 1.0), matCube);
@@ -130,11 +132,6 @@ class DemoScene extends Scene {
         this._addSectorInstances(sector);
         this._addTrigger(vec3(0.0, 0.0, 1.5), vec3(9.0, 10.0, 4.5), sector, false); //Activate
         this._addTrigger(vec3(0.0, 0.0, 6.0), vec3(9.0, 10.0, 4.0), sector, true); //Deactivate
-
-        // Text
-        //this.addGameObject(new Text(this._renderer, "A Game By", "retganon", {size: 36, position: vec3(5.0, 1.0, 0.0), rotation: vec3(0.0, Math.PI/2, 0.0)}));
-        // this.addGameObject(new Text(this._renderer, "Jucarave", "retganon", {size: 36, position: vec3(3.0, 1.5, 0.0), rotation: vec3(0.0, Math.PI/2, 0.0)}));
-        //this.addGameObject(new Text(this._renderer, "pixelhorrorjam2017", "retganon", {size: 36, position: vec3(7.0, 1.0, 0.0), rotation: vec3(0.0, 3/2*Math.PI, 0.0)}));
         
         this.addGameObject(player.translate(8.0, 0.0, 0.0).rotate(0, Math.PI, 0));
         this.setCamera(camera);
