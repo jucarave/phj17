@@ -1,7 +1,7 @@
 import Renderer from '../Renderer';
 import { ShadersNames } from '../shaders/ShaderStruct';
 import Shader from '../shaders/Shader';
-import { createUUID } from '../../Utils';
+import { createUUID } from '../Utils';
 
 abstract class Material {
     protected _renderer                : Renderer;

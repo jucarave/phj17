@@ -1,7 +1,7 @@
-import Sector from '../engine/Sector';
+import { PI_2 } from '../engine/Constants';
 import Renderer from '../engine/Renderer';
-import { vec3 } from '../math/Vector3';
-import { PI_2 } from '../Constants';
+import { vec3 } from '../engine/math/Vector3';
+import Sector from '../scenes/Sector';
 
 interface SectorsMap {
     [index: string]: Sector;

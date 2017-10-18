@@ -1,4 +1,4 @@
-import Instance from '../entities/Instance';
+import Instance from '../engine/entities/Instance';
 import PlayerComponent from '../components/PlayerComponent';
 import Renderer from '../engine/Renderer';
 import Camera from '../engine/Camera';

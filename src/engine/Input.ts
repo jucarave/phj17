@@ -1,5 +1,5 @@
-import { createUUID } from '../Utils';
-import { PLAY_FULLSCREEN } from '../Constants';
+import { createUUID } from './Utils';
+import { PLAY_FULLSCREEN } from './Constants';
 
 interface Callback {
     id: string;

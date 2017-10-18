@@ -1,22 +1,22 @@
 import Scene from '../engine/Scene';
 import Renderer from '../engine/Renderer';
-import Sector from '../engine/Sector';
 import Texture from '../engine/Texture';
 import CubeGeometry from '../engine/geometries/CubeGeometry';
 import PlaneGeometry from '../engine/geometries/PlaneGeometry';
 import WallGeometry from '../engine/geometries/WallGeometry';
 import Material from '../engine/materials/Material';
 import BasicMaterial from '../engine/materials/BasicMaterial';
-import Instance from '../entities/Instance';
+import Instance from '../engine/entities/Instance';
 //import Text from '../entities/Text';
 import EntityFactory from '../factories/EntityFactory';
 //import PropsFactory from '../factories/PropsFactory';
-import { Vector3, vec3 } from '../math/Vector3';
+import { Vector3, vec3 } from '../engine/math/Vector3';
 import TexturesManager from '../managers/TexturesManager';
 //import ModelsManager from '../managers/ModelsManager';
 import SectorsManager from '../managers/SectorsManager';
 import App from '../App';
 import HUDScene from './HUDScene';
+import Sector from './Sector';
 
 interface SectorTrigger {
     position: Vector3;

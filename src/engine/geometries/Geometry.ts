@@ -1,4 +1,4 @@
-import { VERTICE_SIZE } from '../../Constants';
+import { VERTICE_SIZE } from '../Constants';
 import Renderer from '../Renderer';
 import Shader from '../shaders/Shader';
 

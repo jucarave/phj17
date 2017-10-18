@@ -9,14 +9,14 @@
     },
     "files": [
       "src/App.ts",
-      "src/Constants.ts",
-      "src/Utils.ts",
-
+      
       "src/engine/Camera.ts",
+      "src/engine/Component.ts",
+      "src/engine/Constants.ts",
       "src/engine/Renderer.ts",
       "src/engine/Scene.ts",
-      "src/engine/Sector.ts",
       "src/engine/Texture.ts",
+      "src/engine/Utils.ts",
 
       "src/engine/collisions/Collision.ts",
       "src/engine/collisions/BoxCollision.ts",
@@ -32,6 +32,10 @@
       "src/engine/shaders/Basic.ts",
       "src/engine/shaders/Shader.ts",
       "src/engine/shaders/ShaderStruct.ts",
+      
+      "src/engine/math/Matrix4.ts",
+      "src/engine/math/Vector3.ts",
+      "src/engine/math/Vector4.ts",
 
       "src/entities/Instance.ts",
       "src/entities/Text.ts",
@@ -43,14 +47,10 @@
       "src/managers/ModelsManager.ts",
       "src/managers/SectorsManager.ts",
 
-      "src/math/Matrix4.ts",
-      "src/math/Vector3.ts",
-      "src/math/Vector4.ts",
-
       "src/scenes/DemoScene.ts",
       "src/scenes/HUDScene.ts",
+      "src/scenes/Sector.ts",
 
-      "src/components/Component.ts",
       "src/components/PlayerComponent.ts"
     ]
   }

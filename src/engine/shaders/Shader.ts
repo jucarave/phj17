@@ -1,5 +1,5 @@
 import { ShaderStruct } from './ShaderStruct';
-import { createUUID } from '../../Utils';
+import { createUUID } from '../Utils';
 
 interface Attributes {
     [index: string]: number
