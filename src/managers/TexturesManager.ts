@@ -5,7 +5,7 @@ interface TexturesMap {
     [index: string] : Texture
 }
 
-type TexturesNames = 'TEXTURE_16' | 'MOCKGUN' | 'CITY';
+export type TexturesNames = 'TEXTURE_16' | 'MOCKGUN' | 'CITY';
 
 class TexturesManager {
     private _textures           : TexturesMap;

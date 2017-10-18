@@ -6,8 +6,6 @@ import { Vector3 } from '../math/Vector3';
 
 interface Prop {
     name: string;
-    position: Vector3;
-    rotation?: Vector3;
     options?: any;
 }
 
@@ -25,11 +23,9 @@ class Sector {
         this._propList = [];
     }
 
-    public addProp(propName: PropsNames, position: Vector3, rotation?: Vector3, options?: any): void {
+    public addProp(propName: PropsNames, options?: any): void {
         this._propList.push({
             name: propName,
-            position: position,
-            rotation: rotation,
             options: options
         });
     }
@@ -40,7 +36,7 @@ class Sector {
         let ret: Array<Instance> = [];
 
         for (let i=0,prop;prop=this._propList[i];i++) {
-            ret.push(PropsFactory.createProp(this._renderer, prop.name, prop.position, prop.rotation, prop.options));
+            ret.push(PropsFactory.createProp(this._renderer, prop.name, prop.options));
         }
 
         this._instances = ret;

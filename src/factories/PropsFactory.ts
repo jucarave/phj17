@@ -8,10 +8,24 @@ import Instance from '../entities/Instance';
 import Text from '../entities/Text';
 import { Vector3, vec3 } from '../math/Vector3';
 import TexturesManager from '../managers/TexturesManager';
+import { TexturesNames } from '../managers/TexturesManager';
 import ModelsManager from '../managers/ModelsManager';
 import { ModelNames } from '../managers/ModelsManager';
 
-export type PropsNames = 'BarFloorSign' | 'Dumpster' | 'BarSign' | 'BarWindow' | 'Text' | 'BarDoorFrame';
+export type PropsNames = 'Model3D' | 'Text';
+
+export interface PropOptions {
+    model?: string;
+    texture?: string;
+    material?: Material;
+    position?: Vector3;
+    rotation?: Vector3;
+    culling?: boolean;
+
+    text?: string;
+    font?: string;
+    size?: number;
+}
 
 abstract class PropsFactory {
     private static _createMaterial(renderer: Renderer, texture: Texture, uv?: Array<number>, repeat?: Array<number>): Material {
@@ -30,6 +44,15 @@ abstract class PropsFactory {
             w / texture.width,
             h / texture.height
         ];
+    }
+    
+    private static _processObjectProperties(object: Instance, options: PropOptions): Instance {
+        if (options.position) { object.translate(options.position.x, options.position.y, options.position.z); }
+        if (options.rotation) { object.rotate(options.rotation.x, options.rotation.y, options.rotation.z); }
+
+        if (options.culling) { object.material.setCulling(options.culling); }
+
+        return object;
     }
 
     public static createBarFloorSign(renderer: Renderer, position: Vector3): Instance {
@@ -62,7 +85,7 @@ abstract class PropsFactory {
         return object;
     }
     
-    public static create3DModel(renderer: Renderer, modelName: ModelNames, culling: boolean, opaque: boolean, position: Vector3, rotation?: Vector3): Instance {
+    /*public static create3DModel(renderer: Renderer, modelName: ModelNames, culling: boolean, opaque: boolean, position: Vector3, rotation?: Vector3): Instance {
         let texture = TexturesManager.getTexture("CITY"),
             material = this._createMaterial(renderer, texture).setCulling(culling).setOpaque(opaque),
             model = ModelsManager.getModel(modelName),
@@ -72,41 +95,45 @@ abstract class PropsFactory {
         if (rotation) object.rotate(rotation.x, rotation.y, rotation.z);
 
         return object;
+    }*/
+
+    public static create3DModel(renderer: Renderer, options: PropOptions): Instance {
+        let material: Material = null,
+            model = ModelsManager.getModel(<ModelNames>options.model),
+            object: Instance;
+
+        if (model.material) {
+            material = model.material;
+        }else if (options.texture) {
+            material = this._createMaterial(renderer, TexturesManager.getTexture(<TexturesNames>options.texture));
+        } else if (options.material) {
+            material = options.material;
+        }
+
+        object = new Instance(renderer, model.geometry, material);
+
+        return this._processObjectProperties(object, options);
     }
 
-    public static createText(renderer: Renderer, position: Vector3, rotation?: Vector3, options?: any): Text {
-        return new Text(renderer, options.text, options.font, {position: position, rotation: rotation, size: options.size});
+    public static createText(renderer: Renderer, options: PropOptions): Text {
+        return new Text(renderer, options.text, options.font, {position: options.position, rotation: options.rotation, size: options.size});
     }
 
-    public static createProp(renderer: Renderer, propName: string, position: Vector3, rotation?: Vector3, options?: any): Instance {
+    public static createProp(renderer: Renderer, propName: string, options?: PropOptions): Instance {
         let name = <PropsNames>propName,
             obj: Instance;
 
-        rotation;
-
         switch (name) {
-            case 'BarFloorSign':
+            /*case 'BarFloorSign':
                 obj = PropsFactory.createBarFloorSign(renderer, position);
-                break;
-
-            case 'Dumpster':
-                obj = PropsFactory.createDumpster(renderer, position, rotation);
-                break;
+                break;*/
                 
-            case 'BarSign':
-                obj = PropsFactory.create3DModel(renderer, "BarSign", true, true, position, rotation);
-                break;
-                
-            case 'BarWindow':
-                obj = PropsFactory.create3DModel(renderer, "BarWindow", false, true, position, rotation);
-                break;
-                
-            case 'BarDoorFrame':
-                obj = PropsFactory.create3DModel(renderer, "BarDoorFrame", false, true, position, rotation);
+            case 'Model3D':
+                obj = PropsFactory.create3DModel(renderer, options);
                 break;
                 
             case 'Text':
-                obj = PropsFactory.createText(renderer, position, rotation, options);
+                obj = PropsFactory.createText(renderer, options);
                 break;
 
             default:

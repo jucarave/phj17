@@ -10,6 +10,7 @@ class Geometry {
     private _texBuffer               : WebGLBuffer;
     private _indexBuffer             : WebGLBuffer;
     private _indexLength             : number;
+    private _boundingBox             : Array<number>;
     
     protected _renderer              : Renderer;
     protected _dynamic               : boolean;
@@ -18,12 +19,23 @@ class Geometry {
         this._vertices = [];
         this._texCoords = [];
         this._triangles = [];
+        this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
 
         this._dynamic = false;
     }
 
     public addVertice(x: number, y: number, z: number): void {
         this._vertices.push(x, y, z);
+
+        // Calculate bounding box
+        this._boundingBox = [
+            Math.min(this._boundingBox[0], x),
+            Math.min(this._boundingBox[1], y),
+            Math.min(this._boundingBox[2], z),
+            Math.max(this._boundingBox[3], x),
+            Math.max(this._boundingBox[4], y),
+            Math.max(this._boundingBox[5], z)
+        ];
     }
     
     public addTexCoord(x: number, y: number): void {
@@ -87,6 +99,10 @@ class Geometry {
 
     public get isDynamic(): boolean {
         return this._dynamic;
+    }
+
+    public get boundingBox(): Array<number> {
+        return this._boundingBox;
     }
 }
 
