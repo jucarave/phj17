@@ -21,6 +21,7 @@ export interface PropOptions {
     position?: Vector3;
     rotation?: Vector3;
     culling?: boolean;
+    opaque?: boolean;
 
     text?: string;
     font?: string;
@@ -51,6 +52,7 @@ abstract class PropsFactory {
         if (options.rotation) { object.rotate(options.rotation.x, options.rotation.y, options.rotation.z); }
 
         if (options.culling) { object.material.setCulling(options.culling); }
+        if (options.opaque) { object.material.setOpaque(options.opaque); }
 
         return object;
     }
@@ -84,18 +86,6 @@ abstract class PropsFactory {
 
         return object;
     }
-    
-    /*public static create3DModel(renderer: Renderer, modelName: ModelNames, culling: boolean, opaque: boolean, position: Vector3, rotation?: Vector3): Instance {
-        let texture = TexturesManager.getTexture("CITY"),
-            material = this._createMaterial(renderer, texture).setCulling(culling).setOpaque(opaque),
-            model = ModelsManager.getModel(modelName),
-            object = new Instance(renderer, model.geometry, material);
-
-        object.translate(position.x, position.y, position.z);
-        if (rotation) object.rotate(rotation.x, rotation.y, rotation.z);
-
-        return object;
-    }*/
 
     public static create3DModel(renderer: Renderer, options: PropOptions): Instance {
         let material: Material = null,
