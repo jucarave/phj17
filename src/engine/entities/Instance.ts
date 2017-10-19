@@ -169,6 +169,10 @@ class Instance {
 
         this._geometry.render();
     }
+
+    public get geometry(): Geometry {
+        return this._geometry;
+    }
     
     public get material(): Material {
         return this._material;

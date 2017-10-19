@@ -31,10 +31,10 @@ class SectorsManager {
 
         sector.addProp("Model3D", <PropOptions>{ model: 'Dumpster', texture: 'CITY', position: pctw(0.0, 0.0, 8.0), culling: true });
         sector.addProp("Model3D", <PropOptions>{ model: 'BarSign', texture: 'CITY', position: pctw(45, 32, 27), rotation: vec3(0, PI_2, 0), culling: true });
-        sector.addProp("Model3D", <PropOptions>{ model: 'BarWindow', texture: 'CITY', position: pctw(88, 0.0, 40), rotation: vec3(0, PI_2, 0) });
-        sector.addProp("Model3D", <PropOptions>{ model: 'BarWindow', texture: 'CITY', position: pctw(120, 0.0, 40), rotation: vec3(0, PI_2, 0) });
-        sector.addProp("Model3D", <PropOptions>{ model: 'BarDoorFrame', texture: 'CITY', position: pctw(46, 0.0, 32), rotation: vec3(0, PI_2, 0) });
-        sector.addProp("Model3D", <PropOptions>{ model: 'BarDoor', texture: 'CITY', position: pctw(41.5, 0.0, 49), rotation: vec3(0, PI_2, 0), opaque: false });
+        sector.addProp("Model3D", <PropOptions>{ model: 'BarWindow', texture: 'CITY', position: pctw(80, 0.0, 48), rotation: vec3(0, PI_2, 0) });
+        sector.addProp("Model3D", <PropOptions>{ model: 'BarWindow', texture: 'CITY', position: pctw(112, 0.0, 48), rotation: vec3(0, PI_2, 0) });
+        sector.addProp("Model3D", <PropOptions>{ model: 'BarDoorFrame', texture: 'CITY', position: pctw(32, 0.0, 48), rotation: vec3(0, PI_2, 0) });
+        sector.addProp("Model3D", <PropOptions>{ model: 'BarDoor', texture: 'CITY', position: pctw(41, 0.0, 48), rotation: vec3(0, PI_2, 0), opaque: false });
 
         sector.addProp("Text", <PropOptions>{ text: "Jucarave", font: "retganon", fontSize: 36, position: vec3(3.0, 1.5, 0.0), rotation: vec3(0, PI_2, 0), opaque: false });
         sector.addProp("Text", <PropOptions>{ text: "A Game By", font: "retganon", fontSize: 36, position: vec3(5.0, 1.0, 0.0), rotation: vec3(0, PI_2, 0), opaque: false });

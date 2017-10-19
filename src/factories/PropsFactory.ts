@@ -75,6 +75,24 @@ abstract class PropsFactory {
         return object;
     }
 
+    private static _centerObjectInGrid(object: Instance, options: PropOptions): Instance {
+        // Center Object in grid
+        let bbox = object.geometry.boundingBox;
+        
+        let x = -bbox[0],
+            y = -bbox[1],
+            z = -bbox[2];
+
+        if (options.rotation && (options.rotation.y == PI_2 || options.rotation.y == PI3_2)) {
+            x = -bbox[2];
+            z = -bbox[0];
+        }
+
+        object.translate(x, y, z);
+
+        return object;
+    }
+
     public static createBarFloorSign(renderer: Renderer, position: Vector3): Instance {
         let width = 10, height = 11,
             texture = TexturesManager.getTexture("CITY"),
@@ -120,9 +138,7 @@ abstract class PropsFactory {
 
         object = new Instance(renderer, model.geometry, material);
 
-        // Center Object in grid
-        let bbox = model.geometry.boundingBox;
-        object.translate(-bbox[0], -bbox[1], -bbox[2]);
+        this._centerObjectInGrid(object, options);
 
         return this._processObjectProperties(object, options);
     }
@@ -152,19 +168,7 @@ abstract class PropsFactory {
             
             object = new Instance(renderer, geometry, material);
 
-        // Center Object in grid
-        let bbox = geometry.boundingBox;
-
-        let x = -bbox[0],
-            y = -bbox[1],
-            z = -bbox[2];
-
-        if (options.rotation && (options.rotation.y == PI_2 || options.rotation.y == PI3_2)) {
-            x = -bbox[2];
-            z = -bbox[0];
-        }
-
-        object.translate(x, y, z);
+        this._centerObjectInGrid(object, options);
 
         return this._processObjectProperties(object, options);
     }
