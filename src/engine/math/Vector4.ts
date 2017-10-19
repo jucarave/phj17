@@ -1,3 +1,5 @@
+import { PIXEL_UNIT_RELATION } from '../Constants';
+
 export class Vector4 {
     private _x                  : number;
     private _y                  : number;
@@ -50,11 +52,28 @@ export class Vector4 {
 
         return this;
     }
+    
+    public pixelsCoordsToWorld(): Vector4 {
+        this.multiply(PIXEL_UNIT_RELATION);
+
+        return this;
+    }
+    
+    public worldCoordsToPixel(): Vector4 {
+        this.multiply(1 / PIXEL_UNIT_RELATION);
+
+        return this;
+    }
 
     public get x(): number { return this._x; }
     public get y(): number { return this._y; }
     public get z(): number { return this._z; }
     public get w(): number { return this._w; }
+    
+    public set x(x: number) { this._x = x; this.needsUpdate = true; }
+    public set y(y: number) { this._y = y; this.needsUpdate = true; }
+    public set z(z: number) { this._z = z; this.needsUpdate = true; }
+    public set w(w: number) { this._w = w; this.needsUpdate = true; }
 
     public get length(): number {
         if (!this.needsUpdate) {

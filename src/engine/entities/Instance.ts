@@ -43,11 +43,21 @@ class Instance {
         this._destroyed = false;
     }
     
-    public translate(x: number, y: number, z: number, relative: boolean = false): Instance {
-        if (relative) {
-            this._position.add(x, y, z);
+    public translate(x: number|Vector3, y: number = 0, z: number = 0, relative: boolean = false): Instance {
+        let _x: number;
+
+        if ((<Vector3>x).length) {
+            _x = (<Vector3>x).x;
+            y = (<Vector3>x).y;
+            z = (<Vector3>x).z;
         } else {
-            this._position.set(x, y, z);
+            _x = <number>x;
+        }
+
+        if (relative) {
+            this._position.add(_x, y, z);
+        } else {
+            this._position.set(_x, y, z);
         }
 
         this._needsUpdate = true;
@@ -55,11 +65,21 @@ class Instance {
         return this;
     }
     
-    public rotate(x: number, y: number, z: number, relative: boolean = false): Instance {
-        if (relative) {
-            this._rotation.add(x, y, z);
+    public rotate(x: number|Vector3, y: number = 0, z: number = 0, relative: boolean = false): Instance {
+        let _x: number;
+        
+        if ((<Vector3>x).length) {
+            _x = (<Vector3>x).x;
+            y = (<Vector3>x).y;
+            z = (<Vector3>x).z;
         } else {
-            this._rotation.set(x, y, z);
+            _x = <number>x;
+        }
+        
+        if (relative) {
+            this._rotation.add(_x, y, z);
+        } else {
+            this._rotation.set(_x, y, z);
         }
 
         this._needsUpdate = true;

@@ -4,51 +4,69 @@ import BoxCollision from '../engine/collisions/BoxCollision';
 import Material from '../engine/materials/Material';
 import BasicMaterial from '../engine/materials/BasicMaterial';
 import WallGeometry from '../engine/geometries/WallGeometry';
+import PlaneGeometry from '../engine/geometries/PlaneGeometry';
 import Instance from '../engine/entities/Instance';
 import Text from '../engine/entities/Text';
 import { Vector3, vec3 } from '../engine/math/Vector3';
+import { Vector4 } from '../engine/math/Vector4';
 import TexturesManager from '../managers/TexturesManager';
 import { TexturesNames } from '../managers/TexturesManager';
 import ModelsManager from '../managers/ModelsManager';
 import { ModelNames } from '../managers/ModelsManager';
+import { PI_2, PI3_2 } from '../engine/Constants';
 
-export type PropsNames = 'Model3D' | 'Text';
+export type PropsNames = 'Model3D' | 'Text' | 'Floor' | 'Wall';
 
 export interface PropOptions {
     model?: string;
+    
     texture?: string;
     material?: Material;
+    uv?: Vector4;
+    repeat?: Array<number>;
+    
     position?: Vector3;
     rotation?: Vector3;
+    size?: Vector3;
+    
     culling?: boolean;
     opaque?: boolean;
 
     text?: string;
     font?: string;
-    size?: number;
+    fontSize?: number;
 }
 
 abstract class PropsFactory {
-    private static _createMaterial(renderer: Renderer, texture: Texture, uv?: Array<number>, repeat?: Array<number>): Material {
+    private static _createMaterial(renderer: Renderer, texture: Texture, uv?: Vector4, repeat?: Array<number>): Material {
         let ret = new BasicMaterial(texture, renderer);
 
         if (repeat) ret.setRepeat(repeat[0], repeat[1]);
-        if (uv) ret.setUv(uv[0], uv[1], uv[2], uv[3]);
+        if (uv) ret.setUv(uv.x, uv.y, uv.z, uv.w);
 
         return ret;
     }
     
-    private static _getUVS(texture: Texture, x: number, y: number, w: number, h: number): Array<number> {
-        return [
-            x / texture.width,
+    private static _getUVS(texture: Texture, x: number|Vector4, y?: number, w?: number, h?: number): Vector4 {
+        let _x: number;
+
+        if ((<Vector4>x).length !== undefined) {
+            _x = (<Vector4>x).x;
+            y = (<Vector4>x).y;
+            w = (<Vector4>x).z;
+            h = (<Vector4>x).w;
+        }
+
+        return new Vector4(
+            _x / texture.width,
             y / texture.height,
             w / texture.width,
             h / texture.height
-        ];
+        );
     }
     
     private static _processObjectProperties(object: Instance, options: PropOptions): Instance {
-        if (options.position) { object.translate(options.position.x, options.position.y, options.position.z); }
+        if (options.position) { object.translate(options.position.x, options.position.y, options.position.z, true); }
         if (options.rotation) { object.rotate(options.rotation.x, options.rotation.y, options.rotation.z); }
 
         if (options.culling) { object.material.setCulling(options.culling); }
@@ -102,11 +120,53 @@ abstract class PropsFactory {
 
         object = new Instance(renderer, model.geometry, material);
 
+        // Center Object in grid
+        let bbox = model.geometry.boundingBox;
+        object.translate(-bbox[0], -bbox[1], -bbox[2]);
+
         return this._processObjectProperties(object, options);
     }
 
     public static createText(renderer: Renderer, options: PropOptions): Text {
-        return new Text(renderer, options.text, options.font, {position: options.position, rotation: options.rotation, size: options.size});
+        return new Text(renderer, options.text, options.font, {position: options.position, rotation: options.rotation, size: options.fontSize});
+    }
+
+    public static createFloor(renderer: Renderer, options: PropOptions): Instance {
+        let geometry = new PlaneGeometry(renderer, options.size.x, options.size.y),
+            texture = TexturesManager.getTexture(<TexturesNames>options.texture),
+            material = this._createMaterial(renderer, texture, this._getUVS(texture, options.uv), options.repeat),
+            
+            object = new Instance(renderer, geometry, material);
+
+        // Center Object in grid
+        let bbox = geometry.boundingBox;
+        object.translate(-bbox[0], -bbox[1], -bbox[2]);
+
+        return this._processObjectProperties(object, options);
+    }
+    
+    public static createWall(renderer: Renderer, options: PropOptions): Instance {
+        let geometry = new WallGeometry(renderer, options.size.x, options.size.y),
+            texture = TexturesManager.getTexture(<TexturesNames>options.texture),
+            material = this._createMaterial(renderer, texture, this._getUVS(texture, options.uv), options.repeat),
+            
+            object = new Instance(renderer, geometry, material);
+
+        // Center Object in grid
+        let bbox = geometry.boundingBox;
+
+        let x = -bbox[0],
+            y = -bbox[1],
+            z = -bbox[2];
+
+        if (options.rotation && (options.rotation.y == PI_2 || options.rotation.y == PI3_2)) {
+            x = -bbox[2];
+            z = -bbox[0];
+        }
+
+        object.translate(x, y, z);
+
+        return this._processObjectProperties(object, options);
     }
 
     public static createProp(renderer: Renderer, propName: string, options?: PropOptions): Instance {
@@ -124,6 +184,14 @@ abstract class PropsFactory {
                 
             case 'Text':
                 obj = PropsFactory.createText(renderer, options);
+                break;
+                
+            case 'Floor':
+                obj = PropsFactory.createFloor(renderer, options);
+                break;
+                
+            case 'Wall':
+                obj = PropsFactory.createWall(renderer, options);
                 break;
 
             default:

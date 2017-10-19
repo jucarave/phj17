@@ -1,5 +1,5 @@
 import { Vector3 } from './math/Vector3';
-import { CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT } from './Constants';
+import { CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT, PIXEL_UNIT_RELATION } from './Constants';
 
 export function createUUID(): string {
     let date = (new Date()).getTime(),
@@ -49,6 +49,14 @@ export function coordsToOrtho(x: number, y: number): Vector3 {
         x - CAMERA_ORTHO_WIDTH / 2.0,
         (CAMERA_ORTHO_HEIGHT / 2.0) - y,
         0.0
+    );
+}
+
+export function pixelCoordsToWorld(x: number = 0, y: number = 0, z: number = 0): Vector3 {
+    return new Vector3(
+        x * PIXEL_UNIT_RELATION,
+        y * PIXEL_UNIT_RELATION,
+        z * PIXEL_UNIT_RELATION
     );
 }
 

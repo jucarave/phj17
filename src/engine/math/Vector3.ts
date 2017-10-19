@@ -59,6 +59,10 @@ export class Vector3 {
     public get y(): number { return this._y; }
     public get z(): number { return this._z; }
 
+    public set x(x: number) { this._x = x; this.needsUpdate = true; }
+    public set y(y: number) { this._y = y; this.needsUpdate = true; }
+    public set z(z: number) { this._z = z; this.needsUpdate = true; }
+
     public get length(): number {
         if (!this.needsUpdate) {
             return this._length;
