@@ -13,7 +13,7 @@ interface ModelMap {
     [index: string]: Model;
 }
 
-export type ModelNames = 'BarSign' | 'Dumpster' | 'BarWindow' | 'BarDoorFrame';
+export type ModelNames = 'BarSign' | 'Dumpster' | 'BarWindow' | 'BarDoorFrame' | 'BarDoor';
 
 class ModelsManager {
     private _models                 : ModelMap;
@@ -77,6 +77,7 @@ class ModelsManager {
         this._loadModel("Dumpster", renderer);
         this._loadModel("BarWindow", renderer);
         this._loadModel("BarDoorFrame", renderer);
+        this._loadModel("BarDoor", renderer);
     }
 
     public getModel(name: ModelNames): Model {

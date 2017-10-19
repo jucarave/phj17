@@ -31,9 +31,10 @@ class SectorsManager {
 
         sector.addProp("Model3D", { model: 'Dumpster', texture: 'CITY', position: vec3(0.5, 0.0, 0.0), culling: true });
         sector.addProp("Model3D", { model: 'BarSign', texture: 'CITY', position: vec3(3.0, 1.7, 1.2), rotation: vec3(0, PI_2, 0), culling: true });
-        sector.addProp("Model3D", { model: 'BarDoorFrame', texture: 'CITY', position: vec3(3.0, 0.0, 1.5), rotation: vec3(0, PI_2, 0) });
         sector.addProp("Model3D", { model: 'BarWindow', texture: 'CITY', position: vec3(5.5, 0.0, 1.5), rotation: vec3(0, PI_2, 0) });
         sector.addProp("Model3D", { model: 'BarWindow', texture: 'CITY', position: vec3(7.5, 0.0, 1.5), rotation: vec3(0, PI_2, 0) });
+        sector.addProp("Model3D", { model: 'BarDoorFrame', texture: 'CITY', position: vec3(3.0, 0.0, 1.5), rotation: vec3(0, PI_2, 0) });
+        sector.addProp("Model3D", { model: 'BarDoor', texture: 'CITY', position: vec3(2.5625, 0.0, 1.5625), rotation: vec3(0, PI_2, 0) });
 
         sector.addProp("Text", { text: "A Game By", font: "retganon", size: 36, position: vec3(5.0, 1.0, 0.0), rotation: vec3(0, PI_2, 0) });
 
