@@ -1,7 +1,6 @@
 import { PI_2, PI3_2 } from '../engine/Constants';
 import Renderer from '../engine/Renderer';
 import { vec3 } from '../engine/math/Vector3';
-import { vec4 } from '../engine/math/Vector4';
 import Sector from '../scenes/Sector';
 import { PropOptions } from '../factories/PropsFactory';
 import { pixelCoordsToWorld as pctw } from '../engine/Utils';
@@ -27,7 +26,7 @@ class SectorsManager {
 
         sector.addProp("Floor", <PropOptions>{ texture: 'CITY', position: pctw(0.0, 0.0, 0.0), size: pctw(144, 48), uv: city.ALLEY_FLOOR, repeat: [9, 3]});
         
-        sector.addProp("Wall", <PropOptions>{ texture: 'TEXTURE_16', position: pctw(0.0, 0.0, 0.0), size: pctw(144, 128), uv: vec4(19,1,16,16), repeat: [9, 8]});
+        sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(0.0, 0.0, 0.0), size: pctw(144, 128), uv: city.BLACK_BUILDING, repeat: [9, 8]});
         
         sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(0.0, 0.0, 0.0), rotation: vec3(0, PI_2, 0), size: pctw(48, 36), uv: city.ALLEY_BACK_WALL, repeat: [3, 1] });
         

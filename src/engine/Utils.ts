@@ -39,8 +39,8 @@ export function get2DAngle(position1: Vector3, position2: Vector3): number {
 
 export function getSquaredDistance(position1: Vector3, position2: Vector3): number {
     let x = position1.x - position2.x,
-        y = position1.x - position2.x,
-        z = position1.x - position2.x;
+        y = position1.y - position2.y,
+        z = position1.z - position2.z;
     return x*x + y*y + z*z;
 }
 

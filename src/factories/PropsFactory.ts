@@ -69,8 +69,8 @@ abstract class PropsFactory {
         if (options.position) { object.translate(options.position.x, options.position.y, options.position.z, true); }
         if (options.rotation) { object.rotate(options.rotation.x, options.rotation.y, options.rotation.z); }
 
-        if (options.culling) { object.material.setCulling(options.culling); }
-        if (options.opaque) { object.material.setOpaque(options.opaque); }
+        if (options.culling !== undefined) { object.material.setCulling(options.culling); }
+        if (options.opaque !== undefined) { object.material.setOpaque(options.opaque); }
 
         if (options.billboard) { object.isBillboard = options.billboard; }
 

@@ -9,7 +9,9 @@ const UVManager = {
         BAR_FLOOR_SIGN: vec4(22, 76, 10, 11),
         BAR_EXT_WALL: vec4(1, 53, 16, 48),
 
-        BLACK_WINDOW: vec4(19, 40, 16, 16)
+        BLACK_WINDOW: vec4(19, 40, 16, 16),
+
+        BLACK_BUILDING: vec4(1, 103, 16, 16)
     }
 }
 

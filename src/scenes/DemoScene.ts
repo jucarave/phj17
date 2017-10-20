@@ -56,7 +56,7 @@ class DemoScene extends Scene {
         this._addTrigger(vec3(0.0, 0.0, 1.5), vec3(9.0, 10.0, 4.5), sector, false); //Activate
         this._addTrigger(vec3(0.0, 0.0, 6.0), vec3(9.0, 10.0, 4.0), sector, true); //Deactivate
         
-        this.addGameObject(player.translate(pctw(120, 0.0, 24)).rotate(0, Math.PI, 0));
+        this.addGameObject(player.translate(pctw(112, 0.0, 24)).rotate(0, Math.PI, 0));
         this.setCamera(camera);
 
         this._hud = new HUDScene(this._app, this._renderer);
