@@ -4,6 +4,7 @@ var tsify = require('tsify');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var errorify = require('errorify');
+var tsConfig = require('./tsconfig.json');
 
 gulp.task("bundle", function() {
     return browserify({
@@ -32,10 +33,11 @@ gulp.task("watch", function() {
         basedir: '.',
         debug: true,
         entries: ['src/App.ts'],
+        paths: ['./src/'],
         cache: {},
         packageCache: {}
     })
-    .plugin(tsify)
+    .plugin('tsify', tsConfig.compilerOptions)
     .plugin(watchify)
     .plugin(errorify);
 

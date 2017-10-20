@@ -1,4 +1,4 @@
-import { ShaderStruct } from './ShaderStruct';
+import { ShaderStruct } from 'engine/shaders/ShaderStruct';
 
 let Basic: ShaderStruct = {
     vertexShader: `

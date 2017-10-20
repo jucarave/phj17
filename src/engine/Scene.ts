@@ -1,10 +1,10 @@
-import Collision from './collisions/Collision';
-import Instance from './entities/Instance';
-import App from '../App';
-import Camera from './Camera';
-import Renderer from './Renderer';
-import { Vector3 } from './math/Vector3';
-import { getSquaredDistance } from './Utils';
+import Collision from 'engine/collisions/Collision';
+import Instance from 'engine/entities/Instance';
+import Camera from 'engine/Camera';
+import Renderer from 'engine/Renderer';
+import { Vector3 } from 'engine/math/Vector3';
+import { getSquaredDistance } from 'engine/Utils';
+import App from 'App';
 
 interface InstancesMap {
     [index: string] : Array<Instance>;

@@ -1,4 +1,4 @@
-import { PIXEL_UNIT_RELATION } from '../Constants';
+import { PIXEL_UNIT_RELATION } from 'engine/Constants';
 
 export class Vector4 {
     private _x                  : number;

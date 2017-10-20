@@ -1,5 +1,5 @@
-import Matrix4 from './math/Matrix4';
-import { Vector3, vec3 } from './math/Vector3';
+import Matrix4 from 'engine/math/Matrix4';
+import { Vector3, vec3 } from 'engine/math/Vector3';
 
 class Camera {
     private transform           : Matrix4;

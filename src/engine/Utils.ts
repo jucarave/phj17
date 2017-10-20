@@ -1,5 +1,5 @@
-import { Vector3 } from './math/Vector3';
-import { CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT, PIXEL_UNIT_RELATION } from './Constants';
+import { Vector3 } from 'engine/math/Vector3';
+import { CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT, PIXEL_UNIT_RELATION } from 'engine/Constants';
 
 export function createUUID(): string {
     let date = (new Date()).getTime(),

@@ -1,4 +1,4 @@
-import { Vector4 } from './Vector4';
+import { Vector4 } from 'engine/math/Vector4';
 
 class Matrix4 extends Array {
     constructor(...values: Array<number>) {

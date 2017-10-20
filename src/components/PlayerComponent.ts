@@ -1,9 +1,9 @@
-import Input from '../engine/Input';
-import Camera from '../engine/Camera';
-import { PI_2 } from '../engine/Constants';
-import Component from '../engine/Component';
-import { vec3 } from '../engine/math/Vector3';
-import { degToRad, get2DVectorDir } from '../engine/Utils';
+import Input from 'engine/Input';
+import Camera from 'engine/Camera';
+import { PI_2 } from 'engine/Constants';
+import Component from 'engine/Component';
+import { vec3 } from 'engine/math/Vector3';
+import { degToRad, get2DVectorDir } from 'engine/Utils';
 
 const LIMIT_ROTATION = degToRad(70);
 

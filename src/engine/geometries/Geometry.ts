@@ -1,6 +1,6 @@
-import { VERTICE_SIZE } from '../Constants';
-import Renderer from '../Renderer';
-import Shader from '../shaders/Shader';
+import { VERTICE_SIZE } from 'engine/Constants';
+import Renderer from 'engine/Renderer';
+import Shader from 'engine/shaders/Shader';
 
 class Geometry {
     private _vertices                : Array<number>;

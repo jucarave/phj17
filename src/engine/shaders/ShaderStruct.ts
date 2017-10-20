@@ -1,4 +1,4 @@
-import Shader from './Shader';
+import Shader from 'engine/shaders/Shader';
 
 export interface ShaderStruct {
     vertexShader: string,

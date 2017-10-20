@@ -1,14 +1,14 @@
 declare var Stats: any;
 
-import Renderer from './engine/Renderer';
-import Input from './engine/Input';
-import Scene from './engine/Scene';
-import Camera from './engine/Camera';
-import TexturesManager from './managers/TexturesManager';
-import ModelsManager from './managers/ModelsManager';
-import SectorsManager from './managers/SectorsManager';
-import DemoScene from './scenes/DemoScene';
-import { CANVAS_WIDTH, CANVAS_HEIGHT, CAMERA_FOV, CAMERA_RATIO, CAMERA_ZFAR, CAMERA_ZNEAR, CAMERA_ORTHO_HEIGHT, CAMERA_ORTHO_WIDTH } from './engine/Constants';
+import Renderer from 'engine/Renderer';
+import Input from 'engine/Input';
+import Scene from 'engine/Scene';
+import Camera from 'engine/Camera';
+import TexturesManager from 'managers/TexturesManager';
+import ModelsManager from 'managers/ModelsManager';
+import SectorsManager from 'managers/SectorsManager';
+import DemoScene from 'scenes/DemoScene';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, CAMERA_FOV, CAMERA_RATIO, CAMERA_ZFAR, CAMERA_ZNEAR, CAMERA_ORTHO_HEIGHT, CAMERA_ORTHO_WIDTH } from 'engine/Constants';
 
 class App {
     private _renderer                   : Renderer;

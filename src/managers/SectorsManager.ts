@@ -1,10 +1,10 @@
-import { PI_2, PI3_2 } from '../engine/Constants';
-import Renderer from '../engine/Renderer';
-import { vec3 } from '../engine/math/Vector3';
-import Sector from '../scenes/Sector';
-import { PropOptions } from '../factories/PropsFactory';
-import { pixelCoordsToWorld as pctw } from '../engine/Utils';
-import UVManager from './UVManager';
+import { PI_2, PI3_2 } from 'engine/Constants';
+import Renderer from 'engine/Renderer';
+import { pixelCoordsToWorld as pctw } from 'engine/Utils';
+import { vec3 } from 'engine/math/Vector3';
+import Sector from 'scenes/Sector';
+import { PropOptions } from 'factories/PropsFactory';
+import UVManager from 'managers/UVManager';
 
 interface SectorsMap {
     [index: string]: Sector;

@@ -1,8 +1,8 @@
-import Renderer from '../engine/Renderer';
-import { Vector3 } from '../engine/math/Vector3';
-import Instance from '../engine/entities/Instance';
-import PropsFactory from '../factories/PropsFactory';
-import {PropsNames} from '../factories/PropsFactory';
+import Renderer from 'engine/Renderer';
+import { Vector3 } from 'engine/math/Vector3';
+import Instance from 'engine/entities/Instance';
+import PropsFactory from 'factories/PropsFactory';
+import {PropsNames} from 'factories/PropsFactory';
 
 interface Prop {
     name: string;

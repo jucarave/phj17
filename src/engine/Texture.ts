@@ -1,4 +1,4 @@
-import Renderer from './Renderer';
+import Renderer from 'engine/Renderer';
 
 class Texture {
     private _src               : string;

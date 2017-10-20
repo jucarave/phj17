@@ -1,10 +1,10 @@
-import Texture from '../Texture';
-import Renderer from '../Renderer';
-import BasicMaterial from '../materials/BasicMaterial';
-import WallGeometry from '../geometries/WallGeometry';
-import { Vector3 } from '../math/Vector3';
-import { roundUpPowerOf2 } from '../Utils';
-import Instance from './Instance';
+import Texture from 'engine/Texture';
+import Renderer from 'engine/Renderer';
+import BasicMaterial from 'engine/materials/BasicMaterial';
+import WallGeometry from 'engine/geometries/WallGeometry';
+import { Vector3 } from 'engine/math/Vector3';
+import { roundUpPowerOf2 } from 'engine/Utils';
+import Instance from 'engine/entities/Instance';
 
 export interface TextOptions {
     size?: number;

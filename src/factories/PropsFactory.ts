@@ -1,18 +1,18 @@
-import Renderer from '../engine/Renderer';
-import Texture from '../engine/Texture';
-import Material from '../engine/materials/Material';
-import BasicMaterial from '../engine/materials/BasicMaterial';
-import WallGeometry from '../engine/geometries/WallGeometry';
-import PlaneGeometry from '../engine/geometries/PlaneGeometry';
-import Instance from '../engine/entities/Instance';
-import Text from '../engine/entities/Text';
-import { Vector3 } from '../engine/math/Vector3';
-import { Vector4 } from '../engine/math/Vector4';
-import TexturesManager from '../managers/TexturesManager';
-import { TexturesNames } from '../managers/TexturesManager';
-import ModelsManager from '../managers/ModelsManager';
-import { ModelNames } from '../managers/ModelsManager';
-import { PI_2, PI3_2 } from '../engine/Constants';
+import Renderer from 'engine/Renderer';
+import Texture from 'engine/Texture';
+import { PI_2, PI3_2 } from 'engine/Constants';
+import Material from 'engine/materials/Material';
+import BasicMaterial from 'engine/materials/BasicMaterial';
+import WallGeometry from 'engine/geometries/WallGeometry';
+import PlaneGeometry from 'engine/geometries/PlaneGeometry';
+import Instance from 'engine/entities/Instance';
+import Text from 'engine/entities/Text';
+import { Vector3 } from 'engine/math/Vector3';
+import { Vector4 } from 'engine/math/Vector4';
+import TexturesManager from 'managers/TexturesManager';
+import { TexturesNames } from 'managers/TexturesManager';
+import ModelsManager from 'managers/ModelsManager';
+import { ModelNames } from 'managers/ModelsManager';
 
 export type PropsNames = 'Model3D' | 'Text' | 'Floor' | 'Wall';
 

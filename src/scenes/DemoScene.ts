@@ -1,13 +1,13 @@
-import Scene from '../engine/Scene';
-import Renderer from '../engine/Renderer';
-import Instance from '../engine/entities/Instance';
-import { Vector3, vec3 } from '../engine/math/Vector3';
-import { pixelCoordsToWorld as pctw } from '../engine/Utils';
-import EntityFactory from '../factories/EntityFactory';
-import SectorsManager from '../managers/SectorsManager';
-import App from '../App';
-import HUDScene from './HUDScene';
-import Sector from './Sector';
+import Scene from 'engine/Scene';
+import Renderer from 'engine/Renderer';
+import Instance from 'engine/entities/Instance';
+import { Vector3, vec3 } from 'engine/math/Vector3';
+import { pixelCoordsToWorld as pctw } from 'engine/Utils';
+import EntityFactory from 'factories/EntityFactory';
+import SectorsManager from 'managers/SectorsManager';
+import App from 'App';
+import HUDScene from 'scenes/HUDScene';
+import Sector from 'scenes/Sector';
 
 interface SectorTrigger {
     position: Vector3;

@@ -1,57 +1,58 @@
 {
-    "compilerOptions": {
-      "noImplicitAny": true,
-      "noEmitOnError": true,
-      "noUnusedParameters": true,
-      "noUnusedLocals": true,
-      "removeComments": true,
-      "target": "es5"
-    },
-    "files": [
-      "src/App.ts",
-      
-      "src/engine/Camera.ts",
-      "src/engine/Component.ts",
-      "src/engine/Constants.ts",
-      "src/engine/Renderer.ts",
-      "src/engine/Scene.ts",
-      "src/engine/Texture.ts",
-      "src/engine/Utils.ts",
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "target": "es5",
+    "baseUrl": "./src"
+  },
+  "files": [
+    "src/App.ts",
+    
+    "src/engine/Camera.ts",
+    "src/engine/Component.ts",
+    "src/engine/Constants.ts",
+    "src/engine/Renderer.ts",
+    "src/engine/Scene.ts",
+    "src/engine/Texture.ts",
+    "src/engine/Utils.ts",
 
-      "src/engine/collisions/Collision.ts",
-      "src/engine/collisions/BoxCollision.ts",
+    "src/engine/collisions/Collision.ts",
+    "src/engine/collisions/BoxCollision.ts",
 
-      "src/engine/geometries/CubeGeometry.ts",
-      "src/engine/geometries/Geometry.ts",
-      "src/engine/geometries/PlaneGeometry.ts",
-      "src/engine/geometries/WallGeometry.ts",
+    "src/engine/geometries/CubeGeometry.ts",
+    "src/engine/geometries/Geometry.ts",
+    "src/engine/geometries/PlaneGeometry.ts",
+    "src/engine/geometries/WallGeometry.ts",
 
-      "src/engine/materials/Material.ts",
-      "src/engine/materials/BasicMaterial.ts",
+    "src/engine/materials/Material.ts",
+    "src/engine/materials/BasicMaterial.ts",
 
-      "src/engine/shaders/Basic.ts",
-      "src/engine/shaders/Shader.ts",
-      "src/engine/shaders/ShaderStruct.ts",
-      
-      "src/engine/math/Matrix4.ts",
-      "src/engine/math/Vector3.ts",
-      "src/engine/math/Vector4.ts",
+    "src/engine/shaders/Basic.ts",
+    "src/engine/shaders/Shader.ts",
+    "src/engine/shaders/ShaderStruct.ts",
+    
+    "src/engine/math/Matrix4.ts",
+    "src/engine/math/Vector3.ts",
+    "src/engine/math/Vector4.ts",
 
-      "src/entities/Instance.ts",
-      "src/entities/Text.ts",
+    "src/entities/Instance.ts",
+    "src/entities/Text.ts",
 
-      "src/factories/EntityFactory.ts",
-      "src/factories/PropsFactory.ts",
-      
-      "src/managers/ModelsManager.ts",
-      "src/managers/SectorsManager.ts",
-      "src/managers/TexturesManager.ts",
-      "src/managers/UVManager.ts",
+    "src/factories/EntityFactory.ts",
+    "src/factories/PropsFactory.ts",
+    
+    "src/managers/ModelsManager.ts",
+    "src/managers/SectorsManager.ts",
+    "src/managers/TexturesManager.ts",
+    "src/managers/UVManager.ts",
 
-      "src/scenes/DemoScene.ts",
-      "src/scenes/HUDScene.ts",
-      "src/scenes/Sector.ts",
+    "src/scenes/DemoScene.ts",
+    "src/scenes/HUDScene.ts",
+    "src/scenes/Sector.ts",
 
-      "src/components/PlayerComponent.ts"
-    ]
-  }
+    "src/components/PlayerComponent.ts"
+  ]
+}

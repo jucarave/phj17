@@ -1,13 +1,13 @@
-import Scene from '../engine/Scene';
-import Renderer from '../engine/Renderer';
-import Texture from '../engine/Texture';
-import BasicMaterial from '../engine/materials/BasicMaterial';
-import WallGeometry from '../engine/geometries/WallGeometry';
-import { Vector3 } from '../engine/math/Vector3';
-import TextureManager from '../managers/TexturesManager';
-import Instance from '../engine/entities/Instance';
-import App from '../App';
-import { coordsToOrtho } from '../engine/Utils';
+import Scene from 'engine/Scene';
+import Renderer from 'engine/Renderer';
+import Texture from 'engine/Texture';
+import BasicMaterial from 'engine/materials/BasicMaterial';
+import WallGeometry from 'engine/geometries/WallGeometry';
+import { Vector3 } from 'engine/math/Vector3';
+import TextureManager from 'managers/TexturesManager';
+import Instance from 'engine/entities/Instance';
+import App from 'App';
+import { coordsToOrtho } from 'engine/Utils';
 
 class HUDScene extends Scene {
     constructor(app: App, renderer: Renderer) {

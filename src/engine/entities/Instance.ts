@@ -1,14 +1,14 @@
-import Renderer from '../Renderer';
-import Camera from '../Camera';
-import Scene from '../Scene';
-import Collision from '../collisions/Collision';
-import Geometry from '../geometries/Geometry';
-import Material from '../materials/Material';
-import Shader from '../shaders/Shader';
-import Component from '../Component';
-import Matrix4 from '../math/Matrix4';
-import { Vector3, vec3 } from '../math/Vector3';
-import { get2DAngle } from '../Utils';
+import Renderer from 'engine/Renderer';
+import Camera from 'engine/Camera';
+import Scene from 'engine/Scene';
+import Collision from 'engine/collisions/Collision';
+import Geometry from 'engine/geometries/Geometry';
+import Material from 'engine/materials/Material';
+import Shader from 'engine/shaders/Shader';
+import Component from 'engine/Component';
+import Matrix4 from 'engine/math/Matrix4';
+import { Vector3, vec3 } from 'engine/math/Vector3';
+import { get2DAngle } from 'engine/Utils';
 
 class Instance {
     protected _renderer           : Renderer;

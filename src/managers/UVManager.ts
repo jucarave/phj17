@@ -1,4 +1,4 @@
-import { vec4 } from '../engine/math/Vector4';
+import { vec4 } from 'engine/math/Vector4';
 
 const UVManager = {
     CITY: {

@@ -1,5 +1,5 @@
-import Collision from './Collision';
-import { Vector3 } from '../math/Vector3';
+import Collision from 'engine/collisions/Collision';
+import { Vector3 } from 'engine/math/Vector3';
 
 class BoxCollision extends Collision {
     private _position               : Vector3;
