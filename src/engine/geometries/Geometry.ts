@@ -74,6 +74,25 @@ class Geometry {
         this._triangles = null;
     }
 
+    public clearBoundBoxAxis(x: number = 0, y: number = 0, z: number = 0): Geometry {
+        if (x == 1) {
+            this._boundingBox[0] = 0;
+            this._boundingBox[3] = 0;
+        }
+        
+        if (y == 1) {
+            this._boundingBox[1] = 0;
+            this._boundingBox[4] = 0;
+        }
+
+        if (z == 1) {
+            this._boundingBox[2] = 0;
+            this._boundingBox[5] = 0;
+        }
+
+        return this;
+    }
+
     public destroy(): void {
         let gl = this._renderer.GL;
 
