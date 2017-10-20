@@ -43,9 +43,10 @@
       "src/factories/EntityFactory.ts",
       "src/factories/PropsFactory.ts",
       
-      "src/managers/TexturesManager.ts",
       "src/managers/ModelsManager.ts",
       "src/managers/SectorsManager.ts",
+      "src/managers/TexturesManager.ts",
+      "src/managers/UVManager.ts",
 
       "src/scenes/DemoScene.ts",
       "src/scenes/HUDScene.ts",
