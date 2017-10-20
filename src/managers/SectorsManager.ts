@@ -36,7 +36,7 @@ class SectorsManager {
         sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(96, 0.0, 48), size: pctw(16, 48), rotation: vec3(0, Math.PI, 0), uv: city.BAR_EXT_WALL, repeat: [1, 1] });
         sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(128, 0.0, 48), size: pctw(16, 48), rotation: vec3(0, Math.PI, 0), uv: city.BAR_EXT_WALL, repeat: [1, 1] });
 
-        sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(128, 0.0, 0.0), rotation: vec3(0, PI3_2, 0), size: pctw(48, 24), uv: city.ALLEY_FENCE, repeat: [3, 1] });
+        sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(128, 0.0, 0.0), rotation: vec3(0, PI3_2, 0), size: pctw(48, 32), uv: city.ALLEY_FENCE, repeat: [3, 1] });
 
         sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(24, 0.0, 40), size: pctw(10, 11), uv: city.BAR_FLOOR_SIGN, billboard: true });
         sector.addProp("Model3D", <PropOptions>{ model: 'Dumpster', texture: 'CITY', position: pctw(0.0, 0.0, 8.0), culling: true });
@@ -45,6 +45,8 @@ class SectorsManager {
         sector.addProp("Model3D", <PropOptions>{ model: 'BarWindow', texture: 'CITY', position: pctw(112, 0.0, 48), rotation: vec3(0, PI_2, 0) });
         sector.addProp("Model3D", <PropOptions>{ model: 'BarDoorFrame', texture: 'CITY', position: pctw(32, 0.0, 48), rotation: vec3(0, PI_2, 0) });
         sector.addProp("Model3D", <PropOptions>{ model: 'BarDoor', texture: 'CITY', position: pctw(41, 0.0, 48), rotation: vec3(0, PI_2, 0), opaque: false });
+        sector.addProp("Model3D", <PropOptions>{ model: 'Barrel', texture: 'CITY', position: pctw(66, 0.0, 2) });
+        sector.addProp("Model3D", <PropOptions>{ model: 'Barrel', texture: 'CITY', position: pctw(80, 0.0, 2), rotation: vec3(0, -PI_2, 0) });
 
         sector.addProp("Text", <PropOptions>{ text: "Jucarave", font: "retganon", fontSize: 36, position: pctw(48, 24, 24), rotation: vec3(0, PI_2, 0), opaque: false });
         sector.addProp("Text", <PropOptions>{ text: "A Game By", font: "retganon", fontSize: 36, position: pctw(80, 16, 24), rotation: vec3(0, PI_2, 0), opaque: false });
