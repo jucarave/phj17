@@ -114,12 +114,18 @@ class BoxCollision extends Collision {
         geometry.offset = this._offset;
 
         this._scene.addGameObject(object);
+
+        this._displayInstance = object;
     }
 
-    public centerInAxis(x: boolean, y: boolean, z: boolean): void {
-        if (x) { this._offset.x = this._size.x / 2; }
-        if (y) { this._offset.y = this._size.y / 2; }
-        if (z) { this._offset.z = this._size.z / 2; }
+    public centerInAxis(x: boolean, y: boolean, z: boolean): BoxCollision {
+        this._offset.x = (!x)? this._size.x / 2 : 0;
+        this._offset.y = (!y)? this._size.y / 2 : 0;
+        this._offset.z = (!z)? this._size.z / 2 : 0;
+
+        this._recalc();
+        
+        return this;
     }
 }
 

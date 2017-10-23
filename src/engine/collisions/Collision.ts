@@ -8,6 +8,7 @@ abstract class Collision {
     protected _instance             : Instance;
     protected _position             : Vector3;
     protected _offset               : Vector3;
+    protected _displayInstance      : Instance;
 
     public solid                    : boolean;
 
@@ -34,6 +35,10 @@ abstract class Collision {
 
     public get instance(): Instance {
         return this._instance;
+    }
+
+    public get displayInstance(): Instance {
+        return this._displayInstance;
     }
 }
 

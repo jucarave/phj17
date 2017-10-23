@@ -44,7 +44,7 @@ class Sector {
     }
 
     public setCollision(position: Vector3, size: Vector3): void {
-        this._collision = new BoxCollision(position, size);
+        this._collision = new BoxCollision(position, size).centerInAxis(false, false, false);
         this._collision.solid = false;
     }
 

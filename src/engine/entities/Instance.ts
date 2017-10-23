@@ -63,6 +63,10 @@ class Instance {
 
         this._needsUpdate = true;
 
+        if (this._collision && this._collision.displayInstance) {
+            this._collision.displayInstance.translate(x, y, z, true);
+        }
+
         return this;
     }
     
