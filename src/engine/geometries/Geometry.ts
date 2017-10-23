@@ -1,6 +1,7 @@
-import { VERTICE_SIZE } from 'engine/Constants';
+import { VERTICE_SIZE, TEXCOORD_SIZE } from 'engine/Constants';
 import Renderer from 'engine/Renderer';
 import Shader from 'engine/shaders/Shader';
+import { Vector3 } from 'engine/math/Vector3';
 
 class Geometry {
     private _vertices                : Array<number>;
@@ -15,11 +16,14 @@ class Geometry {
     protected _renderer              : Renderer;
     protected _dynamic               : boolean;
 
+    public offset                    : Vector3;
+
     constructor() {
         this._vertices = [];
         this._texCoords = [];
         this._triangles = [];
         this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
+        this.offset = new Vector3(0, 0, 0);
 
         this._dynamic = false;
     }
@@ -108,8 +112,10 @@ class Geometry {
         gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
         gl.vertexAttribPointer(shader.attributes["aVertexPosition"], VERTICE_SIZE, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._texBuffer);
-        gl.vertexAttribPointer(shader.attributes["aTexCoords"], 2, gl.FLOAT, false, 0, 0);
+        if (shader.attributes["aTexCoords"]) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this._texBuffer);
+            gl.vertexAttribPointer(shader.attributes["aTexCoords"], TEXCOORD_SIZE, gl.FLOAT, false, 0, 0);
+        }
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
 

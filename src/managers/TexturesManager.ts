@@ -5,7 +5,7 @@ interface TexturesMap {
     [index: string] : Texture
 }
 
-export type TexturesNames = 'TEXTURE_16' | 'MOCKGUN' | 'CITY';
+export type TexturesNames = 'TEXTURE_16' | 'MOCKGUN' | 'CITY' | 'NPCS';
 
 class TexturesManager {
     private _textures           : TexturesMap;
@@ -31,6 +31,7 @@ class TexturesManager {
     public init(renderer: Renderer): void {
         this._loadTexture(renderer, 'TEXTURE_16', "img/texture.png");
         this._loadTexture(renderer, 'CITY', "img/city.png");
+        this._loadTexture(renderer, 'NPCS', "img/npcs.png");
 
         this._loadTexture(renderer, 'MOCKGUN', "img/mockGun.png");
     }

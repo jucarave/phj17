@@ -20,7 +20,7 @@ class HUDScene extends Scene {
 
     private _createSprite(texture: Texture, width: number, height: number, position: Vector3): void {
         let geometry = new WallGeometry(this._renderer, width, height),
-            material = new BasicMaterial(texture, this._renderer),
+            material = new BasicMaterial(this._renderer, texture),
             object = new Instance(this._renderer, geometry, material);
         
         object.translate(position.x, position.y, position.z);

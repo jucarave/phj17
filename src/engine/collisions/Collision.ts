@@ -1,13 +1,21 @@
 import Scene from 'engine/Scene';
 import Instance from 'engine/entities/Instance';
 import { Vector3 } from 'engine/math/Vector3';
+import Renderer from 'engine/Renderer';
 
 abstract class Collision {
     protected _scene                : Scene;
     protected _instance             : Instance;
+    protected _position             : Vector3;
+    protected _offset               : Vector3;
+
+    public solid                    : boolean;
 
     constructor(scene: Scene) {
         this.setScene(scene);
+        this.solid = true;
+
+        this._offset = new Vector3(0, 0, 0);
     }
 
     public abstract test(position: Vector3, direction: Vector3) : Vector3;
@@ -18,6 +26,10 @@ abstract class Collision {
 
     public setInstance(instance: Instance): void {
         this._instance = instance;
+    }
+
+    public addCollisionInstance(renderer: Renderer): void {
+        renderer;
     }
 
     public get instance(): Instance {

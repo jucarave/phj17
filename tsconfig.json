@@ -29,8 +29,10 @@
 
     "src/engine/materials/Material.ts",
     "src/engine/materials/BasicMaterial.ts",
+    "src/engine/materials/ColorMaterial.ts",
 
     "src/engine/shaders/Basic.ts",
+    "src/engine/shaders/Color.ts",
     "src/engine/shaders/Shader.ts",
     "src/engine/shaders/ShaderStruct.ts",
     
@@ -53,6 +55,7 @@
     "src/scenes/HUDScene.ts",
     "src/scenes/Sector.ts",
 
-    "src/components/PlayerComponent.ts"
+    "src/components/PlayerComponent.ts",
+    "src/components/CharaRendererComponent.ts"
   ]
 }

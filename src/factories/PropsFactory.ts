@@ -19,7 +19,7 @@ export type PropsNames = 'Model3D' | 'Text' | 'Floor' | 'Wall';
 export interface PropOptions {
     model?: string;
     
-    texture?: string;
+    texture?: TexturesNames;
     material?: Material;
     uv?: Vector4;
     repeat?: Array<number>;
@@ -39,30 +39,12 @@ export interface PropOptions {
 
 abstract class PropsFactory {
     private static _createMaterial(renderer: Renderer, texture: Texture, uv?: Vector4, repeat?: Array<number>): Material {
-        let ret = new BasicMaterial(texture, renderer);
+        let ret = new BasicMaterial(renderer, texture);
 
         if (repeat) ret.setRepeat(repeat[0], repeat[1]);
         if (uv) ret.setUv(uv.x, uv.y, uv.z, uv.w);
 
         return ret;
-    }
-    
-    private static _getUVS(texture: Texture, x: number|Vector4, y?: number, w?: number, h?: number): Vector4 {
-        let _x: number;
-
-        if ((<Vector4>x).length !== undefined) {
-            _x = (<Vector4>x).x;
-            y = (<Vector4>x).y;
-            w = (<Vector4>x).z;
-            h = (<Vector4>x).w;
-        }
-
-        return new Vector4(
-            _x / texture.width,
-            y / texture.height,
-            w / texture.width,
-            h / texture.height
-        );
     }
     
     private static _processObjectProperties(object: Instance, options: PropOptions): Instance {
@@ -122,7 +104,7 @@ abstract class PropsFactory {
     public static createFloor(renderer: Renderer, options: PropOptions): Instance {
         let geometry = new PlaneGeometry(renderer, options.size.x, options.size.y),
             texture = TexturesManager.getTexture(<TexturesNames>options.texture),
-            material = this._createMaterial(renderer, texture, this._getUVS(texture, options.uv), options.repeat),
+            material = this._createMaterial(renderer, texture, texture.getUVS(options.uv), options.repeat),
             
             object = new Instance(renderer, geometry, material);
 
@@ -136,7 +118,7 @@ abstract class PropsFactory {
     public static createWall(renderer: Renderer, options: PropOptions): Instance {
         let geometry = new WallGeometry(renderer, options.size.x, options.size.y),
             texture = TexturesManager.getTexture(<TexturesNames>options.texture),
-            material = this._createMaterial(renderer, texture, this._getUVS(texture, options.uv), options.repeat),
+            material = this._createMaterial(renderer, texture, texture.getUVS(options.uv), options.repeat),
             
             object = new Instance(renderer, geometry, material);
 

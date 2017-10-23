@@ -1,17 +1,26 @@
 import Collision from 'engine/collisions/Collision';
+import ColorMaterial from 'engine/materials/ColorMaterial';
+import CubeGeometry from 'engine/geometries/CubeGeometry';
+import Renderer from 'engine/Renderer';
 import { Vector3 } from 'engine/math/Vector3';
+import { vec4 } from 'engine/math/Vector4';
+import Instance from 'engine/entities/Instance';
 
 class BoxCollision extends Collision {
-    private _position               : Vector3;
     private _size                   : Vector3;
     private _box                    : Array<number>;
+
+    public isDynamic                : boolean;
+    
 
     constructor(position: Vector3, size: Vector3) {
         super(null);
 
         this._position = position;
         this._size = size;
-        this._box = this._reorderBox([position.x, position.y, position.z, position.x + size.x, position.y + size.y, position.z + size.z]);
+        this.isDynamic = false;
+
+        this._recalc();
     }
 
     private _reorderBox(box: Array<number>): Array<number> {
@@ -36,8 +45,28 @@ class BoxCollision extends Collision {
         return true;
     }
 
+    private _recalc(): void {
+        let position = this._position,
+            size = this._size;
+
+        let px = position.x + this._offset.x,
+            py = position.y + this._offset.y,
+            pz = position.z + this._offset.z,
+            
+            sx = size.x / 2,
+            sy = size.y / 2,
+            sz = size.z / 2;
+
+        this._box = this._reorderBox([px - sx, py - sy, pz - sz, px + sx, py + sy, pz + sz]);
+    }
+
     public test(position: Vector3, direction: Vector3): Vector3 {
-        let width = 0.3,
+        if (this.isDynamic) {
+            this._recalc();
+        }
+
+        let collided = false,
+            width = 0.3,
             height = 0.8,
             x = position.x,
             y = position.y,
@@ -49,6 +78,7 @@ class BoxCollision extends Collision {
 
         if (this._boxCollision(box)) {
             xTo = 0;
+            collided = true;
         }
 
         x += xTo;
@@ -57,11 +87,39 @@ class BoxCollision extends Collision {
         box = this._reorderBox([x - width, y, z - width * sign, x + width, y + height, z + width * sign + direction.z]);
         if (this._boxCollision(box)) {
             zTo = 0;
+            collided = true;
         }
 
-        direction.set(xTo, 0, zTo);
+        if (!collided) {
+            return null;
+        }
+
+        if (this.solid) {
+            direction.set(xTo, 0, zTo);
+        }
 
         return direction;
+    }
+
+    public addCollisionInstance(renderer: Renderer): void {
+        let geometry = new CubeGeometry(renderer, this._size.x, this._size.y, this._size.z),
+            material = new ColorMaterial(renderer, vec4(0.0, 1.0, 0.0, 0.5)),
+            
+            object = new Instance(renderer, geometry, material);
+
+        material.setOpaque(false);
+
+        object.position = this._position;
+
+        geometry.offset = this._offset;
+
+        this._scene.addGameObject(object);
+    }
+
+    public centerInAxis(x: boolean, y: boolean, z: boolean): void {
+        if (x) { this._offset.x = this._size.x / 2; }
+        if (y) { this._offset.y = this._size.y / 2; }
+        if (z) { this._offset.z = this._size.z / 2; }
     }
 }
 

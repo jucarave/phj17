@@ -20,11 +20,13 @@ class DemoScene extends Scene {
     private _hud                : HUDScene;
     private _triggers           : Array<SectorTrigger>;
     private _player             : Instance;
+    private _sectors            : Array<Sector>;
 
     constructor(app: App, renderer: Renderer) {
         super(app, renderer);
 
         this._triggers = [];
+        this._sectors = [];
         this._buildScene();
     }
 
@@ -52,6 +54,7 @@ class DemoScene extends Scene {
 
         // Sectors
         let sector = SectorsManager.getSector("ALLEY");
+        this._sectors.push(sector);
         this._addSectorInstances(sector);
         this._addTrigger(vec3(0.0, 0.0, 1.5), vec3(9.0, 10.0, 4.5), sector, false); //Activate
         this._addTrigger(vec3(0.0, 0.0, 6.0), vec3(9.0, 10.0, 4.0), sector, true); //Deactivate
@@ -62,6 +65,23 @@ class DemoScene extends Scene {
         this._hud = new HUDScene(this._app, this._renderer);
 
         this._player = player;
+    }
+
+    public testCollision(position: Vector3, direction: Vector3): Vector3 {
+        for (let i=0,sector;sector=this._sectors[i];i++) {
+            if (sector.collision.test(position, direction)) {
+                for (let j=0,ins;ins=sector.instances[j];j++) {
+                    if (ins.collision) {
+                        let collision = ins.collision.test(position, direction);
+                        if (collision) {
+                            direction = collision;
+                        }
+                    }
+                }
+            }
+        }
+
+        return direction;
     }
 
     public update(): void {
@@ -95,6 +115,10 @@ class DemoScene extends Scene {
         super.render();
 
         this._hud.render();
+    }
+
+    public get player(): Instance {
+        return this._player;
     }
 }
 

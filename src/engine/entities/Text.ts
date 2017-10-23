@@ -89,7 +89,7 @@ class Text extends Instance {
 
         let uvs = [0, 0, (size.width + 4) / canvas.width, (this._options.size + 8) / canvas.height],
             texture = new Texture(canvas, this._renderer),
-            material = new BasicMaterial(texture, this._renderer),
+            material = new BasicMaterial(this._renderer, texture),
             geometry = new WallGeometry(this._renderer, size.width / 100, this._options.size / 100);
 
         material.setUv(uvs[0], uvs[1], uvs[2], uvs[3]);

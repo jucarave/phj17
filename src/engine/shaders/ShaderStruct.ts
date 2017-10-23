@@ -9,4 +9,4 @@ export interface ShaderMap {
     [index: string]: Shader
 };
 
-export type ShadersNames = 'BASIC';
+export type ShadersNames = 'BASIC' | 'COLOR';

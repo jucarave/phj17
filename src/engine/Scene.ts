@@ -25,6 +25,7 @@ class Scene {
     protected _instances          : MaterialsMap;
     protected _camera             : Camera;
     protected _collisions         : Array<Collision>;
+    protected _started            : boolean;
 
     constructor(app: App, renderer: Renderer) {
         this._app = app;
@@ -32,6 +33,7 @@ class Scene {
         this._instances = {};
         this._collisions = [];
         this._camera = null;
+        this._started = false;
     }
 
     public addGameObject(instance: Instance): void {
@@ -59,6 +61,10 @@ class Scene {
         }
 
         instance.setScene(this);
+
+        if (this._started) {
+            instance.awake();
+        }
     }
 
     public registerCollision(collision: Collision): void {
@@ -94,6 +100,8 @@ class Scene {
                 }
             }
         }
+
+        this._started = true;
     }
 
     public update(): void {

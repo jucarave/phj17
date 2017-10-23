@@ -1,5 +1,6 @@
 import Shader from 'engine/shaders/Shader';
 import Basic from 'engine/shaders/Basic';
+import Color from 'engine/shaders/Color';
 import { ShaderMap, ShadersNames } from 'engine/shaders/ShaderStruct';
 
 class Renderer {
@@ -45,6 +46,7 @@ class Renderer {
         this._shaders = {};
 
         this._shaders.BASIC = new Shader(this._gl, Basic);
+        this._shaders.COLOR = new Shader(this._gl, Color);
 
         this._shaders.BASIC.useProgram();
     }

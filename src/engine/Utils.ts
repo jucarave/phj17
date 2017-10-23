@@ -1,5 +1,5 @@
 import { Vector3 } from 'engine/math/Vector3';
-import { CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT, PIXEL_UNIT_RELATION } from 'engine/Constants';
+import { CAMERA_ORTHO_WIDTH, CAMERA_ORTHO_HEIGHT, PIXEL_UNIT_RELATION, PI2 } from 'engine/Constants';
 
 export function createUUID(): string {
     let date = (new Date()).getTime(),
@@ -34,7 +34,7 @@ export function get2DAngle(position1: Vector3, position2: Vector3): number {
 
     let ret = Math.atan2(-y, x);
 
-    return ret;
+    return (ret + PI2) % PI2;
 }
 
 export function getSquaredDistance(position1: Vector3, position2: Vector3): number {

@@ -1,5 +1,3 @@
-import { PIXEL_UNIT_RELATION } from 'engine/Constants';
-
 export class Vector4 {
     private _x                  : number;
     private _y                  : number;
@@ -53,17 +51,10 @@ export class Vector4 {
         return this;
     }
     
-    public pixelsCoordsToWorld(): Vector4 {
-        this.multiply(PIXEL_UNIT_RELATION);
-
-        return this;
+    public toArray(): Array<number> {
+        return [this.x, this.y, this.z, this.w];
     }
-    
-    public worldCoordsToPixel(): Vector4 {
-        this.multiply(1 / PIXEL_UNIT_RELATION);
 
-        return this;
-    }
 
     public get x(): number { return this._x; }
     public get y(): number { return this._y; }

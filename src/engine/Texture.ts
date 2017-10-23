@@ -1,4 +1,5 @@
 import Renderer from 'engine/Renderer';
+import { Vector4 } from 'engine/math/Vector4';
 
 class Texture {
     private _src               : string;
@@ -49,6 +50,24 @@ class Texture {
         gl.bindTexture(gl.TEXTURE_2D, null);
 
         this._ready = true;
+    }
+
+    public getUVS(x: number|Vector4, y?: number, w?: number, h?: number): Vector4 {
+        let _x: number;
+
+        if ((<Vector4>x).length !== undefined) {
+            _x = (<Vector4>x).x;
+            y = (<Vector4>x).y;
+            w = (<Vector4>x).z;
+            h = (<Vector4>x).w;
+        }
+
+        return new Vector4(
+            _x / this.width,
+            y / this.height,
+            w / this.width,
+            h / this.height
+        );
     }
 
     public get isReady(): boolean {

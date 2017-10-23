@@ -8,7 +8,7 @@ class BasicMaterial extends Material {
     private _uv              : Array<number>;
     private _repeat          : Array<number>;
 
-    constructor(texture: Texture, renderer: Renderer) {
+    constructor(renderer: Renderer, texture: Texture) {
         super(renderer, "BASIC");
 
         this._texture = texture;
@@ -48,6 +48,10 @@ class BasicMaterial extends Material {
 
     public get isReady(): boolean {
         return this._texture.isReady;
+    }
+
+    public get texture(): Texture {
+        return this._texture;
     }
 }
 

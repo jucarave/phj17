@@ -9,12 +9,12 @@ import Component from 'engine/Component';
 import Matrix4 from 'engine/math/Matrix4';
 import { Vector3, vec3 } from 'engine/math/Vector3';
 import { get2DAngle } from 'engine/Utils';
+import { DISPLAY_COLLISIONS } from 'engine/Constants';
 
 class Instance {
     protected _renderer           : Renderer;
     protected _geometry           : Geometry;
     protected _material           : Material;
-    protected _position           : Vector3;
     protected _rotation           : Vector3;
     protected _transform          : Matrix4;
     protected _uPosition          : Matrix4;
@@ -24,13 +24,14 @@ class Instance {
     protected _needsUpdate        : boolean;
     protected _destroyed          : boolean;
     
+    public position            : Vector3;
     public isBillboard         : boolean;
     public moved               : boolean;
     
     constructor(renderer: Renderer, geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
         this._uPosition = Matrix4.createIdentity();
-        this._position = vec3(0.0);
+        this.position = vec3(0.0);
         this._rotation = vec3(0.0);
         this.isBillboard = false;
         this._needsUpdate = true;
@@ -55,9 +56,9 @@ class Instance {
         }
 
         if (relative) {
-            this._position.add(_x, y, z);
+            this.position.add(_x, y, z);
         } else {
-            this._position.set(_x, y, z);
+            this.position.set(_x, y, z);
         }
 
         this._needsUpdate = true;
@@ -89,6 +90,13 @@ class Instance {
     
     public setScene(scene: Scene): void {
         this._scene = scene;
+
+        if (this.collision) {
+            this.collision.setScene(scene);
+            if (DISPLAY_COLLISIONS) {
+                this.collision.addCollisionInstance(this._renderer);
+            }
+        }
     }
 
     public addComponent(component: Component): void {
@@ -107,7 +115,8 @@ class Instance {
         Matrix4.multiply(this._transform, Matrix4.createZRotation(this._rotation.z));
         Matrix4.multiply(this._transform, Matrix4.createYRotation(this._rotation.y));
 
-        Matrix4.translate(this._transform, this._position.x, this._position.y, this._position.z);
+        let offset = this._geometry.offset;
+        Matrix4.translate(this._transform, this.position.x + offset.x, this.position.y + offset.y, this.position.z + offset.z);
 
         this._needsUpdate = false;
 
@@ -176,10 +185,6 @@ class Instance {
     
     public get material(): Material {
         return this._material;
-    }
-
-    public get position(): Vector3 {
-        return this._position;
     }
     
     public get rotation(): Vector3 {
