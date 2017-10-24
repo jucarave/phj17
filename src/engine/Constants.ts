@@ -16,6 +16,6 @@ export const PI2                    = Math.PI * 2;
 export const PI3_2                  = Math.PI * 3 / 2;
 
 export const PLAY_FULLSCREEN        = false;
-export const DISPLAY_COLLISIONS     = true;
+export const DISPLAY_COLLISIONS     = false;
 
 export const PIXEL_UNIT_RELATION    = 1 / 16;

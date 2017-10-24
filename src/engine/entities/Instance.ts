@@ -9,7 +9,7 @@ import Component from 'engine/Component';
 import Matrix4 from 'engine/math/Matrix4';
 import { Vector3, vec3 } from 'engine/math/Vector3';
 import { get2DAngle } from 'engine/Utils';
-import { DISPLAY_COLLISIONS } from 'engine/Constants';
+//import { DISPLAY_COLLISIONS } from 'engine/Constants';
 
 class Instance {
     protected _renderer           : Renderer;
@@ -95,12 +95,12 @@ class Instance {
     public setScene(scene: Scene): void {
         this._scene = scene;
 
-        if (this.collision) {
+        /*if (this.collision) {
             this.collision.setScene(scene);
             if (DISPLAY_COLLISIONS) {
                 this.collision.addCollisionInstance(this._renderer);
             }
-        }
+        }*/
     }
 
     public addComponent(component: Component): void {

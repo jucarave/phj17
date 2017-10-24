@@ -1,4 +1,3 @@
-import Collision from 'engine/collisions/Collision';
 import Instance from 'engine/entities/Instance';
 import Camera from 'engine/Camera';
 import Renderer from 'engine/Renderer';
@@ -24,14 +23,12 @@ class Scene {
     protected _renderer           : Renderer;
     protected _instances          : MaterialsMap;
     protected _camera             : Camera;
-    protected _collisions         : Array<Collision>;
     protected _started            : boolean;
 
     constructor(app: App, renderer: Renderer) {
         this._app = app;
         this._renderer = renderer;
         this._instances = {};
-        this._collisions = [];
         this._camera = null;
         this._started = false;
     }
@@ -56,10 +53,6 @@ class Scene {
 
         this._instances[shduuid][matuuid].push(instance);
 
-        if (instance.collision) {
-            this.registerCollision(instance.collision);
-        }
-
         instance.setScene(this);
 
         if (this._started) {
@@ -67,22 +60,8 @@ class Scene {
         }
     }
 
-    public registerCollision(collision: Collision): void {
-        collision.setScene(this);
-        this._collisions.push(collision);
-    }
-
     public testCollision(position: Vector3, direction: Vector3): Vector3 {
-        for (let i=0,col;col=this._collisions[i];i++) {
-            if (col.instance.isDestroyed){
-                this._collisions.splice(i, 1);
-                i--;
-                continue;
-            }
-
-            direction = col.test(position, direction);
-        }
-
+        position;
         return direction;
     }
 

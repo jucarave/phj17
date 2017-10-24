@@ -1,6 +1,7 @@
 import { PI_2, PI3_2 } from 'engine/Constants';
 import Renderer from 'engine/Renderer';
 import { pixelCoordsToWorld as pctw } from 'engine/Utils';
+import BoxCollision from 'engine/collisions/BoxCollision';
 import { vec3 } from 'engine/math/Vector3';
 import Sector from 'scenes/Sector';
 import { PropOptions } from 'factories/PropsFactory';
@@ -22,8 +23,7 @@ class SectorsManager {
     private _buildAlley(renderer: Renderer): void {
         let sector = new Sector(renderer, vec3(0.0, 0.0, 0.0), vec3(3.0, 8.0, 9.0)),
             sectorName: SectorNames = 'ALLEY',
-            city = UVManager.CITY/*,
-            npcs = UVManager.NPCS*/;
+            city = UVManager.CITY;
 
         sector.addProp("Floor", <PropOptions>{ texture: 'CITY', position: pctw(0.0, 0.0, 0.0), size: pctw(144, 48), uv: city.ALLEY_FLOOR, repeat: [9, 3]});
         
@@ -48,11 +48,19 @@ class SectorsManager {
         sector.addProp("Model3D", <PropOptions>{ model: 'Barrel', texture: 'CITY', position: pctw(66, 0.0, 2) });
         sector.addProp("Model3D", <PropOptions>{ model: 'Barrel', texture: 'CITY', position: pctw(80, 0.0, 2), rotation: vec3(0, -PI_2, 0) });
 
-        //sector.addProp("Wall", <PropOptions>{ texture: 'NPCS', position: pctw(24, 0.0, 8), size: pctw(12, 26), uv: npcs.ALLEY_PERSON.SIDE, billboard: true, opaque: false });
-        sector.addInstance("ALLEY_GUY", {position: pctw(24, 0, 8)})
-
         sector.addProp("Text", <PropOptions>{ text: "Jucarave", font: "retganon", fontSize: 36, position: pctw(48, 24, 24), rotation: vec3(0, PI_2, 0), opaque: false });
         sector.addProp("Text", <PropOptions>{ text: "A Game By", font: "retganon", fontSize: 36, position: pctw(80, 16, 24), rotation: vec3(0, PI_2, 0), opaque: false });
+
+        // Collisions
+        sector.registerCollision((new BoxCollision(pctw(0, 0, -1), pctw(144, 128, 2))).centerInAxis(false, false, false)); // RightWall
+        sector.registerCollision((new BoxCollision(pctw(-1, 0, 0), pctw(2, 36, 48))).centerInAxis(false, false, false)); // BackWall
+        sector.registerCollision((new BoxCollision(pctw(0, 0, 47), pctw(41, 48, 2))).centerInAxis(false, false, false)); // Bar part 1
+        sector.registerCollision((new BoxCollision(pctw(55, 0, 47), pctw(89, 48, 2))).centerInAxis(false, false, false)); // Bar part 2
+        sector.registerCollision((new BoxCollision(pctw(127, 0, 0), pctw(2, 32, 48))).centerInAxis(false, false, false)); // Fence
+
+        sector.registerCollision((new BoxCollision(pctw(0, 0, 8), pctw(16, 16, 30))).centerInAxis(false, false, false)); // Dumpster
+        sector.registerCollision((new BoxCollision(pctw(22, 0, 36), pctw(12, 12, 12))).centerInAxis(false, false, false)); // Sign
+        sector.registerCollision((new BoxCollision(pctw(66, 0, 0), pctw(27, 16, 16))).centerInAxis(false, false, false)); // Barrels
 
         sector.setCollision(pctw(0, 0, 0), pctw(144, 128, 48));
 

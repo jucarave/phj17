@@ -54,10 +54,14 @@ class DemoScene extends Scene {
 
         // Sectors
         let sector = SectorsManager.getSector("ALLEY");
+        sector.setScene(this);
+        sector.displayCollisions();
         this._sectors.push(sector);
         this._addSectorInstances(sector);
         this._addTrigger(vec3(0.0, 0.0, 1.5), vec3(9.0, 10.0, 4.5), sector, false); //Activate
         this._addTrigger(vec3(0.0, 0.0, 6.0), vec3(9.0, 10.0, 4.0), sector, true); //Deactivate
+
+        this.addGameObject(EntityFactory.createAlleyGuy(this._renderer).translate(pctw(24, 0, 8)));
         
         this.addGameObject(player.translate(pctw(112, 0.0, 24)).rotate(0, Math.PI, 0));
         this.setCamera(camera);
@@ -70,12 +74,10 @@ class DemoScene extends Scene {
     public testCollision(position: Vector3, direction: Vector3): Vector3 {
         for (let i=0,sector;sector=this._sectors[i];i++) {
             if (sector.collision.test(position, direction)) {
-                for (let j=0,ins;ins=sector.instances[j];j++) {
-                    if (ins.collision) {
-                        let collision = ins.collision.test(position, direction);
-                        if (collision) {
-                            direction = collision;
-                        }
+                for (let j=0,collision;collision=sector.solidInstances[j];j++) {
+                    let result = collision.test(position, direction);
+                    if (result) {
+                        direction = result;
                     }
                 }
             }
