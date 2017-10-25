@@ -14,15 +14,30 @@ class SectorSolidComponent extends Component {
         this._sectors = [];
     }
 
-    public awake() {
+    private _updateCollisions(): void {
+        for (let i=0,sector;sector=this._sectors[i];i++) {
+            sector.clearCollision(this._instance.collision);
+        }
+
+        let sectors = this._scene.getIntersectingSectors(this._instance);
+        this._sectors = sectors;
+
+        for (let i=0,sector;sector=sectors[i];i++) {
+            sector.registerCollision(this._instance.collision);
+        }
+    }
+
+    public awake(): void {
         this._scene = <DemoScene> this._instance.scene;
+
+        this._updateCollisions();
     }
 
-    public update() {
+    public update(): void {
 
     }
 
-    public destroy() {
+    public destroy(): void {
 
     }
 }

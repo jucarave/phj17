@@ -11,6 +11,7 @@ gulp.task("bundle", function() {
         basedir: '.',
         debug: true,
         entries: ['src/App.ts'],
+        paths: ['./src/'],
         cache: {},
         packageCache: {}
     })

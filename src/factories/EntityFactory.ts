@@ -1,6 +1,7 @@
 import Instance from 'engine/entities/Instance';
 import PlayerComponent from 'components/PlayerComponent';
 import CharaRendererComponent from 'components/CharaRendererComponent';
+import SectorSolidComponent from 'components/SectorSolidComponent';
 import Renderer from 'engine/Renderer';
 import Camera from 'engine/Camera';
 import WallGeometry from 'engine/geometries/WallGeometry';
@@ -39,6 +40,7 @@ abstract class EntityFactory {
         bc.isDynamic = true;
         
         ret.addComponent(new CharaRendererComponent(uv));
+        ret.addComponent(new SectorSolidComponent());
         ret.setCollision(bc)
         ret.isBillboard = true;
         

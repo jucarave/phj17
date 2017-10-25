@@ -63,6 +63,10 @@ class Sector {
         this._solidInstances.push(collision);
     }
 
+    public clearCollision(collision: Collision): void {
+        this._solidInstances.splice(this._solidInstances.indexOf(collision), 1);
+    }
+
     public displayCollisions(): void {
         if (DISPLAY_COLLISIONS) {
             for (let i=0,collision;collision=this._solidInstances[i];i++) {

@@ -90,9 +90,15 @@ class DemoScene extends Scene {
     }
 
     public getIntersectingSectors(instance: Instance): Array<Sector> {
-        let ret: Array<Sector> = [];
+        let ret: Array<Sector> = [],
+            pos = instance.position,
+            dir = vec3(0, 0, 0);
 
-        instance;
+        for (let i=0,sector;sector=this._sectors[i];i++) {
+            if (sector.collision.test(pos, dir)) {
+                ret.push(sector);
+            }
+        }
 
         return ret;
     }
