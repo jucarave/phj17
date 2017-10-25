@@ -8,6 +8,7 @@ import SectorsManager from 'managers/SectorsManager';
 import App from 'App';
 import HUDScene from 'scenes/HUDScene';
 import Sector from 'scenes/Sector';
+import PlayerComponent from 'components/PlayerComponent';
 
 interface SectorTrigger {
     position: Vector3;
@@ -20,6 +21,7 @@ class DemoScene extends Scene {
     private _hud                : HUDScene;
     private _triggers           : Array<SectorTrigger>;
     private _player             : Instance;
+    private _playerComponent    : PlayerComponent;
     private _sectors            : Array<Sector>;
 
     constructor(app: App, renderer: Renderer) {
@@ -69,6 +71,7 @@ class DemoScene extends Scene {
         this._hud = new HUDScene(this._app, this._renderer);
 
         this._player = player;
+        this._playerComponent = player.getComponent<PlayerComponent>(PlayerComponent.componentName);
     }
 
     public testCollision(position: Vector3, direction: Vector3): Vector3 {
@@ -86,10 +89,18 @@ class DemoScene extends Scene {
         return direction;
     }
 
+    public getIntersectingSectors(instance: Instance): Array<Sector> {
+        let ret: Array<Sector> = [];
+
+        instance;
+
+        return ret;
+    }
+
     public update(): void {
         super.update();
 
-        if (!this._player.moved) { return; }
+        if (!this._playerComponent.moved) { return; }
 
         let p = this._player.position;
         for (let i=0,trig;trig=this._triggers[i];i++) {

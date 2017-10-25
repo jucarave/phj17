@@ -56,6 +56,7 @@
     "src/scenes/Sector.ts",
 
     "src/components/PlayerComponent.ts",
-    "src/components/CharaRendererComponent.ts"
+    "src/components/CharaRendererComponent.ts",
+    "src/components/SectorSolidComponent.ts"
   ]
 }

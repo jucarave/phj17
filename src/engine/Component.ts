@@ -1,7 +1,14 @@
 import Instance from 'engine/entities/Instance';
 
 abstract class Component {
-    protected _instance           : Instance;
+    protected _instance                 : Instance;
+    
+    public readonly name                    : string;
+    public static readonly componentName    : string;
+
+    constructor(componentName: string) {
+        this.name = componentName;
+    }
 
     public addInstance(instance: Instance): void {
         this._instance = instance;

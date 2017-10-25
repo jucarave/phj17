@@ -19,9 +19,12 @@ class PlayerComponent extends Component {
     private _callbackIds    : Array<string>
     private _camera         : Camera;
     private _height         : number;
+    private _moved          : boolean;
+
+    public static readonly componentName = "PlayerComponent";
 
     constructor() {
-        super();
+        super(PlayerComponent.componentName);
 
         this._keys = [];
         this._callbackIds = [];
@@ -68,6 +71,8 @@ class PlayerComponent extends Component {
         if (this._keys[CONTROLS.RIGHT]) { x = 1; }else
         if (this._keys[CONTROLS.LEFT]) { x = -1; }
 
+        this._moved = false;
+
         if (x != 0 || y != 0) {
             let rot = this._instance.rotation,
                 spd = 0.05,
@@ -81,7 +86,7 @@ class PlayerComponent extends Component {
             
             if (collision.x != 0 || collision.z != 0) {
                 this._instance.translate(collision.x, 0, collision.z, true);
-                this._instance.moved = true;
+                this._moved = true;
             }
         }
     }
@@ -121,6 +126,10 @@ class PlayerComponent extends Component {
     public update(): void {
         this._updateMovement();
         this._updateCamera();
+    }
+
+    public get moved(): boolean {
+        return this._moved;
     }
 }
 

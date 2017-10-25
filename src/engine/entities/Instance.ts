@@ -26,7 +26,6 @@ class Instance {
     
     public position            : Vector3;
     public isBillboard         : boolean;
-    public moved               : boolean;
     
     constructor(renderer: Renderer, geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
@@ -107,6 +106,16 @@ class Instance {
         this._components.push(component);
         component.addInstance(this);
     }
+
+    public getComponent<T>(componentName: string): T {
+        for (let i=0,comp;comp=this._components[i];i++) {
+            if (comp.name == componentName) {
+                return <T>(<any>comp);
+            }
+        }
+
+        return null;
+    }
     
     public getTransformation(): Matrix4 {
         if (!this._needsUpdate) {
@@ -139,8 +148,6 @@ class Instance {
     }
 
     public update(): void {
-        this.moved = false;
-
         for (let i=0,component;component=this._components[i];i++) {
             component.update();
         }

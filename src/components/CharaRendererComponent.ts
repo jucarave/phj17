@@ -11,8 +11,10 @@ class CharaRendererComponent extends Component {
     private _scene              : DemoScene;
     private _player             : Instance;
 
+    public static readonly componentName = "CharaRendererComponent";
+
     constructor(uv: CHARA_UVS) {
-        super();
+        super(CharaRendererComponent.componentName);
 
         this._uvs = uv;
     }
