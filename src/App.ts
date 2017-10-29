@@ -8,7 +8,16 @@ import TexturesManager from 'managers/TexturesManager';
 import ModelsManager from 'managers/ModelsManager';
 import SectorsManager from 'managers/SectorsManager';
 import DemoScene from 'scenes/DemoScene';
-import { CANVAS_WIDTH, CANVAS_HEIGHT, CAMERA_FOV, CAMERA_RATIO, CAMERA_ZFAR, CAMERA_ZNEAR, CAMERA_ORTHO_HEIGHT, CAMERA_ORTHO_WIDTH } from 'engine/Constants';
+
+const CANVAS_WIDTH           = 854; 
+const CANVAS_HEIGHT          = 480;
+
+const CAMERA_FOV             = 105 * Math.PI / 180;
+const CAMERA_RATIO           = CANVAS_WIDTH / CANVAS_HEIGHT;
+const CAMERA_ZNEAR           = 0.1;
+const CAMERA_ZFAR            = 1000;
+const CAMERA_ORTHO_WIDTH     = (CANVAS_WIDTH / 4) << 0;
+const CAMERA_ORTHO_HEIGHT    = (CANVAS_HEIGHT / 4) << 0;
 
 class App {
     private _renderer                   : Renderer;

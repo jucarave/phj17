@@ -1,6 +1,6 @@
 import Renderer from 'engine/Renderer';
 import Scene from 'engine/Scene';
-import { DISPLAY_COLLISIONS } from 'engine/Constants';
+import Config from 'engine/Config';
 import { Vector3 } from 'engine/math/Vector3';
 import Instance from 'engine/entities/Instance';
 import Collision from 'engine/collisions/Collision';
@@ -68,7 +68,7 @@ class Sector {
     }
 
     public displayCollisions(): void {
-        if (DISPLAY_COLLISIONS) {
+        if (Config.DISPLAY_COLLISIONS) {
             for (let i=0,collision;collision=this._solidInstances[i];i++) {
                 collision.setScene(this._scene);
                 collision.addCollisionInstance(this._renderer);

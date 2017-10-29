@@ -2,66 +2,65 @@ import Matrix4 from 'engine/math/Matrix4';
 import { Vector3, vec3 } from 'engine/math/Vector3';
 
 class Camera {
-    private transform           : Matrix4;
-    private position            : Vector3;
-    private target              : Vector3;
-    private up                  : Vector3;
-    private angle               : Vector3;
-    private needsUpdate         : boolean;
+    private _transform           : Matrix4;
+    private _target              : Vector3;
+    private _up                  : Vector3;
+    private _angle               : Vector3;
+    private _needsUpdate         : boolean;
+
+    public position              : Vector3;
+    public screenSize            : Vector3;
 
     public readonly projection          : Matrix4;
 
     constructor(projection: Matrix4) {
         this.projection = projection;
-        this.transform = Matrix4.createIdentity();
+        this._transform = Matrix4.createIdentity();
 
         this.position = vec3(0, 0, 0);
-        this.target = vec3(0, 0, 0);
-        this.up = vec3(0, 1, 0);
-        this.angle = vec3(0.0);
+        this._target = vec3(0, 0, 0);
+        this._up = vec3(0, 1, 0);
+        this._angle = vec3(0.0);
+        this.screenSize = vec3(0.0);
 
-        this.needsUpdate = true;
-    }
-
-    public getPosition(): Vector3 {
-        return this.position;
+        this._needsUpdate = true;
     }
 
     public setPosition(x: number, y: number, z: number): Camera {
         this.position.set(x, y, z);
 
-        this.needsUpdate = true;
+        this._needsUpdate = true;
 
         return this;
     }
 
     public setTarget(x: number, y: number, z: number): Camera {
-        this.target.set(x, y, z);
+        this._target.set(x, y, z);
 
-        this.needsUpdate = true;
+        this._needsUpdate = true;
 
         return this;
     }
 
     public setAngle(x: number, y: number, z: number): Camera {
-        this.angle.set(x, y, z);
+        this._angle.set(x, y, z);
 
-        this.needsUpdate = true;
+        this._needsUpdate = true;
 
         return this;
     }
 
     public getAngle(): Vector3 {
-        return this.angle;
+        return this._angle;
     }
 
     public getTransformation(): Matrix4 {
-        if (!this.needsUpdate) {
-            return this.transform;
+        if (!this._needsUpdate) {
+            return this._transform;
         }
 
         let f = this.forward,
-            l = Vector3.cross(this.up, f).normalize(),
+            l = Vector3.cross(this._up, f).normalize(),
             u = Vector3.cross(f, l).normalize();
 
         let cp = this.position,
@@ -70,27 +69,27 @@ class Camera {
             z = -Vector3.dot(f, cp);
 
         Matrix4.set(
-            this.transform,
+            this._transform,
             l.x, u.x, f.x, 0,
             l.y, u.y, f.y, 0,
             l.z, u.z, f.z, 0,
               x,   y,   z, 1
         );
         
-        this.needsUpdate = false;
+        this._needsUpdate = false;
 
-        return this.transform;
+        return this._transform;
     }
 
     public get forward(): Vector3 {
         let cp = this.position,
-            t = this.target;
+            t = this._target;
 
         return vec3(cp.x - t.x, cp.y - t.y, cp.z - t.z).normalize();
     }
 
     public get isUpdated(): boolean {
-        return !this.needsUpdate;
+        return !this._needsUpdate;
     }
 
     public static createPerspective(fov: number, ratio: number, znear: number, zfar: number): Camera {
@@ -98,7 +97,10 @@ class Camera {
     }
 
     public static createOrthographic(width: number, height: number, znear: number, zfar: number): Camera {
-        return new Camera(Matrix4.createOrtho(width, height, znear, zfar));
+        let ret = new Camera(Matrix4.createOrtho(width, height, znear, zfar));
+        ret.screenSize.set(width, height, 0);
+
+        return ret;
     }
 }
 

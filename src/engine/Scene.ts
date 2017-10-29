@@ -108,7 +108,7 @@ class Scene {
                         if (ins.material.isOpaque) {
                             opaques.push(ins);
                         } else {
-                            let dis = getSquaredDistance(ins.position, this._camera.getPosition()),
+                            let dis = getSquaredDistance(ins.position, this._camera.position),
                                 add = false;
 
                             for (let m=0,trans;trans=transparents[m];m++) {

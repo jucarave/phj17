@@ -1,5 +1,5 @@
 import { createUUID } from 'engine/Utils';
-import { PLAY_FULLSCREEN } from 'engine/Constants';
+import Config from 'engine/Config';
 
 interface Callback {
     id: string;
@@ -84,7 +84,7 @@ class Input {
         this._element.requestFullscreen = this._element.requestFullscreen || this._element.webkitRequestFullScreen || (<any>this._element).mozRequestFullScreen;
 
         this._element.addEventListener("click", () => {
-            if (PLAY_FULLSCREEN && this._element.requestFullscreen) this._element.requestFullscreen();
+            if (Config.PLAY_FULLSCREEN && this._element.requestFullscreen) this._element.requestFullscreen();
 
             this._element.requestPointerLock();
         });

@@ -13,6 +13,7 @@
     
     "src/engine/Camera.ts",
     "src/engine/Component.ts",
+    "src/engine/Config.ts",
     "src/engine/Constants.ts",
     "src/engine/Renderer.ts",
     "src/engine/Scene.ts",

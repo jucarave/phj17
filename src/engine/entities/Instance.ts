@@ -9,7 +9,7 @@ import Component from 'engine/Component';
 import Matrix4 from 'engine/math/Matrix4';
 import { Vector3, vec3 } from 'engine/math/Vector3';
 import { get2DAngle } from 'engine/Utils';
-import { DISPLAY_COLLISIONS } from 'engine/Constants';
+import Config from 'engine/Config';
 
 class Instance {
     protected _renderer           : Renderer;
@@ -146,7 +146,7 @@ class Instance {
             component.awake();
         }
 
-        if (this._collision && DISPLAY_COLLISIONS) {
+        if (this._collision && Config.DISPLAY_COLLISIONS) {
             let collision = this._collision;
 
             collision.setScene(this._scene);
@@ -182,7 +182,7 @@ class Instance {
             shader = Shader.lastProgram;
 
         if (this.isBillboard) {
-            this.rotate(0, get2DAngle(this.position, camera.getPosition()) + Math.PI / 2, 0);
+            this.rotate(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
         }
 
         this._uPosition = Matrix4.setIdentity(this._uPosition);
