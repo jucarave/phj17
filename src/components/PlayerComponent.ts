@@ -2,8 +2,8 @@ import Input from 'engine/Input';
 import Camera from 'engine/Camera';
 import { PI_2 } from 'engine/Constants';
 import Component from 'engine/Component';
-import { vec3 } from 'engine/math/Vector3';
 import { degToRad, get2DVectorDir } from 'engine/Utils';
+import CharaComponent from 'components/CharaComponent';
 
 const LIMIT_ROTATION = degToRad(70);
 
@@ -15,11 +15,11 @@ const CONTROLS = {
 };
 
 class PlayerComponent extends Component {
-    private _keys           : Array<number>;
-    private _callbackIds    : Array<string>
-    private _camera         : Camera;
-    private _height         : number;
-    private _moved          : boolean;
+    private _keys               : Array<number>;
+    private _callbackIds        : Array<string>
+    private _camera             : Camera;
+    private _height             : number;
+    private _charaComponent     : CharaComponent;
 
     public static readonly componentName = "PlayerComponent";
 
@@ -71,23 +71,15 @@ class PlayerComponent extends Component {
         if (this._keys[CONTROLS.RIGHT]) { x = 1; }else
         if (this._keys[CONTROLS.LEFT]) { x = -1; }
 
-        this._moved = false;
-
         if (x != 0 || y != 0) {
             let rot = this._instance.rotation,
                 spd = 0.05,
                 angVar = get2DVectorDir(x, y) - PI_2,
             
                 xTo = Math.cos(rot.y + angVar) * spd,
-                zTo = -Math.sin(rot.y + angVar) * spd,
-                
-                collision = this._instance.scene.testCollision(this._instance.position, vec3(xTo, 0, zTo));
+                zTo = -Math.sin(rot.y + angVar) * spd;
 
-            
-            if (collision.x != 0 || collision.z != 0) {
-                this._instance.translate(collision.x, 0, collision.z, true);
-                this._moved = true;
-            }
+            this._charaComponent.moveTo(xTo, zTo);
         }
     }
     
@@ -115,6 +107,11 @@ class PlayerComponent extends Component {
         this._callbackIds.push(Input.onKeydown((keyCode: number) => { this._handleKeyboard(keyCode, 1); }));
         this._callbackIds.push(Input.onKeyup((keyCode: number) => { this._handleKeyboard(keyCode, 0); }));
         this._callbackIds.push(Input.onMouseMove((dx: number, dy: number) => { this._handleMouseMove(dx, dy); }));
+
+        this._charaComponent = this._instance.getComponent<CharaComponent>(CharaComponent.componentName);
+        if (!this._charaComponent) {
+            throw new Error("PlayerComponent requires CharaComponent");
+        }
     }
 
     public destroy(): void {
@@ -129,7 +126,7 @@ class PlayerComponent extends Component {
     }
 
     public get moved(): boolean {
-        return this._moved;
+        return this._charaComponent.moved;
     }
 }
 

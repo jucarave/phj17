@@ -74,10 +74,15 @@ class DemoScene extends Scene {
         this._playerComponent = player.getComponent<PlayerComponent>(PlayerComponent.componentName);
     }
 
-    public testCollision(position: Vector3, direction: Vector3): Vector3 {
+    public testCollision(instance: Instance, direction: Vector3): Vector3 {
+        let position = instance.position,
+            insCol = instance.collision;
+
         for (let i=0,sector;sector=this._sectors[i];i++) {
             if (sector.collision.test(position, direction)) {
                 for (let j=0,collision;collision=sector.solidInstances[j];j++) {
+                    if (collision == insCol) { continue; }
+                    
                     let result = collision.test(position, direction);
                     if (result) {
                         direction = result;

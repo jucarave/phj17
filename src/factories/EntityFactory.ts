@@ -1,5 +1,6 @@
 import Instance from 'engine/entities/Instance';
 import PlayerComponent from 'components/PlayerComponent';
+import CharaComponent from 'components/CharaComponent';
 import CharaRendererComponent from 'components/CharaRendererComponent';
 import SectorSolidComponent from 'components/SectorSolidComponent';
 import Renderer from 'engine/Renderer';
@@ -21,6 +22,7 @@ abstract class EntityFactory {
 
         playerComponent.setCamera(camera);
 
+        ret.addComponent(new CharaComponent());
         ret.addComponent(playerComponent);
 
         return ret;
@@ -39,6 +41,7 @@ abstract class EntityFactory {
 
         bc.isDynamic = true;
         
+        ret.addComponent(new CharaComponent());
         ret.addComponent(new CharaRendererComponent(uv));
         ret.addComponent(new SectorSolidComponent());
         ret.setCollision(bc)

@@ -4,12 +4,14 @@ import Instance from 'engine/entities/Instance';
 import { get2DAngle, degToRad } from 'engine/Utils';
 import { CHARA_UVS} from 'managers/UVManager';
 import DemoScene from 'scenes/DemoScene';
+import CharaComponent from 'components/CharaComponent';
 
 class CharaRendererComponent extends Component {
     private _uvs                : CHARA_UVS;
     private _material           : BasicMaterial;
     private _scene              : DemoScene;
     private _player             : Instance;
+    private _charaComponent     : CharaComponent;
 
     public static readonly componentName = "CharaRendererComponent";
 
@@ -27,6 +29,17 @@ class CharaRendererComponent extends Component {
 
         this._scene = <DemoScene>this._instance.scene;
         this._player = this._scene.player;
+
+        this._charaComponent = this._instance.getComponent<CharaComponent>(CharaComponent.componentName);
+        if (!this._charaComponent) {
+            throw new Error("CharaRendererComponent requires CharaComponent");
+        }
+
+        setTimeout(() => {
+            this._charaComponent.moveTo(0, 0.5);
+
+            console.log("Lets move");
+        }, 2000);
     }
 
     public update(): void {

@@ -9,7 +9,7 @@ import Component from 'engine/Component';
 import Matrix4 from 'engine/math/Matrix4';
 import { Vector3, vec3 } from 'engine/math/Vector3';
 import { get2DAngle } from 'engine/Utils';
-//import { DISPLAY_COLLISIONS } from 'engine/Constants';
+import { DISPLAY_COLLISIONS } from 'engine/Constants';
 
 class Instance {
     protected _renderer           : Renderer;
@@ -144,6 +144,13 @@ class Instance {
     public awake(): void {
         for (let i=0,component;component=this._components[i];i++) {
             component.awake();
+        }
+
+        if (this._collision && DISPLAY_COLLISIONS) {
+            let collision = this._collision;
+
+            collision.setScene(this._scene);
+            collision.addCollisionInstance(this._renderer);
         }
     }
 

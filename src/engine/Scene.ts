@@ -60,8 +60,8 @@ class Scene {
         }
     }
 
-    public testCollision(position: Vector3, direction: Vector3): Vector3 {
-        position;
+    public testCollision(instance: Instance, direction: Vector3): Vector3 {
+        instance;
         return direction;
     }
 
