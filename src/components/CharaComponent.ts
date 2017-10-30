@@ -26,6 +26,7 @@ class CharaComponent extends Component {
     }
 
     public update(): void {
+        this._moved = false;
     }
 
     public get moved(): boolean {
