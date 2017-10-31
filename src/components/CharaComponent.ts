@@ -11,12 +11,15 @@ class CharaComponent extends Component {
     }
 
     public moveTo(xTo: number, zTo: number): void {
-        let collision = this._instance.scene.testCollision(this._instance, vec3(xTo, 0, zTo));
+        let dir = vec3(xTo, 0, zTo),
+            collision = this._instance.scene.testCollision(this._instance, dir);
 
         if (collision.x != 0 || collision.z != 0) {
             this._instance.translate(collision.x, 0, collision.z, true);
             this._moved = true;
         }
+
+        dir.delete();
     }
 
     public awake(): void {

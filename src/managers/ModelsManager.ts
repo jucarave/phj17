@@ -1,7 +1,7 @@
 import Renderer from 'engine/Renderer';
 import Geometry from 'engine/geometries/Geometry';
 import Material from 'engine/materials/Material';
-import { Vector3, vec3 } from 'engine/math/Vector3';
+import { Vector3 } from 'engine/math/Vector3';
 import { httpRequest } from 'engine/Utils';
 
 interface Model {
@@ -42,9 +42,9 @@ class ModelsManager {
                 let args = line.split(" ");
                 
                 if (args[0] == "v") {
-                    vertices.push(vec3(parseFloat(args[1]), parseFloat(args[2]), parseFloat(args[3])));
+                    vertices.push(new Vector3().set(parseFloat(args[1]), parseFloat(args[2]), parseFloat(args[3])));
                 }else if (args[0] == "vt") {
-                    texCoords.push(vec3(parseFloat(args[1]), parseFloat(args[2])));
+                    texCoords.push(new Vector3().set(parseFloat(args[1]), parseFloat(args[2]), 0));
                 }else if (args[0] == "f") {
                     for (let j=1;j<=3;j++) {
                         let indices = args[j].split("/"),

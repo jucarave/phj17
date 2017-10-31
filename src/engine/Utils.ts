@@ -1,4 +1,4 @@
-import { Vector3 } from 'engine/math/Vector3';
+import { Vector3, vec3 } from 'engine/math/Vector3';
 import Config from 'engine/Config';
 import { PI2 } from 'engine/Constants';
 import Camera from 'engine/Camera';
@@ -47,7 +47,7 @@ export function getSquaredDistance(position1: Vector3, position2: Vector3): numb
 }
 
 export function coordsToOrtho(camera: Camera, x: number, y: number): Vector3 {
-    return new Vector3(
+    return vec3(
         x - camera.screenSize.x / 2.0,
         (camera.screenSize.y / 2.0) - y,
         0.0
@@ -55,7 +55,7 @@ export function coordsToOrtho(camera: Camera, x: number, y: number): Vector3 {
 }
 
 export function pixelCoordsToWorld(x: number = 0, y: number = 0, z: number = 0): Vector3 {
-    return new Vector3(
+    return vec3(
         x * Config.PIXEL_UNIT_RELATION,
         y * Config.PIXEL_UNIT_RELATION,
         z * Config.PIXEL_UNIT_RELATION
@@ -83,4 +83,18 @@ export function httpRequest(url: string, callback: Function): void {
     };
 
     http.send();
+}
+
+let smallPool: Array<any> = [];
+export function rememberPoolAlloc(object: any): any {
+    smallPool.push(object);
+    return object;
+}
+
+export function freePoolAlloc(): void {
+    for (let i=0,obj;obj=smallPool[i];i++) {
+        obj.delete();
+    }
+
+    smallPool = [];
 }

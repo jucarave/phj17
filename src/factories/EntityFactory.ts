@@ -35,7 +35,8 @@ abstract class EntityFactory {
             material = new BasicMaterial(renderer, texture),
             uv = UVManager.NPCS.ALLEY_PERSON,
             ret = new Instance(renderer, geometry, material),
-            bc = (new BoxCollision(ret.position, pctw(8, 23, 8))).centerInAxis(true, false, true);
+            collisionSize = pctw(8, 23, 8),
+            bc = (new BoxCollision(ret.position, collisionSize)).centerInAxis(true, false, true);
 
         geometry.offset.set(0, size.y / 2, 0);
 
@@ -48,6 +49,9 @@ abstract class EntityFactory {
         ret.isBillboard = true;
         
         material.setOpaque(false);
+
+        size.delete();
+        collisionSize.delete();
 
         return ret;
     }

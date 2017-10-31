@@ -3,6 +3,7 @@ import Renderer from 'engine/Renderer';
 import Instance from 'engine/entities/Instance';
 import { Vector3, vec3 } from 'engine/math/Vector3';
 import { pixelCoordsToWorld as pctw } from 'engine/Utils';
+import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
 import EntityFactory from 'factories/EntityFactory';
 import SectorsManager from 'managers/SectorsManager';
 import App from 'App';
@@ -60,18 +61,20 @@ class DemoScene extends Scene {
         sector.displayCollisions();
         this._sectors.push(sector);
         this._addSectorInstances(sector);
-        this._addTrigger(vec3(0.0, 0.0, 1.5), vec3(9.0, 10.0, 4.5), sector, false); //Activate
-        this._addTrigger(vec3(0.0, 0.0, 6.0), vec3(9.0, 10.0, 4.0), sector, true); //Deactivate
+        this._addTrigger(rpa(vec3(0.0, 0.0, 1.5)), rpa(vec3(9.0, 10.0, 4.5)), sector, false); //Activate
+        this._addTrigger(rpa(vec3(0.0, 0.0, 6.0)), rpa(vec3(9.0, 10.0, 4.0)), sector, true); //Deactivate
 
-        this.addGameObject(EntityFactory.createAlleyGuy(this._renderer).translate(pctw(24, 0, 8)));
+        this.addGameObject(EntityFactory.createAlleyGuy(this._renderer).translate(rpa(pctw(24, 0, 8))));
         
-        this.addGameObject(player.translate(pctw(112, 0.0, 24)).rotate(0, Math.PI, 0));
+        this.addGameObject(player.translate(rpa(pctw(112, 0.0, 24))).rotate(0, Math.PI, 0));
         this.setCamera(camera);
 
         this._hud = new HUDScene(this._app, this._renderer);
 
         this._player = player;
         this._playerComponent = player.getComponent<PlayerComponent>(PlayerComponent.componentName);
+
+        freePoolAlloc();
     }
 
     public testCollision(instance: Instance, direction: Vector3): Vector3 {
@@ -104,6 +107,8 @@ class DemoScene extends Scene {
                 ret.push(sector);
             }
         }
+
+        dir.delete();
 
         return ret;
     }

@@ -1,3 +1,5 @@
+import Poolify from 'engine/Poolify';
+
 export class Vector3 {
     private _x                  : number;
     private _y                  : number;
@@ -5,8 +7,10 @@ export class Vector3 {
     private _length             : number;
     private needsUpdate         : boolean;
 
-    constructor(x: number, y: number, z: number) {
-        this.set(x, y, z);
+    public clear(): Vector3 {
+        this.set(0, 0, 0);
+
+        return this;
     }
 
     public set(x: number, y: number, z: number): Vector3 {
@@ -48,7 +52,11 @@ export class Vector3 {
     }
 
     public clone(): Vector3 {
-        return new Vector3(this.x, this.y, this.z);
+        return vec3(this.x, this.y, this.z);
+    }
+
+    public delete(): void {
+        pool.free(this);
     }
 
     public equals(vector3: Vector3): boolean {
@@ -75,7 +83,7 @@ export class Vector3 {
     }
 
     public static cross(vectorA: Vector3, vectorB: Vector3): Vector3 {
-        return new Vector3(
+        return vec3(
             vectorA.y * vectorB.z - vectorA.z * vectorB.y,
             vectorA.z * vectorB.x - vectorA.x * vectorB.z,
             vectorA.x * vectorB.y - vectorA.y * vectorB.x
@@ -87,10 +95,12 @@ export class Vector3 {
     }
 }
 
+const pool = new Poolify(200, Vector3);
 export function vec3(x: number = 0, y?: number, z?: number): Vector3 {
     if (y === undefined && z === undefined) { z = x; }
     else if (z === undefined){ z = 0; }
     if (y === undefined){ y = x; }
 
-    return new Vector3(x, y, z);
+    let obj = <Vector3>(pool.allocate());
+    return obj.set(x, y, z);
 }

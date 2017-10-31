@@ -78,6 +78,10 @@ class Camera {
         
         this._needsUpdate = false;
 
+        f.delete();
+        l.delete();
+        u.delete();
+
         return this._transform;
     }
 

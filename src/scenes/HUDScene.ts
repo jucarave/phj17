@@ -29,7 +29,10 @@ class HUDScene extends Scene {
     }
 
     private _buildScene(): void {
-        this._createSprite(TextureManager.getTexture("MOCKGUN"), 32.0, 32.0, coordsToOrtho(this._camera, 106, 104));
+        let coords = coordsToOrtho(this._camera, 106, 104);
+        this._createSprite(TextureManager.getTexture("MOCKGUN"), 32.0, 32.0, coords);
+
+        coords.delete();
     }
 
     public render(): void {
