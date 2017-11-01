@@ -82,12 +82,3 @@ export class Vector4 {
         return ret;
     }
 }
-
-export function vec4(x: number = 0, y?: number, z?: number, w?: number): Vector4 {
-    if (y === undefined && z === undefined) { z = x; w = x; }
-    else if (z === undefined){ z = 0; }
-    if (y === undefined){ y = x; }
-    if (w === undefined){ w = x; }
-
-    return new Vector4(x, y, z, w);
-}

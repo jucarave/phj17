@@ -1,7 +1,7 @@
 import { VERTICE_SIZE, TEXCOORD_SIZE } from 'engine/Constants';
 import Renderer from 'engine/Renderer';
 import Shader from 'engine/shaders/Shader';
-import { Vector3, vec3 } from 'engine/math/Vector3';
+import { Vector3 } from 'engine/math/Vector3';
 
 class Geometry {
     private _vertices                : Array<number>;
@@ -23,7 +23,7 @@ class Geometry {
         this._texCoords = [];
         this._triangles = [];
         this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
-        this.offset = vec3(0, 0, 0);
+        this.offset = new Vector3(0, 0, 0);
 
         this._dynamic = false;
     }

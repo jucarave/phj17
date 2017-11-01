@@ -3,7 +3,7 @@ import ColorMaterial from 'engine/materials/ColorMaterial';
 import CubeGeometry from 'engine/geometries/CubeGeometry';
 import Renderer from 'engine/Renderer';
 import { Vector3 } from 'engine/math/Vector3';
-import { vec4 } from 'engine/math/Vector4';
+import { Vector4 } from 'engine/math/Vector4';
 import Instance from 'engine/entities/Instance';
 
 class BoxCollision extends Collision {
@@ -103,7 +103,7 @@ class BoxCollision extends Collision {
 
     public addCollisionInstance(renderer: Renderer): void {
         let geometry = new CubeGeometry(renderer, this._size.x, this._size.y, this._size.z),
-            material = new ColorMaterial(renderer, vec4(0.0, 1.0, 0.0, 0.5)),
+            material = new ColorMaterial(renderer, new Vector4(0.0, 1.0, 0.0, 0.5)),
             
             object = new Instance(renderer, geometry, material);
 

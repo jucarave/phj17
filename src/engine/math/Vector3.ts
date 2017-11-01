@@ -7,6 +7,10 @@ export class Vector3 {
     private _length             : number;
     private needsUpdate         : boolean;
 
+    constructor(x: number = 0, y: number = 0, z: number = 0) {
+        this.set(x, y, z);
+    }
+
     public clear(): Vector3 {
         this.set(0, 0, 0);
 
@@ -95,7 +99,7 @@ export class Vector3 {
     }
 }
 
-const pool = new Poolify(200, Vector3);
+const pool = new Poolify(10, Vector3);
 export function vec3(x: number = 0, y?: number, z?: number): Vector3 {
     if (y === undefined && z === undefined) { z = x; }
     else if (z === undefined){ z = 0; }

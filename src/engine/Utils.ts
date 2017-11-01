@@ -54,11 +54,11 @@ export function coordsToOrtho(camera: Camera, x: number, y: number): Vector3 {
     );
 }
 
-export function pixelCoordsToWorld(x: number = 0, y: number = 0, z: number = 0): Vector3 {
-    return vec3(
-        x * Config.PIXEL_UNIT_RELATION,
-        y * Config.PIXEL_UNIT_RELATION,
-        z * Config.PIXEL_UNIT_RELATION
+export function pixelCoordsToWorld(vector: Vector3): Vector3 {
+    return vector.set(
+        vector.x * Config.PIXEL_UNIT_RELATION,
+        vector.y * Config.PIXEL_UNIT_RELATION,
+        vector.z * Config.PIXEL_UNIT_RELATION
     );
 }
 
@@ -93,6 +93,9 @@ export function rememberPoolAlloc(object: any): any {
 
 export function freePoolAlloc(): void {
     for (let i=0,obj;obj=smallPool[i];i++) {
+        if (!obj.delete) {
+            console.log("woah");
+        }
         obj.delete();
     }
 

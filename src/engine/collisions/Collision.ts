@@ -1,6 +1,6 @@
 import Scene from 'engine/Scene';
 import Instance from 'engine/entities/Instance';
-import { Vector3, vec3 } from 'engine/math/Vector3';
+import { Vector3 } from 'engine/math/Vector3';
 import Renderer from 'engine/Renderer';
 
 abstract class Collision {
@@ -16,7 +16,7 @@ abstract class Collision {
         this.setScene(scene);
         this.solid = true;
 
-        this._offset = vec3(0, 0, 0);
+        this._offset = new Vector3(0, 0, 0);
     }
 
     public abstract test(position: Vector3, direction: Vector3) : Vector3;

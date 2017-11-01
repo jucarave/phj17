@@ -7,9 +7,10 @@ import Material from 'engine/materials/Material';
 import Shader from 'engine/shaders/Shader';
 import Component from 'engine/Component';
 import Matrix4 from 'engine/math/Matrix4';
-import { Vector3, vec3 } from 'engine/math/Vector3';
+import { Vector3 } from 'engine/math/Vector3';
 import { get2DAngle } from 'engine/Utils';
 import Config from 'engine/Config';
+import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
 
 class Instance {
     protected _renderer           : Renderer;
@@ -17,7 +18,6 @@ class Instance {
     protected _material           : Material;
     protected _rotation           : Vector3;
     protected _transform          : Matrix4;
-    protected _uPosition          : Matrix4;
     protected _scene              : Scene;
     protected _components         : Array<Component>;
     protected _collision          : Collision;
@@ -29,9 +29,8 @@ class Instance {
     
     constructor(renderer: Renderer, geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
-        this._uPosition = Matrix4.createIdentity();
-        this.position = vec3(0.0);
-        this._rotation = vec3(0.0);
+        this.position = new Vector3(0.0);
+        this._rotation = new Vector3(0.0);
         this.isBillboard = false;
         this._needsUpdate = true;
         this._geometry = geometry;
@@ -122,16 +121,18 @@ class Instance {
             return this._transform;
         }
 
-        Matrix4.setIdentity(this._transform);
+        this._transform.setIdentity();
 
-        Matrix4.multiply(this._transform, Matrix4.createXRotation(this._rotation.x));
-        Matrix4.multiply(this._transform, Matrix4.createZRotation(this._rotation.z));
-        Matrix4.multiply(this._transform, Matrix4.createYRotation(this._rotation.y));
+        this._transform.multiply(rpa(Matrix4.createXRotation(this._rotation.x)));
+        this._transform.multiply(rpa(Matrix4.createZRotation(this._rotation.z)));
+        this._transform.multiply(rpa(Matrix4.createYRotation(this._rotation.y)));
 
         let offset = this._geometry.offset;
-        Matrix4.translate(this._transform, this.position.x + offset.x, this.position.y + offset.y, this.position.z + offset.z);
+        this._transform.translate(this.position.x + offset.x, this.position.y + offset.y, this.position.z + offset.z);
 
         this._needsUpdate = false;
+
+        freePoolAlloc();
 
         return this._transform;
     }
@@ -185,16 +186,18 @@ class Instance {
             this.rotate(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
         }
 
-        this._uPosition = Matrix4.setIdentity(this._uPosition);
-        this._uPosition = Matrix4.multiply(this._uPosition, this.getTransformation());
-        this._uPosition = Matrix4.multiply(this._uPosition, camera.getTransformation());
+        let uPosition = Matrix4.allocate();
+        uPosition.multiply(this.getTransformation());
+        uPosition.multiply(camera.getTransformation());
         
-        gl.uniformMatrix4fv(shader.uniforms["uProjection"], false, camera.projection);
-        gl.uniformMatrix4fv(shader.uniforms["uPosition"], false, this._uPosition);
+        gl.uniformMatrix4fv(shader.uniforms["uProjection"], false, camera.projection.data);
+        gl.uniformMatrix4fv(shader.uniforms["uPosition"], false, uPosition.data);
 
         this._material.render();
 
         this._geometry.render();
+
+        uPosition.delete();
     }
 
     public get geometry(): Geometry {

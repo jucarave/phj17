@@ -2,7 +2,7 @@ import Texture from 'engine/Texture';
 import Renderer from 'engine/Renderer';
 import BasicMaterial from 'engine/materials/BasicMaterial';
 import WallGeometry from 'engine/geometries/WallGeometry';
-import { Vector3, vec3 } from 'engine/math/Vector3';
+import { Vector3 } from 'engine/math/Vector3';
 import { roundUpPowerOf2 } from 'engine/Utils';
 import Instance from 'engine/entities/Instance';
 
@@ -22,8 +22,8 @@ const OptionsDefault: TextOptions = {
     fill: true,
     fillColor: '#FFFFFF',
     strokeColor: '#FFFFFF',
-    position: vec3(0.0, 0.0, 0.0),
-    rotation: vec3(0.0, 0.0, 0.0)
+    position: new Vector3(0.0, 0.0, 0.0),
+    rotation: new Vector3(0.0, 0.0, 0.0)
 };
 
 class Text extends Instance {

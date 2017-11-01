@@ -61,12 +61,12 @@ class DemoScene extends Scene {
         sector.displayCollisions();
         this._sectors.push(sector);
         this._addSectorInstances(sector);
-        this._addTrigger(rpa(vec3(0.0, 0.0, 1.5)), rpa(vec3(9.0, 10.0, 4.5)), sector, false); //Activate
-        this._addTrigger(rpa(vec3(0.0, 0.0, 6.0)), rpa(vec3(9.0, 10.0, 4.0)), sector, true); //Deactivate
+        this._addTrigger(new Vector3(0.0, 0.0, 1.5), new Vector3(9.0, 10.0, 4.5), sector, false); //Activate
+        this._addTrigger(new Vector3(0.0, 0.0, 6.0), new Vector3(9.0, 10.0, 4.5), sector, true); //Deactivate
 
-        this.addGameObject(EntityFactory.createAlleyGuy(this._renderer).translate(rpa(pctw(24, 0, 8))));
+        this.addGameObject(EntityFactory.createAlleyGuy(this._renderer).translate(rpa(pctw(vec3(24, 0, 8)))));
         
-        this.addGameObject(player.translate(rpa(pctw(112, 0.0, 24))).rotate(0, Math.PI, 0));
+        this.addGameObject(player.translate(rpa(pctw(vec3(112, 0.0, 24)))).rotate(0, Math.PI, 0));
         this.setCamera(camera);
 
         this._hud = new HUDScene(this._app, this._renderer);
