@@ -1,11 +1,14 @@
 import Poolify from 'engine/Poolify';
+import { PoolClass } from 'engine/Poolify';
 
-export class Vector3 {
+export class Vector3 implements PoolClass {
     private _x                  : number;
     private _y                  : number;
     private _z                  : number;
     private _length             : number;
     private needsUpdate         : boolean;
+
+    public inUse                : boolean;
 
     constructor(x: number = 0, y: number = 0, z: number = 0) {
         this.set(x, y, z);

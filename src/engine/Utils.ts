@@ -93,11 +93,8 @@ export function rememberPoolAlloc(object: any): any {
 
 export function freePoolAlloc(): void {
     for (let i=0,obj;obj=smallPool[i];i++) {
-        if (!obj.delete) {
-            console.log("woah");
-        }
         obj.delete();
     }
 
-    smallPool = [];
+    smallPool.length = 0;
 }

@@ -1,8 +1,10 @@
 import { Vector4 } from 'engine/math/Vector4';
 import Poolify from 'engine/Poolify';
+import { PoolClass } from 'engine/Poolify';
 
-class Matrix4 {
-    public data           : Array<number>;
+class Matrix4 implements PoolClass {
+    public data                 : Array<number>;
+    public inUse                : boolean;
 
     constructor(...values: Array<number>) {
         this.data = new Array(16);

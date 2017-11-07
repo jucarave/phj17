@@ -32,6 +32,10 @@ abstract class Collision {
     public addCollisionInstance(renderer: Renderer): void {
         renderer;
     }
+    
+    public destroy(): void {
+        this._displayInstance.destroy();
+    }
 
     public get instance(): Instance {
         return this._instance;
