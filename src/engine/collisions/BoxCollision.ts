@@ -105,7 +105,7 @@ class BoxCollision extends Collision {
         let geometry = new CubeGeometry(renderer, this._size.x, this._size.y, this._size.z),
             material = new ColorMaterial(renderer, new Vector4(0.0, 1.0, 0.0, 0.5)),
             
-            object = new Instance(renderer, geometry, material);
+            object = Instance.allocate(renderer, geometry, material);
 
         material.setOpaque(false);
 

@@ -17,7 +17,7 @@ export type EntitiesNames = 'ALLEY_GUY';
 
 abstract class EntityFactory {
     public static createPlayer(renderer: Renderer, camera: Camera): Instance {
-        let ret: Instance = new Instance(renderer),
+        let ret: Instance = Instance.allocate(renderer),
         playerComponent = new PlayerComponent();
 
         playerComponent.setCamera(camera);
@@ -34,7 +34,7 @@ abstract class EntityFactory {
             texture = TextureManager.getTexture("NPCS"),
             material = new BasicMaterial(renderer, texture),
             uv = UVManager.NPCS.ALLEY_PERSON,
-            ret = new Instance(renderer, geometry, material),
+            ret = Instance.allocate(renderer, geometry, material),
             collisionSize = rpa(pctw(vec3(8, 23, 8))),
             bc = (new BoxCollision(ret.position, collisionSize)).centerInAxis(true, false, true);
 

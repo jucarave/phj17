@@ -93,6 +93,8 @@ class List<T> {
 
         while (count < index) {
             node = node.next;
+            count++;
+
             if (!node) {
                 return null;
             }
@@ -109,7 +111,17 @@ class List<T> {
 
             item = item.next;
         }
-    };
+    }
+
+    public clear(): void {
+        let node = this._head;
+
+        while (node) {
+            node.delete();
+
+            node = node.next;
+        }
+    }
 
     public sort(sortCheck: Function): void {
         if (this._length < 2) { return; }
