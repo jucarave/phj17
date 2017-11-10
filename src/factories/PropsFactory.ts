@@ -90,7 +90,7 @@ abstract class PropsFactory {
             material = options.material;
         }
 
-        object = new Instance(renderer, model.geometry, material);
+        object = Instance.allocate(renderer, model.geometry, material);
 
         this._centerObjectInGrid(object, options);
 
@@ -106,7 +106,7 @@ abstract class PropsFactory {
             texture = TexturesManager.getTexture(<TexturesNames>options.texture),
             material = this._createMaterial(renderer, texture, texture.getUVS(options.uv), options.repeat),
             
-            object = new Instance(renderer, geometry, material);
+            object = Instance.allocate(renderer, geometry, material);
 
         // Center Object in grid
         let bbox = geometry.boundingBox;
@@ -120,7 +120,7 @@ abstract class PropsFactory {
             texture = TexturesManager.getTexture(<TexturesNames>options.texture),
             material = this._createMaterial(renderer, texture, texture.getUVS(options.uv), options.repeat),
             
-            object = new Instance(renderer, geometry, material);
+            object = Instance.allocate(renderer, geometry, material);
 
         this._centerObjectInGrid(object, options);
 

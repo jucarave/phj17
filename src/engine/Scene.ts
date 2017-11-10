@@ -3,14 +3,11 @@ import Camera from 'engine/Camera';
 import Renderer from 'engine/Renderer';
 import { Vector3 } from 'engine/math/Vector3';
 import { getSquaredDistance } from 'engine/Utils';
+import List from 'engine/List';
 import App from 'App';
 
 interface InstancesMap {
-    [index: string] : Array<Instance>;
-}
-
-interface MaterialsMap {
-    [index: string] : InstancesMap;
+    [index: string] : List<Instance>;
 }
 
 interface TransparentInstance {
@@ -19,45 +16,50 @@ interface TransparentInstance {
 }
 
 class Scene {
-    protected _app                : App;
-    protected _renderer           : Renderer;
-    protected _instances          : MaterialsMap;
-    protected _camera             : Camera;
-    protected _started            : boolean;
+    protected _app                      : App;
+    protected _renderer                 : Renderer;
+    protected _opaqueInstances          : InstancesMap;
+    protected _transparentInstances     : List<TransparentInstance>;
+    protected _camera                   : Camera;
+    protected _started                  : boolean;
 
     constructor(app: App, renderer: Renderer) {
         this._app = app;
         this._renderer = renderer;
-        this._instances = {};
+        this._opaqueInstances = {};
+        this._transparentInstances = new List();
         this._camera = null;
         this._started = false;
     }
 
     public addGameObject(instance: Instance): void {
         let mat = instance.material,
-            matuuid = 'noMaterial',
             shduuid = 'noShader';
 
-        if (mat) {
-            matuuid = mat.uuid;
-            shduuid = mat.getShader().uuid;
-        }
-
-        if (!this._instances[shduuid]) {
-            this._instances[shduuid] = {};
-        }
-
-        if (!this._instances[shduuid][matuuid]) {
-            this._instances[shduuid][matuuid] = [];
-        }
-
-        this._instances[shduuid][matuuid].push(instance);
-
         instance.setScene(this);
-
+        
         if (this._started) {
             instance.awake();
         }
+
+        if (mat) {
+            shduuid = mat.getShader().uuid;
+
+            if (!mat.isOpaque) {
+                this._transparentInstances.push({
+                    instance: instance,
+                    distance: 0
+                });
+
+                return;
+            }
+        }
+
+        if (!this._opaqueInstances[shduuid]) {
+            this._opaqueInstances[shduuid] = new List();
+        }
+
+        this._opaqueInstances[shduuid].push(instance);
     }
 
     public testCollision(instance: Instance, direction: Vector3): Vector3 {
@@ -70,71 +72,60 @@ class Scene {
     }
 
     public init(): void {
-        for (let i in this._instances) {
-            for (let j in this._instances[i]) {
-                var instances = this._instances[i][j];
-
-                for (let k=0,ins;ins=instances[k];k++) {
-                    ins.awake();
-                }
-            }
+        for (let i in this._opaqueInstances) {
+            this._opaqueInstances[i].each((ins: Instance) => {
+                ins.awake();
+            });
         }
+
+        this._transparentInstances.each((ins: TransparentInstance) => {
+            ins.instance.awake();
+        });
 
         this._started = true;
     }
 
     public update(): void {
-        
+        for (let i in this._opaqueInstances) {
+            this._opaqueInstances[i].each((ins: Instance) => {
+                if (ins.isDestroyed) {
+                    let shdId = (ins.material)? ins.material.getShader().uuid : 'noShader';
+                    this._opaqueInstances[shdId].remove(ins);
+                    return;
+                }
+    
+                ins.update();
+            });
+        }
+
+        this._transparentInstances.each((tIns: TransparentInstance) => {
+            let ins = tIns.instance;
+            
+            if (ins.isDestroyed) {
+                this._transparentInstances.remove(tIns);
+                return;
+            }
+
+            ins.update();
+
+            tIns.distance = getSquaredDistance(ins.position, this._camera.position);
+        });
     }
 
     public render(): void {
-        let opaques: Array<Instance> = [],
-            transparents: Array<TransparentInstance> = [];
-
-        for (let i in this._instances) {
-            for (let j in this._instances[i]) {
-                var instances = this._instances[i][j];
-
-                for (let k=0,ins;ins=instances[k];k++) {
-                    if (ins.isDestroyed) {
-                        this._instances[i][j].splice(k, 1);
-                        k--;
-                        continue;
-                    }
-
-                    ins.update();
-
-                    if (ins.material) {
-                        if (ins.material.isOpaque) {
-                            opaques.push(ins);
-                        } else {
-                            let dis = getSquaredDistance(ins.position, this._camera.position),
-                                add = false;
-
-                            for (let m=0,trans;trans=transparents[m];m++) {
-                                if (dis > trans.distance) {
-                                    transparents.splice(m, 0, {instance: ins, distance: dis});
-                                    add = true;
-                                    m = transparents.length;
-                                }
-                            }
-
-                            if (!add) {
-                                transparents.push({instance: ins, distance: dis});
-                            }
-                        }
-                    }
-                }
-            }
+        for (let i in this._opaqueInstances) {
+            this._opaqueInstances[i].each((ins: Instance) => {
+                ins.render(this._camera);
+            });
         }
 
-        for (let i=0,ins;ins=opaques[i];i++) {
-            ins.render(this._camera);
-        }
-        
-        for (let i=0,ins;ins=transparents[i];i++) {
+        this._transparentInstances.sort((itemA: TransparentInstance, itemB: TransparentInstance) => {
+            return (itemA.distance > itemB.distance);
+        });
+
+        this._transparentInstances.each((ins: TransparentInstance) => {
             ins.instance.render(this._camera);
-        }
+        });
     }
 }
 

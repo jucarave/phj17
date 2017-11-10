@@ -129,6 +129,13 @@ class Sector {
     public get solidInstances(): Array<Collision> {
         return this._solidInstances;
     }
-}
+    
+    public get position(): Vector3 {
+        return this._position;
+    }
+    
+    public get size(): Vector3 {
+        return this._size;
+    }}
 
 export default Sector;

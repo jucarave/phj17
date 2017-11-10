@@ -1,5 +1,6 @@
 import Matrix4 from 'engine/math/Matrix4';
 import { Vector3, vec3 } from 'engine/math/Vector3';
+import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
 
 class Camera {
     private _transform           : Matrix4;
@@ -17,11 +18,11 @@ class Camera {
         this.projection = projection;
         this._transform = Matrix4.createIdentity();
 
-        this.position = vec3(0, 0, 0);
-        this._target = vec3(0, 0, 0);
-        this._up = vec3(0, 1, 0);
-        this._angle = vec3(0.0);
-        this.screenSize = vec3(0.0);
+        this.position = new Vector3(0, 0, 0);
+        this._target = new Vector3(0, 0, 0);
+        this._up = new Vector3(0, 1, 0);
+        this._angle = new Vector3(0.0);
+        this.screenSize = new Vector3(0.0);
 
         this._needsUpdate = true;
     }
@@ -59,17 +60,16 @@ class Camera {
             return this._transform;
         }
 
-        let f = this.forward,
-            l = Vector3.cross(this._up, f).normalize(),
-            u = Vector3.cross(f, l).normalize();
+        let f = rpa(this.forward),
+            l = rpa(Vector3.cross(this._up, f).normalize()),
+            u = rpa(Vector3.cross(f, l).normalize());
 
         let cp = this.position,
             x = -Vector3.dot(l, cp),
             y = -Vector3.dot(u, cp),
             z = -Vector3.dot(f, cp);
 
-        Matrix4.set(
-            this._transform,
+        this._transform.set(
             l.x, u.x, f.x, 0,
             l.y, u.y, f.y, 0,
             l.z, u.z, f.z, 0,
@@ -77,6 +77,8 @@ class Camera {
         );
         
         this._needsUpdate = false;
+
+        freePoolAlloc();
 
         return this._transform;
     }

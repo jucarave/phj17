@@ -42,6 +42,10 @@ class CharaRendererComponent extends Component {
         }
 
         this._playerCharaComponent = this._player.getComponent<CharaComponent>(CharaComponent.componentName);
+
+        setTimeout(() => {
+            this._instance.destroy();
+        }, 3000);
     }
 
     public update(): void {

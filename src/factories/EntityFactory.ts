@@ -9,15 +9,15 @@ import WallGeometry from 'engine/geometries/WallGeometry';
 import BasicMaterial from 'engine/materials/BasicMaterial';
 import TextureManager from 'managers/TexturesManager';
 import UVManager from 'managers/UVManager';
-import { pixelCoordsToWorld as pctw } from 'engine/Utils';
-import { Vector3 } from 'engine/math/Vector3';
+import { pixelCoordsToWorld as pctw, rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
+import { Vector3, vec3 } from 'engine/math/Vector3';
 import BoxCollision from 'engine/collisions/BoxCollision';
 
 export type EntitiesNames = 'ALLEY_GUY';
 
 abstract class EntityFactory {
     public static createPlayer(renderer: Renderer, camera: Camera): Instance {
-        let ret: Instance = new Instance(renderer),
+        let ret: Instance = Instance.allocate(renderer),
         playerComponent = new PlayerComponent();
 
         playerComponent.setCamera(camera);
@@ -29,13 +29,14 @@ abstract class EntityFactory {
     }
 
     public static createAlleyGuy(renderer: Renderer): Instance {
-        let size = pctw(12, 26),
+        let size = rpa(pctw(vec3(12, 26))),
             geometry = new WallGeometry(renderer, size.x, size.y),
             texture = TextureManager.getTexture("NPCS"),
             material = new BasicMaterial(renderer, texture),
             uv = UVManager.NPCS.ALLEY_PERSON,
-            ret = new Instance(renderer, geometry, material),
-            bc = (new BoxCollision(ret.position, pctw(8, 23, 8))).centerInAxis(true, false, true);
+            ret = Instance.allocate(renderer, geometry, material),
+            collisionSize = rpa(pctw(vec3(8, 23, 8))),
+            bc = (new BoxCollision(ret.position, collisionSize)).centerInAxis(true, false, true);
 
         geometry.offset.set(0, size.y / 2, 0);
 
@@ -48,6 +49,8 @@ abstract class EntityFactory {
         ret.isBillboard = true;
         
         material.setOpaque(false);
+
+        freePoolAlloc();
 
         return ret;
     }
