@@ -19,6 +19,7 @@
     "src/engine/List.ts",
     "src/engine/Poolify.ts",
     "src/engine/Renderer.ts",
+    "src/engine/RenderingLayer.ts",
     "src/engine/Scene.ts",
     "src/engine/Texture.ts",
     "src/engine/Utils.ts",

@@ -88,6 +88,8 @@ class List<T> {
     }
 
     public getAt(index: number): T {
+        if (this._length == 0) { return null; }
+
         let node = this._head,
             count = 0;
 
@@ -101,6 +103,36 @@ class List<T> {
         }
 
         return node.item;
+    }
+    
+    public insertAt(index: number, item: T): void {
+        let node = this._head,
+            count = 0;
+
+        this._length++;
+
+        while (count < index) {
+            node = node.next;
+            count++;
+
+            if (!node) {
+                this.push(item);
+                return;
+            }
+        }
+
+        let newItem = Node.allocate(item);
+        if (this._head == node) {
+            this._head.prev = newItem;
+            newItem.next = this._head;
+            this._head = newItem;
+        } else {
+            newItem.next = node;
+            newItem.prev = node.prev;
+    
+            if (node.prev) node.prev.next = newItem;
+            node.prev = newItem;
+        }
     }
 
     public each(callback: Function): void {
