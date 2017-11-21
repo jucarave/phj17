@@ -36,7 +36,7 @@ class SectorsManager {
         sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(new Vector3(96, 0.0, 48)), size: pctw(new Vector3(16, 48)), rotation: new Vector3(0, Math.PI, 0), uv: city.BAR_EXT_WALL, repeat: [1, 1] });
         sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(new Vector3(128, 0.0, 48)), size: pctw(new Vector3(16, 48)), rotation: new Vector3(0, Math.PI, 0), uv: city.BAR_EXT_WALL, repeat: [1, 1] });
 
-        sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(new Vector3(128, 0.0, 0.0)), rotation: new Vector3(0, PI3_2, 0), size: pctw(new Vector3(48, 32)), uv: city.ALLEY_FENCE, repeat: [3, 1] });
+        sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(new Vector3(128, 0.0, 0.0)), rotation: new Vector3(0, PI3_2, 0), size: pctw(new Vector3(48, 32)), uv: city.ALLEY_FENCE, repeat: [3, 1], opaque: false });
 
         sector.addProp("Wall", <PropOptions>{ texture: 'CITY', position: pctw(new Vector3(24, 0.0, 40)), size: pctw(new Vector3(10, 11)), uv: city.BAR_FLOOR_SIGN, billboard: true });
         sector.addProp("Model3D", <PropOptions>{ model: 'Dumpster', texture: 'CITY', position: pctw(new Vector3(0.0, 0.0, 8.0)), culling: true });
