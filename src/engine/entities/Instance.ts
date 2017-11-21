@@ -1,7 +1,6 @@
 import Renderer from 'engine/Renderer';
 import Camera from 'engine/Camera';
 import Scene from 'engine/Scene';
-import Collision from 'engine/collisions/Collision';
 import Geometry from 'engine/geometries/Geometry';
 import Material from 'engine/materials/Material';
 import Shader from 'engine/shaders/Shader';
@@ -9,7 +8,6 @@ import Component from 'engine/Component';
 import Matrix4 from 'engine/math/Matrix4';
 import { Vector3 } from 'engine/math/Vector3';
 import { get2DAngle } from 'engine/Utils';
-import Config from 'engine/Config';
 import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
 import Poolify from 'engine/Poolify';
 import { PoolClass } from 'engine/Poolify';
@@ -23,7 +21,6 @@ class Instance implements PoolClass {
     protected _transform          : Matrix4;
     protected _scene              : Scene;
     protected _components         : List<Component>;
-    protected _collision          : Collision;
     protected _needsUpdate        : boolean;
     protected _destroyed          : boolean;
     
@@ -42,7 +39,6 @@ class Instance implements PoolClass {
         this._renderer = renderer;
         this._scene = null;
         this._components = new List();
-        this._collision = null;
         this._destroyed = false;
     }
     
@@ -64,10 +60,6 @@ class Instance implements PoolClass {
         }
 
         this._needsUpdate = true;
-
-        if (this._collision && this._collision.displayInstance) {
-            this._collision.displayInstance.translate(x, y, z, true);
-        }
 
         return this;
     }
@@ -134,11 +126,6 @@ class Instance implements PoolClass {
         return this._transform;
     }
 
-    public setCollision(collision: Collision): void {
-        this._collision = collision;
-        collision.setInstance(this);
-    }
-
     public set(renderer: Renderer, geometry: Geometry = null, material: Material = null): void {
         this._renderer = renderer;
         this._geometry = geometry;
@@ -157,7 +144,6 @@ class Instance implements PoolClass {
         this._needsUpdate = true;
         this._scene = null;
         this._components.clear();
-        this._collision = null;
         this._destroyed = true;
     }
 
@@ -169,13 +155,6 @@ class Instance implements PoolClass {
         this._components.each((component: Component) => {
             component.awake();
         });
-
-        if (this._collision && Config.DISPLAY_COLLISIONS) {
-            let collision = this._collision;
-
-            collision.setScene(this._scene);
-            collision.addCollisionInstance(this._renderer);
-        }
     }
 
     public update(): void {
@@ -191,10 +170,6 @@ class Instance implements PoolClass {
 
         if (this._geometry.isDynamic) {
             this._geometry.destroy();
-        }
-
-        if (this._collision && Config.DISPLAY_COLLISIONS) {
-            this._collision.destroy();
         }
 
         this._destroyed = true;
@@ -247,10 +222,6 @@ class Instance implements PoolClass {
     
     public get rotation(): Vector3 {
         return this._rotation;
-    }
-
-    public get collision(): Collision {
-        return this._collision;
     }
 
     public get scene(): Scene {

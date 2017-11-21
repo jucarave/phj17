@@ -5,7 +5,6 @@ import { InstancesMap } from 'engine/RenderingLayer';
 import List from 'engine/List';
 import { getSquaredDistance } from 'engine/Utils';
 import Instance from 'engine/entities/Instance';
-import { Vector3 } from 'engine/math/Vector3';
 import App from 'App';
 
 class Scene {
@@ -59,11 +58,6 @@ class Scene {
         }
         
         layer.addInstance(instance);
-    }
-
-    public testCollision(instance: Instance, direction: Vector3): Vector3 {
-        instance;
-        return direction;
     }
 
     public setCamera(camera: Camera): void {

@@ -57,8 +57,6 @@ class DemoScene extends Scene {
 
         // Sectors
         let sector = SectorsManager.getSector("ALLEY");
-        sector.setScene(this);
-        sector.displayCollisions();
         this._sectors.push(sector);
         this._addSectorInstances(sector);
         this._addTrigger(new Vector3(0.0, 0.0, 1.5), new Vector3(9.0, 10.0, 4.5), sector, false); //Activate
@@ -75,42 +73,6 @@ class DemoScene extends Scene {
         this._playerComponent = player.getComponent<PlayerComponent>(PlayerComponent.componentName);
 
         freePoolAlloc();
-    }
-
-    public testCollision(instance: Instance, direction: Vector3): Vector3 {
-        let position = instance.position,
-            insCol = instance.collision;
-
-        for (let i=0,sector;sector=this._sectors[i];i++) {
-            if (sector.collision.test(position, direction)) {
-                for (let j=0,collision;collision=sector.solidInstances[j];j++) {
-                    if (collision == insCol) { continue; }
-                    
-                    let result = collision.test(position, direction);
-                    if (result) {
-                        direction = result;
-                    }
-                }
-            }
-        }
-
-        return direction;
-    }
-
-    public getIntersectingSectors(instance: Instance): Array<Sector> {
-        let ret: Array<Sector> = [],
-            pos = instance.position,
-            dir = vec3(0, 0, 0);
-
-        for (let i=0,sector;sector=this._sectors[i];i++) {
-            if (sector.collision.test(pos, dir)) {
-                ret.push(sector);
-            }
-        }
-
-        dir.delete();
-
-        return ret;
     }
 
     public update(): void {

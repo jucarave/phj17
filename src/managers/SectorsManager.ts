@@ -1,7 +1,6 @@
 import { PI_2, PI3_2 } from 'engine/Constants';
 import Renderer from 'engine/Renderer';
 import { pixelCoordsToWorld as pctw } from 'engine/Utils';
-import BoxCollision from 'engine/collisions/BoxCollision';
 import { Vector3 } from 'engine/math/Vector3';
 import Sector from 'scenes/Sector';
 import { PropOptions } from 'factories/PropsFactory';
@@ -50,19 +49,6 @@ class SectorsManager {
 
         sector.addProp("Text", <PropOptions>{ text: "Jucarave", font: "retganon", fontSize: 36, position: pctw(new Vector3(48, 24, 24)), rotation: new Vector3(0, PI_2, 0), opaque: false });
         sector.addProp("Text", <PropOptions>{ text: "A Game By", font: "retganon", fontSize: 36, position: pctw(new Vector3(80, 16, 24)), rotation: new Vector3(0, PI_2, 0), opaque: false });
-
-        // Collisions
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(0, 0, -1)), pctw(new Vector3(144, 128, 2)))).centerInAxis(false, false, false)); // RightWall
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(-1, 0, 0)), pctw(new Vector3(2, 36, 48)))).centerInAxis(false, false, false)); // BackWall
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(0, 0, 47)), pctw(new Vector3(41, 48, 2)))).centerInAxis(false, false, false)); // Bar part 1
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(55, 0, 47)), pctw(new Vector3(89, 48, 2)))).centerInAxis(false, false, false)); // Bar part 2
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(127, 0, 0)), pctw(new Vector3(2, 32, 48)))).centerInAxis(false, false, false)); // Fence
-
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(0, 0, 8)), pctw(new Vector3(16, 16, 30)))).centerInAxis(false, false, false)); // Dumpster
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(22, 0, 36)), pctw(new Vector3(12, 12, 12)))).centerInAxis(false, false, false)); // Sign
-        sector.registerCollision((new BoxCollision(pctw(new Vector3(66, 0, 0)), pctw(new Vector3(27, 16, 16)))).centerInAxis(false, false, false)); // Barrels
-
-        sector.setCollision(pctw(new Vector3(0, 0, 0)), pctw(new Vector3(144, 128, 48)));
 
         this._sectors[sectorName] = sector;
     }
