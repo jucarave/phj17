@@ -45,8 +45,12 @@
     "src/engine/math/Vector3.ts",
     "src/engine/math/Vector4.ts",
 
-    "src/entities/Instance.ts",
-    "src/entities/Text.ts",
+    "src/engine/entities/Instance.ts",
+    "src/engine/entities/Text.ts",
+    
+    "src/engine/physics/Body.ts",
+    "src/engine/physics/BoundingBox.ts",
+    "src/engine/physics/Triangle.ts",
 
     "src/factories/EntityFactory.ts",
     "src/factories/PropsFactory.ts",

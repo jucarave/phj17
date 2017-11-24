@@ -10,7 +10,7 @@ export class Vector3 implements PoolClass {
 
     public inUse                : boolean;
 
-    constructor(x: number = 0, y: number = 0, z: number = 0) {
+    constructor(x: number|Vector3 = 0, y: number = 0, z: number = 0) {
         this.set(x, y, z);
     }
 
@@ -20,7 +20,16 @@ export class Vector3 implements PoolClass {
         return this;
     }
 
-    public set(x: number, y: number, z: number): Vector3 {
+    public set(x: number|Vector3, y: number, z: number): Vector3 {
+        if ((<Vector3>x).x !== undefined) {
+            let v = <Vector3>x;
+            x = v.x;
+            y = v.y;
+            z = v.z;
+        } else {
+            x = <number>x;
+        }
+
         this._x = x;
         this._y = y;
         this._z = z;
@@ -99,6 +108,14 @@ export class Vector3 implements PoolClass {
 
     public static dot(vectorA: Vector3, vectorB: Vector3): number {
         return vectorA.x * vectorB.x + vectorA.y * vectorB.y + vectorA.z * vectorB.z;
+    }
+
+    public static difference(vectorA: Vector3, vectorB: Vector3): Vector3 {
+        return vec3(
+            vectorA.x - vectorB.x,
+            vectorA.y - vectorB.y,
+            vectorA.z - vectorB.z
+        );
     }
 }
 

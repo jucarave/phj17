@@ -12,6 +12,7 @@ import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
 import Poolify from 'engine/Poolify';
 import { PoolClass } from 'engine/Poolify';
 import List from 'engine/List';
+import Body from 'engine/physics/Body';
 
 class Instance implements PoolClass {
     protected _renderer           : Renderer;
@@ -19,6 +20,7 @@ class Instance implements PoolClass {
     protected _material           : Material;
     protected _rotation           : Vector3;
     protected _transform          : Matrix4;
+    protected _body               : Body;
     protected _scene              : Scene;
     protected _components         : List<Component>;
     protected _needsUpdate        : boolean;
@@ -40,6 +42,7 @@ class Instance implements PoolClass {
         this._scene = null;
         this._components = new List();
         this._destroyed = false;
+        this._body = null;
     }
     
     public translate(x: number|Vector3, y: number = 0, z: number = 0, relative: boolean = false): Instance {
@@ -210,6 +213,10 @@ class Instance implements PoolClass {
         ins.set(renderer, geometry, material);
 
         return ins;
+    }
+
+    public set body(body: Body) {
+        this._body = body;
     }
 
     public get geometry(): Geometry {
