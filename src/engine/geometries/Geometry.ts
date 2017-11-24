@@ -1,17 +1,21 @@
 import { VERTICE_SIZE, TEXCOORD_SIZE } from 'engine/Constants';
 import Renderer from 'engine/Renderer';
 import Shader from 'engine/shaders/Shader';
+import BoundingBox from 'engine/physics/BoundingBox'
+import Triangle from 'engine/physics/Triangle'
 import { Vector3 } from 'engine/math/Vector3';
+import List from 'engine/List';
 
 class Geometry {
     private _vertices                : Array<number>;
-    private _triangles               : Array<number>;
+    private _indices                 : Array<number>;
     private _texCoords               : Array<number>;
+    private _triangles               : List<Triangle>;
     private _vertexBuffer            : WebGLBuffer;
     private _texBuffer               : WebGLBuffer;
     private _indexBuffer             : WebGLBuffer;
     private _indexLength             : number;
-    private _boundingBox             : Array<number>;
+    private _boundingBox             : BoundingBox;
     
     protected _renderer              : Renderer;
     protected _dynamic               : boolean;
@@ -21,25 +25,39 @@ class Geometry {
     constructor() {
         this._vertices = [];
         this._texCoords = [];
-        this._triangles = [];
-        this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
+        this._indices = [];
+        this._triangles = null;
+        this._boundingBox = new BoundingBox();
         this.offset = new Vector3(0, 0, 0);
 
         this._dynamic = false;
+    }
+
+    private _buildTriangles(): void {
+        this._triangles = new List();
+
+        for (let i=0,len=this._indices.length;i<len;i+=3) {
+            let v1_x = this._vertices[this._indices[i] * VERTICE_SIZE],
+                v1_y = this._vertices[this._indices[i] * VERTICE_SIZE + 1],
+                v1_z = this._vertices[this._indices[i] * VERTICE_SIZE + 2],
+
+                v2_x = this._vertices[this._indices[i+1] * VERTICE_SIZE],
+                v2_y = this._vertices[this._indices[i+1] * VERTICE_SIZE + 1],
+                v2_z = this._vertices[this._indices[i+1] * VERTICE_SIZE + 2],
+
+                v3_x = this._vertices[this._indices[i+2] * VERTICE_SIZE],
+                v3_y = this._vertices[this._indices[i+2] * VERTICE_SIZE + 1],
+                v3_z = this._vertices[this._indices[i+2] * VERTICE_SIZE + 2];
+
+            this._triangles.push(new Triangle(new Vector3(v1_x, v1_y, v1_z), new Vector3(v2_x, v2_y, v2_z), new Vector3(v3_x, v3_y, v3_z)));
+        }
     }
 
     public addVertice(x: number, y: number, z: number): void {
         this._vertices.push(x, y, z);
 
         // Calculate bounding box
-        this._boundingBox = [
-            Math.min(this._boundingBox[0], x),
-            Math.min(this._boundingBox[1], y),
-            Math.min(this._boundingBox[2], z),
-            Math.max(this._boundingBox[3], x),
-            Math.max(this._boundingBox[4], y),
-            Math.max(this._boundingBox[5], z)
-        ];
+        this._boundingBox.readjustSize(x, y, z);
     }
     
     public addTexCoord(x: number, y: number): void {
@@ -51,12 +69,16 @@ class Geometry {
         if (this._vertices[vert2 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert2 + "] not found!")}
         if (this._vertices[vert3 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert3 + "] not found!")}
 
-        this._triangles.push(vert1, vert2, vert3);
+        this._indices.push(vert1, vert2, vert3);
     }
 
-    public build(renderer: Renderer): void {
+    public build(renderer: Renderer, keepTriangles: boolean = false): void {
         let gl = renderer.GL;
 
+        if (keepTriangles) {
+            this._buildTriangles();
+        }
+        
         this._renderer = renderer;
 
         this._vertexBuffer = gl.createBuffer();
@@ -69,32 +91,13 @@ class Geometry {
 
         this._indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this._triangles), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this._indices), gl.STATIC_DRAW);
 
-        this._indexLength = this._triangles.length;
+        this._indexLength = this._indices.length;
 
         this._vertices = null;
         this._texCoords = null;
-        this._triangles = null;
-    }
-
-    public clearBoundBoxAxis(x: number = 0, y: number = 0, z: number = 0): Geometry {
-        if (x == 1) {
-            this._boundingBox[0] = 0;
-            this._boundingBox[3] = 0;
-        }
-        
-        if (y == 1) {
-            this._boundingBox[1] = 0;
-            this._boundingBox[4] = 0;
-        }
-
-        if (z == 1) {
-            this._boundingBox[2] = 0;
-            this._boundingBox[5] = 0;
-        }
-
-        return this;
+        this._indices = null;
     }
 
     public destroy(): void {
@@ -126,8 +129,12 @@ class Geometry {
         return this._dynamic;
     }
 
-    public get boundingBox(): Array<number> {
+    public get boundingBox(): BoundingBox {
         return this._boundingBox;
+    }
+
+    public get triangles(): List<Triangle> {
+        return this._triangles;
     }
 }
 

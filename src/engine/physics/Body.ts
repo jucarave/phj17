@@ -1,4 +1,5 @@
 import Instance from 'engine/entities/Instance';
+import Geometry from 'engine/geometries/Geometry';
 import Triangle from 'engine/physics/Triangle'
 import BoundingBox from 'engine/physics/BoundingBox'
 import List from 'engine/List';
@@ -6,17 +7,21 @@ import { Vector3 } from 'engine/math/Vector3';
 
 class Body {
     private _instance       : Instance;
+    private _geometry       : Geometry;
     private _triangles      : List<Triangle>;
     private _bbox           : BoundingBox;
     
     public position         : Vector3;
 
-    constructor(instance: Instance) {
+    constructor(instance: Instance, geometry: Geometry) {
         this._instance = instance;
-        this._triangles = new List();
-        this.position = new Vector3(0.0, 0.0, 0.0);
-        this._bbox = new BoundingBox(this);
+        this._geometry = geometry;
+        
+        this.position = instance.position;
+        this._triangles = this._geometry.triangles;
+        this._bbox = this._geometry.boundingBox;
 
+        geometry.boundingBox.body = this;
         instance.body = this;
     }
 

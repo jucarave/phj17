@@ -1,5 +1,6 @@
 import { Vector3 } from 'engine/math/Vector3';
 import Body from 'engine/physics/Body';
+import Config from 'engine/Config';
 
 class BoundingBox {
     private _body       : Body;
@@ -11,7 +12,7 @@ class BoundingBox {
     public y2          : number;
     public z2          : number;
 
-    constructor(body: Body) {
+    constructor() {
         this.x1 = Infinity;
         this.y1 = Infinity;
         this.z1 = Infinity;
@@ -19,10 +20,10 @@ class BoundingBox {
         this.y2 = -Infinity;
         this.z2 = -Infinity;
 
-        this._body = body;
+        this._body = null;
     }
 
-    public overlaps(bbox: BoundingBox) {
+    public overlaps(bbox: BoundingBox): boolean {
         let x1 = this.position.x + this.x1,
             y1 = this.position.y + this.y1,
             z1 = this.position.z + this.z1,
@@ -42,6 +43,32 @@ class BoundingBox {
             y1 > by2 || y2 < by1 || 
             z1 > bz2 || z2 < bz1
         );
+    }
+
+    public readjustSize(x: number, y: number, z: number): void {
+        this.x1 = Math.min(this.x1, x);
+        this.y1 = Math.min(this.y1, y);
+        this.z1 = Math.min(this.z1, z);
+        this.x2 = Math.max(this.x2, x);
+        this.y2 = Math.max(this.y2, y);
+        this.z2 = Math.max(this.z2, z);
+
+        if (this.x1 == this.x2) {
+            this.x1 -= Config.PIXEL_UNIT_RELATION;
+            this.x2 += Config.PIXEL_UNIT_RELATION;
+        }
+        if (this.y1 == this.y2) {
+            this.y1 -= Config.PIXEL_UNIT_RELATION;
+            this.y2 += Config.PIXEL_UNIT_RELATION;
+        }
+        if (this.z1 == this.z2) {
+            this.z1 -= Config.PIXEL_UNIT_RELATION;
+            this.z2 += Config.PIXEL_UNIT_RELATION;
+        }
+    }
+
+    public set body(body: Body) {
+        this._body = body;
     }
 
     public get position(): Vector3 {

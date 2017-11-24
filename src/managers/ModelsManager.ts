@@ -26,7 +26,7 @@ class ModelsManager {
         this._modelsReady = 0;
     }
 
-    private _loadModel(modelName: string, renderer: Renderer, clearBBAxis?: Array<number>): void {
+    private _loadModel(modelName: string, renderer: Renderer): void {
         this._modelsCount++;
         httpRequest("data/" + modelName + ".obj", (data: string) => {
             let lines = data.split("\n"),
@@ -61,10 +61,6 @@ class ModelsManager {
 
             geometry.build(renderer);
 
-            if (clearBBAxis) {
-                geometry.clearBoundBoxAxis(clearBBAxis[0], clearBBAxis[1], clearBBAxis[2]);
-            }
-
             this._modelsReady++;
 
             let obj: Model = {
@@ -79,8 +75,8 @@ class ModelsManager {
     public init(renderer: Renderer): void {
         this._loadModel("BarSign", renderer);
         this._loadModel("Dumpster", renderer);
-        this._loadModel("BarWindow", renderer, [1, 0, 0]);
-        this._loadModel("BarDoorFrame", renderer, [1, 0, 0]);
+        this._loadModel("BarWindow", renderer);
+        this._loadModel("BarDoorFrame", renderer);
         this._loadModel("BarDoor", renderer);
         this._loadModel("Barrel", renderer);
     }

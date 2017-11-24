@@ -63,13 +63,13 @@ abstract class PropsFactory {
         // Center Object in grid
         let bbox = object.geometry.boundingBox;
         
-        let x = -bbox[0],
-            y = -bbox[1],
-            z = -bbox[2];
+        let x = -bbox.x1,
+            y = -bbox.y1,
+            z = -bbox.z1;
 
         if (options.rotation && (options.rotation.y == PI_2 || options.rotation.y == PI3_2)) {
-            x = -bbox[2];
-            z = -bbox[0];
+            x = -bbox.z1;
+            z = -bbox.x1;
         }
 
         object.translate(x, y, z);
@@ -110,7 +110,7 @@ abstract class PropsFactory {
 
         // Center Object in grid
         let bbox = geometry.boundingBox;
-        object.translate(-bbox[0], -bbox[1], -bbox[2]);
+        object.translate(-bbox.x1, -bbox.y1, -bbox.z1);
 
         return this._processObjectProperties(object, options);
     }

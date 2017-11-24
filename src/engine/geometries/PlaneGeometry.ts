@@ -29,7 +29,10 @@ class PlaneGeometry extends Geometry {
         this.addTexCoord(0.0, 0.0);
         this.addTexCoord(1.0, 0.0);
 
-        this.build(this._renderer);
+        this.build(this._renderer, true);
+
+        console.log(this.triangles);
+        console.log(this.boundingBox);
     }
 }
 
