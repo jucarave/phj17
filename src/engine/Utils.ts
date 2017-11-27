@@ -98,3 +98,36 @@ export function freePoolAlloc(): void {
 
     smallPool.length = 0;
 }
+
+export function clamp(num: number, min: number, max: number): number {
+    if (num < min) { num = min; }
+    if (num > max) { num = max; }
+
+    return num;
+}
+
+export function getLowestRoot(a: number, b: number, c: number, maxR: number): number {
+    let determinant = b * b - 4.0 * a * c;
+
+    if (determinant < 0.0) return null;
+
+    let sqrtD = Math.sqrt(determinant),
+        r1 = (-b - sqrtD) / (2 * a),
+        r2 = (-b + sqrtD) / (2 * a);
+
+    if (r1 > r2) {
+        let h = r1;
+        r1 = r2;
+        r2 = h;
+    }
+
+    if (r1 > 0 && r1 < maxR) {
+        return r1;
+    }
+
+    if (r2 > 0 && r2 < maxR) {
+        return r2;
+    }
+
+    return null;
+}

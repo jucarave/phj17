@@ -70,9 +70,16 @@ class Triangle {
         return (bInt(z)& ~(bInt(x)|bInt(y)) & 0x80000000) != 0;
     }
 
+    public getPoint(index: number): Vector3 {
+        if (index == 0) { return this._p1; } else 
+        if (index == 1) { return this._p2; } else
+        if (index == 2) { return this._p3; }
+    }
+
     public get p1(): Vector3 { return this._p1; }
     public get p2(): Vector3 { return this._p2; }
     public get p3(): Vector3 { return this._p3; }
+    public get normal(): Vector3 { return this._normal; }
 }
 
 export default Triangle;

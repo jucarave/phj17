@@ -26,7 +26,7 @@ class ModelsManager {
         this._modelsReady = 0;
     }
 
-    private _loadModel(modelName: string, renderer: Renderer): void {
+    private _loadModel(modelName: string, renderer: Renderer, keepTriangles: boolean = false): void {
         this._modelsCount++;
         httpRequest("data/" + modelName + ".obj", (data: string) => {
             let lines = data.split("\n"),
@@ -59,7 +59,7 @@ class ModelsManager {
                 }
             }
 
-            geometry.build(renderer);
+            geometry.build(renderer, keepTriangles);
 
             this._modelsReady++;
 
@@ -79,6 +79,7 @@ class ModelsManager {
         this._loadModel("BarDoorFrame", renderer);
         this._loadModel("BarDoor", renderer);
         this._loadModel("Barrel", renderer);
+        this._loadModel("CollisionTest", renderer, true);
     }
 
     public getModel(name: ModelNames): Model {

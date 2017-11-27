@@ -50,7 +50,9 @@
     
     "src/engine/physics/Body.ts",
     "src/engine/physics/BoundingBox.ts",
+    "src/engine/physics/Ellipsoid.ts",
     "src/engine/physics/Triangle.ts",
+    "src/engine/physics/Physics.ts",
 
     "src/factories/EntityFactory.ts",
     "src/factories/PropsFactory.ts",
@@ -60,6 +62,7 @@
     "src/managers/TexturesManager.ts",
     "src/managers/UVManager.ts",
 
+    "src/scenes/CollisionScene.ts",
     "src/scenes/DemoScene.ts",
     "src/scenes/HUDScene.ts",
     "src/scenes/Sector.ts",

@@ -7,7 +7,7 @@ import Camera from 'engine/Camera';
 import TexturesManager from 'managers/TexturesManager';
 import ModelsManager from 'managers/ModelsManager';
 import SectorsManager from 'managers/SectorsManager';
-import DemoScene from 'scenes/DemoScene';
+import CollisionScene from 'scenes/CollisionScene';
 
 const CANVAS_WIDTH           = 854; 
 const CANVAS_HEIGHT          = 480;
@@ -47,7 +47,7 @@ class App {
 
     private _waitLoad(): void {
         if (TexturesManager.isReady() && ModelsManager.isReady()) {
-            this._scene = new DemoScene(this, this._renderer);
+            this._scene = new CollisionScene(this, this._renderer);
             this._scene.init();
 
             this._stats.showPanel(1);

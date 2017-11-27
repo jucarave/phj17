@@ -1,5 +1,6 @@
 import Renderer from 'engine/Renderer';
 import Texture from 'engine/Texture';
+import Geometry from 'engine/geometries/Geometry';
 import { PI_2, PI3_2 } from 'engine/Constants';
 import Material from 'engine/materials/Material';
 import BasicMaterial from 'engine/materials/BasicMaterial';
@@ -13,6 +14,7 @@ import TexturesManager from 'managers/TexturesManager';
 import { TexturesNames } from 'managers/TexturesManager';
 import ModelsManager from 'managers/ModelsManager';
 import { ModelNames } from 'managers/ModelsManager';
+import Body from 'engine/physics/Body';
 
 export type PropsNames = 'Model3D' | 'Text' | 'Floor' | 'Wall';
 
@@ -35,6 +37,9 @@ export interface PropOptions {
     text?: string;
     font?: string;
     fontSize?: number;
+
+    solid?: boolean;
+    solidGeometry?: Geometry;
 }
 
 abstract class PropsFactory {
@@ -93,6 +98,13 @@ abstract class PropsFactory {
         object = Instance.allocate(renderer, model.geometry, material);
 
         this._centerObjectInGrid(object, options);
+
+        if (options.solid) {
+            let geo = (options.solidGeometry)? options.solidGeometry : model.geometry;
+            new Body(object, geo);
+
+            console.log(object);
+        }
 
         return this._processObjectProperties(object, options);
     }

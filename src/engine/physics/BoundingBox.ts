@@ -76,4 +76,9 @@ class BoundingBox {
     }
 }
 
+export const UnityBox: BoundingBox = new BoundingBox();
+
+UnityBox.readjustSize(0.5, 0.5, 0.5);
+UnityBox.readjustSize(-0.5, -0.5, -0.5);
+
 export default BoundingBox;

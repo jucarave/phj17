@@ -39,10 +39,26 @@ export class Vector3 implements PoolClass {
         return this;
     }
 
-    public add(x: number, y: number, z: number): Vector3 {
-        this._x += x;
-        this._y += y;
-        this._z += z;
+    public add(x: number|Vector3, y?: number, z?: number): Vector3 {
+        let isVector = (<Vector3>x).x !== undefined;
+        if (isVector) {
+            x = <Vector3>x;
+
+            this._x += x.x;
+            this._y += x.y;
+            this._z += x.z;
+        } else {
+            x = <number>x;
+            this._x += x;
+            
+            if (y !== undefined) {
+                this._y += y;
+                this._z += z;
+            } else {
+                this._y += x;
+                this._z += x;
+            }
+        }
 
         this.needsUpdate = true;
 
@@ -92,10 +108,14 @@ export class Vector3 implements PoolClass {
             return this._length;
         }
 
-        this._length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        this._length = Math.sqrt(this.squaredLength);
         this.needsUpdate =  false;
 
         return this._length;
+    }
+
+    public get squaredLength(): number {
+        return this.x * this.x + this.y * this.y + this.z * this.z;
     }
 
     public static cross(vectorA: Vector3, vectorB: Vector3): Vector3 {

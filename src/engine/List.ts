@@ -1,14 +1,10 @@
-import Poolify from 'engine/Poolify';
-import { PoolClass } from 'engine/Poolify';
-
-class Node implements PoolClass {
+class Node {
     public prev        : Node;
     public next        : Node;
     public item        : any;
-    public inUse       : boolean;
 
-    constructor() {
-        this.clear();
+    constructor(item: any) {
+        this.item = item;
     }
 
     public clear(): void {
@@ -16,21 +12,7 @@ class Node implements PoolClass {
         this.next = null;
         this.item = null;
     }
-
-    public delete(): void {
-        pool.free(this);
-    }
-
-    public static allocate(item: any): Node {
-        let ret = pool.allocate();
-
-        ret.item = item;
-
-        return ret;
-    }
 }
-
-let pool = new Poolify(100, Node);
 
 class List<T> {
     private _head           : Node;
@@ -44,7 +26,7 @@ class List<T> {
     }
 
     public push(item: T): void {
-        let node = Node.allocate(item);
+        let node = new Node(item);
 
         if (this._head == null) {
             this._head = node;
@@ -76,8 +58,7 @@ class List<T> {
                     node.next.prev = node.prev;
                 }
 
-                node.delete();
-
+                node.clear();
                 this._length -= 1;
 
                 return;
@@ -121,7 +102,7 @@ class List<T> {
             }
         }
 
-        let newItem = Node.allocate(item);
+        let newItem = new Node(item);
         if (this._head == node) {
             this._head.prev = newItem;
             newItem.next = this._head;
@@ -149,9 +130,10 @@ class List<T> {
         let node = this._head;
 
         while (node) {
-            node.delete();
+            let n = node.next;
+            node.clear();
 
-            node = node.next;
+            node = n;
         }
     }
 
