@@ -1,5 +1,5 @@
+import Ellipsoid from 'engine/physics/Ellipsoid';
 import { Vector3 } from 'engine/math/Vector3';
-import { freePoolAlloc, rememberPoolAlloc as rpa } from 'engine/Utils';
 
 const buffer = new ArrayBuffer(4),
     floatBuffer = new Float32Array(buffer),
@@ -11,35 +11,66 @@ function bInt(floatNumber: number): number {
 }
 
 class Triangle {
-    private _p1             : Vector3;
-    private _p2             : Vector3;
-    private _p3             : Vector3;
+    private _basePoints     : Array<Vector3>;
+    private _points         : Array<Vector3>;
+    private _edges          : Array<Vector3>;
     private _normal         : Vector3;
     private _plane          : number;
 
     constructor(p1: Vector3, p2: Vector3, p3: Vector3) {
-        this._p1 = p1;
-        this._p2 = p2;
-        this._p3 = p3;
+        this._basePoints = [p1, p2, p3];
 
-        this._calculateNormal();
-        this._calculatePlaneEquation();
+        this._normal = new Vector3(0.0, 0.0, 0.0);
     }
 
     private _calculateNormal(): void {
-        let e1 = rpa(Vector3.difference(this._p2, this._p1)),
-            e2 = rpa(Vector3.difference(this._p3, this._p1));
+        let e1 = Vector3.difference(this.p2, this.p1),
+            e2 = Vector3.difference(this.p3, this.p1),
+            n = Vector3.cross(e1, e2).normalize();
 
-        this._normal = new Vector3(rpa(Vector3.cross(e1, e2).normalize()));
+        this._normal.set(n);
 
-        freePoolAlloc();
+        e1.delete();
+        e2.delete();
+        n.delete();
     }
 
     private _calculatePlaneEquation(): void {
         let n = this._normal,
-            p = this._p1;
+            p = this.p1;
 
         this._plane = -(n.x*p.x+n.y*p.y+n.z*p.z);
+    }
+
+    private _calculateEdges(): void {
+        this._edges.push(Vector3.difference(this.p2, this.p1));
+        this._edges.push(Vector3.difference(this.p3, this.p2));
+        this._edges.push(Vector3.difference(this.p1, this.p3));
+    }
+
+    public setTriangleInESpace(ellipsoid: Ellipsoid, position: Vector3): void {
+        this._points = [
+            ellipsoid.coordinatesToESpace(this._basePoints[0]).add(position),
+            ellipsoid.coordinatesToESpace(this._basePoints[1]).add(position),
+            ellipsoid.coordinatesToESpace(this._basePoints[2]).add(position)
+        ];
+
+        this._edges = [];
+        
+        this._calculateEdges();
+        this._calculateNormal();
+        this._calculatePlaneEquation();
+
+        ellipsoid;
+    }
+
+    public clearTriangle(): void {
+        for (let i=0;i<2;i++) {
+            this._points[i].delete();
+            this._edges[i].delete();
+        }
+
+        this._points = null;
     }
 
     public isFrontFacing(direction: Vector3): boolean {
@@ -51,9 +82,9 @@ class Triangle {
     }
 
     public isPointInTriangle(point: Vector3): boolean {
-        let v1 = rpa(Vector3.difference(this._p2, this._p1)),
-            v2 = rpa(Vector3.difference(this._p3, this._p1)),
-            vp = rpa(Vector3.difference(point, this._p1));
+        let v1 = Vector3.difference(this.p2, this.p1),
+            v2 = Vector3.difference(this.p3, this.p1),
+            vp = Vector3.difference(point, this.p1);
 
         let a = Vector3.dot(v1, v1),
             b = Vector3.dot(v1, v2),
@@ -65,20 +96,27 @@ class Triangle {
             y = (e*a)-(d*b),
             z = x+y-ac_bb;
 
-        freePoolAlloc();
+        
+        let result = (bInt(z)& ~(bInt(x)|bInt(y)) & 0x80000000) != 0;
 
-        return (bInt(z)& ~(bInt(x)|bInt(y)) & 0x80000000) != 0;
+        v1.delete();
+        v2.delete();
+        vp.delete();
+
+        return result;
     }
 
     public getPoint(index: number): Vector3 {
-        if (index == 0) { return this._p1; } else 
-        if (index == 1) { return this._p2; } else
-        if (index == 2) { return this._p3; }
+        return this._points[index];
     }
 
-    public get p1(): Vector3 { return this._p1; }
-    public get p2(): Vector3 { return this._p2; }
-    public get p3(): Vector3 { return this._p3; }
+    public getEdge(index: number): Vector3 {
+        return this._edges[index];
+    }
+
+    public get p1(): Vector3 { return this._points[0]; }
+    public get p2(): Vector3 { return this._points[1]; }
+    public get p3(): Vector3 { return this._points[2]; }
     public get normal(): Vector3 { return this._normal; }
 }
 

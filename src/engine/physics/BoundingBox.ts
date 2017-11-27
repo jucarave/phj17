@@ -1,16 +1,14 @@
 import { Vector3 } from 'engine/math/Vector3';
-import Body from 'engine/physics/Body';
 import Config from 'engine/Config';
 
 class BoundingBox {
-    private _body       : Body;
-
     public x1          : number;
     public y1          : number;
     public z1          : number;
     public x2          : number;
     public y2          : number;
     public z2          : number;
+    public position    : Vector3;
 
     constructor() {
         this.x1 = Infinity;
@@ -19,8 +17,6 @@ class BoundingBox {
         this.x2 = -Infinity;
         this.y2 = -Infinity;
         this.z2 = -Infinity;
-
-        this._body = null;
     }
 
     public overlaps(bbox: BoundingBox): boolean {
@@ -31,12 +27,12 @@ class BoundingBox {
             y2 = this.position.y + this.y2,
             z2 = this.position.z + this.z2;
 
-        let bx1 = bbox.position.x + this.x1,
-            by1 = bbox.position.y + this.y1,
-            bz1 = bbox.position.z + this.z1,
-            bx2 = bbox.position.x + this.x2,
-            by2 = bbox.position.y + this.y2,
-            bz2 = bbox.position.z + this.z2;
+        let bx1 = bbox.position.x + bbox.x1,
+            by1 = bbox.position.y + bbox.y1,
+            bz1 = bbox.position.z + bbox.z1,
+            bx2 = bbox.position.x + bbox.x2,
+            by2 = bbox.position.y + bbox.y2,
+            bz2 = bbox.position.z + bbox.z2;
 
 
         return !(x1 > bx2 || x2 < bx1 || 
@@ -66,19 +62,11 @@ class BoundingBox {
             this.z2 += Config.PIXEL_UNIT_RELATION;
         }
     }
-
-    public set body(body: Body) {
-        this._body = body;
-    }
-
-    public get position(): Vector3 {
-        return this._body.position;
-    }
 }
 
-export const UnityBox: BoundingBox = new BoundingBox();
+export const UnitBox: BoundingBox = new BoundingBox();
 
-UnityBox.readjustSize(0.5, 0.5, 0.5);
-UnityBox.readjustSize(-0.5, -0.5, -0.5);
+UnitBox.readjustSize(0.5, 0.5, 0.5);
+UnitBox.readjustSize(-0.5, -0.5, -0.5);
 
 export default BoundingBox;

@@ -21,7 +21,7 @@ class Ellipsoid {
         return this._size;
     }
 
-    public get poisition(): Vector3 {
+    public get position(): Vector3 {
         return this._position;
     }
 }

@@ -20,7 +20,7 @@ export class Vector3 implements PoolClass {
         return this;
     }
 
-    public set(x: number|Vector3, y: number, z: number): Vector3 {
+    public set(x: number|Vector3, y?: number, z?: number): Vector3 {
         if ((<Vector3>x).x !== undefined) {
             let v = <Vector3>x;
             x = v.x;
@@ -139,7 +139,7 @@ export class Vector3 implements PoolClass {
     }
 }
 
-const pool = new Poolify(10, Vector3);
+const pool = new Poolify(20, Vector3);
 export function vec3(x: number = 0, y?: number, z?: number): Vector3 {
     if (y === undefined && z === undefined) { z = x; }
     else if (z === undefined){ z = 0; }
