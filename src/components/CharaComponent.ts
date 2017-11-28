@@ -24,9 +24,14 @@ class CharaComponent extends Component {
         dir.delete();
     }
 
+    public setEllipsoid(size: Vector3, offset: Vector3): void {
+        this._ellipsoid = new Ellipsoid(null, size, offset);
+    }
+
     public awake(): void {
-        this._instance.position.y = 1.3 / 2;
-        this._ellipsoid = new Ellipsoid(this._instance.position, new Vector3(1.0, 1.3, 1.0));
+        if (this._ellipsoid && this._instance) {
+            this._ellipsoid.position = this._instance.position;
+        }
     }
 
     public destroy(): void {

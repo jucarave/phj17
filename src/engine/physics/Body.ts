@@ -48,12 +48,12 @@ class Body {
 
     public checkCollision(collision: CollisionPackage): void {
         UnitBox.position = collision.position; 
-        if (!this._bbox.overlaps(UnitBox)) { return; }
+        if (!this._bbox.overlaps(UnitBox, collision.ellipsoid)) { return; }
 
         let position = collision.ellipsoid.coordinatesToESpace(this.position);
 
         this._triangles.each((triangle: Triangle) => {
-            triangle.setTriangleInESpace(collision.ellipsoid, position);
+            triangle.translateToSpace(collision.ellipsoid, position);
 
             if (!triangle.isFrontFacing(collision.normalizedVelocity)) {
                 return triangle.clearTriangle();

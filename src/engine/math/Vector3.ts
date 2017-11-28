@@ -148,3 +148,5 @@ export function vec3(x: number = 0, y?: number, z?: number): Vector3 {
     let obj = <Vector3>(pool.allocate());
     return obj.set(x, y, z);
 }
+
+(<any>window).Vector3 = pool;

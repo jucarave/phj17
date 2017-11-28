@@ -16,11 +16,14 @@ export type EntitiesNames = 'ALLEY_GUY';
 abstract class EntityFactory {
     public static createPlayer(renderer: Renderer, camera: Camera): Instance {
         let ret: Instance = Instance.allocate(renderer),
-        playerComponent = new PlayerComponent();
+            playerComponent = new PlayerComponent(),
+            charaComponent = new CharaComponent();;
 
+        charaComponent.setEllipsoid(new Vector3(0.3, 1.3, 0.3), new Vector3(0.0, 1.3 / 2, 0.0));
+        
         playerComponent.setCamera(camera);
 
-        ret.addComponent(new CharaComponent());
+        ret.addComponent(charaComponent);
         ret.addComponent(playerComponent);
 
         return ret;

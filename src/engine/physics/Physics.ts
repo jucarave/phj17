@@ -71,7 +71,7 @@ class Physics {
     }
 
     public checkCollision(ellipsoid: Ellipsoid, velocity: Vector3): Vector3 {
-        let ePosition = rpa(ellipsoid.coordinatesToESpace(ellipsoid.position)),
+        let ePosition = rpa(ellipsoid.coordinatesToESpace(rpa(ellipsoid.position))),
             eVelocity = rpa(ellipsoid.coordinatesToESpace(velocity));
 
         this._recursion = 0;

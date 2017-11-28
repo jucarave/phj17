@@ -1,5 +1,6 @@
 import { Vector3 } from 'engine/math/Vector3';
 import Config from 'engine/Config';
+import Ellipsoid from 'engine/physics/Ellipsoid';
 
 class BoundingBox {
     public x1          : number;
@@ -19,13 +20,13 @@ class BoundingBox {
         this.z2 = -Infinity;
     }
 
-    public overlaps(bbox: BoundingBox): boolean {
-        let x1 = this.position.x + this.x1,
-            y1 = this.position.y + this.y1,
-            z1 = this.position.z + this.z1,
-            x2 = this.position.x + this.x2,
-            y2 = this.position.y + this.y2,
-            z2 = this.position.z + this.z2;
+    public overlaps(bbox: BoundingBox, ellipsoid: Ellipsoid): boolean {
+        let x1 = (this.position.x + this.x1) / ellipsoid.size.x,
+            y1 = (this.position.y + this.y1) / ellipsoid.size.y,
+            z1 = (this.position.z + this.z1) / ellipsoid.size.z,
+            x2 = (this.position.x + this.x2) / ellipsoid.size.x,
+            y2 = (this.position.y + this.y2) / ellipsoid.size.y,
+            z2 = (this.position.z + this.z2) / ellipsoid.size.z;
 
         let bx1 = bbox.position.x + bbox.x1,
             by1 = bbox.position.y + bbox.y1,

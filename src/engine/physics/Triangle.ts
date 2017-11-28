@@ -48,7 +48,7 @@ class Triangle {
         this._edges.push(Vector3.difference(this.p1, this.p3));
     }
 
-    public setTriangleInESpace(ellipsoid: Ellipsoid, position: Vector3): void {
+    public translateToSpace(ellipsoid: Ellipsoid, position: Vector3): void {
         this._points = [
             ellipsoid.coordinatesToESpace(this._basePoints[0]).add(position),
             ellipsoid.coordinatesToESpace(this._basePoints[1]).add(position),
@@ -65,12 +65,13 @@ class Triangle {
     }
 
     public clearTriangle(): void {
-        for (let i=0;i<2;i++) {
+        for (let i=0;i<3;i++) {
             this._points[i].delete();
             this._edges[i].delete();
         }
 
         this._points = null;
+        this._edges = null;
     }
 
     public isFrontFacing(direction: Vector3): boolean {
