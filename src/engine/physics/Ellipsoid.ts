@@ -23,6 +23,10 @@ class Ellipsoid {
         return this._size;
     }
 
+    public get offset(): Vector3 {
+        return this._offset;
+    }
+
     public set position(position: Vector3) {
         this._position = position;
     }

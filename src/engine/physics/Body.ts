@@ -170,6 +170,9 @@ class Body {
             }
 
             if (foundCollision) {
+                if (t != 0) {
+                    console.log(t);
+                }
                 let distToCollision = t * collision.velocity.length;
 
                 if (collision.foundCollision == false || distToCollision < collision.nearestDistance) {

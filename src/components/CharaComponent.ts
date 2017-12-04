@@ -16,9 +16,9 @@ class CharaComponent extends Component {
     public moveTo(xTo: number, zTo: number): void {
         let dir = vec3(xTo, 0, zTo);
 
-        Physics.checkCollision(this._ellipsoid, dir);
+        let newDir = Physics.checkCollision(this._ellipsoid, dir);
 
-        this._instance.translate(dir.x, 0, dir.z, true);
+        this._instance.translate(newDir.x, newDir.y, newDir.z, true);
         this._moved = true;
 
         dir.delete();

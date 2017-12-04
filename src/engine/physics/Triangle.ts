@@ -17,7 +17,7 @@ class Triangle {
     private _normal         : Vector3;
     private _plane          : number;
 
-    constructor(p1: Vector3, p2: Vector3, p3: Vector3) {
+    constructor(p1: Vector3 = null, p2: Vector3 = null, p3: Vector3 = null) {
         this._basePoints = [p1, p2, p3];
 
         this._normal = new Vector3(0.0, 0.0, 0.0);
@@ -35,17 +35,17 @@ class Triangle {
         n.delete();
     }
 
-    private _calculatePlaneEquation(): void {
-        let n = this._normal,
-            p = this.p1;
-
-        this._plane = -(n.x*p.x+n.y*p.y+n.z*p.z);
-    }
-
     private _calculateEdges(): void {
         this._edges.push(Vector3.difference(this.p2, this.p1));
         this._edges.push(Vector3.difference(this.p3, this.p2));
         this._edges.push(Vector3.difference(this.p1, this.p3));
+    }
+    
+    public calculatePlaneEquation(): void {
+        let n = this._normal,
+            p = this.p1;
+
+        this._plane = -(n.x*p.x+n.y*p.y+n.z*p.z);
     }
 
     public translateToSpace(ellipsoid: Ellipsoid, position: Vector3): void {
@@ -59,7 +59,7 @@ class Triangle {
         
         this._calculateEdges();
         this._calculateNormal();
-        this._calculatePlaneEquation();
+        this.calculatePlaneEquation();
 
         ellipsoid;
     }
@@ -116,9 +116,15 @@ class Triangle {
     }
 
     public get p1(): Vector3 { return this._points[0]; }
+    public set p1(point: Vector3){ this._points = [point]; }
+
     public get p2(): Vector3 { return this._points[1]; }
     public get p3(): Vector3 { return this._points[2]; }
     public get normal(): Vector3 { return this._normal; }
+
+    public set normal(normal: Vector3) {
+        this.normal.set(normal);
+    }
 }
 
 export default Triangle;

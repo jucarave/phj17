@@ -26,7 +26,7 @@ class CollisionScene extends Scene {
 
         // Sectors
         let mat = new ColorMaterial(this._renderer, new Vector4(1.0, 0.0, 0.0, 1.0));
-        this.addGameObject(PropsFactory.create3DModel(this._renderer, {material: mat, model: 'CollisionTest', solid: true }));
+        this.addGameObject(PropsFactory.create3DModel(this._renderer, {material: mat, model: 'CollisionTest.1', solid: true }));
 
         this.addGameObject(player.translate(rpa(vec3(10.0, 0.0, 4.0))).rotate(0, Math.PI, 0));
         this.setCamera(camera);

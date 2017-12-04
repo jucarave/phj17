@@ -79,7 +79,7 @@ class ModelsManager {
         this._loadModel("BarDoorFrame", renderer);
         this._loadModel("BarDoor", renderer);
         this._loadModel("Barrel", renderer);
-        this._loadModel("CollisionTest", renderer, true);
+        this._loadModel("CollisionTest.1", renderer, true);
     }
 
     public getModel(name: ModelNames): Model {

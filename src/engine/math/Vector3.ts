@@ -114,6 +114,12 @@ export class Vector3 implements PoolClass {
         return this._length;
     }
 
+    public set length(length: number) {
+        let f = length / this._length;
+
+        this.multiply(f);
+    }
+
     public get squaredLength(): number {
         return this.x * this.x + this.y * this.y + this.z * this.z;
     }
@@ -139,7 +145,7 @@ export class Vector3 implements PoolClass {
     }
 }
 
-const pool = new Poolify(20, Vector3);
+const pool = new Poolify(40, Vector3);
 export function vec3(x: number = 0, y?: number, z?: number): Vector3 {
     if (y === undefined && z === undefined) { z = x; }
     else if (z === undefined){ z = 0; }
