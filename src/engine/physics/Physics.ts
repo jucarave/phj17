@@ -67,7 +67,7 @@ class Physics {
         }
 
         let destination = position.clone().add(velocity),
-            newPosition = destination.clone();
+            newPosition = position.clone();
 
         if (collisionPack.nearestDistance >= closeDistance) {
             let v = velocity.clone();
@@ -87,7 +87,7 @@ class Physics {
         this._slidePlane.normal = slidingPlaneNormal;
         this._slidePlane.calculatePlaneEquation();
 
-        let newDestinationPoint = Vector3.difference(destination, slidingPlaneNormal.multiply(-this._slidePlane.signedDistanceTo(destination))),
+        let newDestinationPoint = Vector3.difference(destination, slidingPlaneNormal.multiply(this._slidePlane.signedDistanceTo(destination))),
             newVelocity = Vector3.difference(newDestinationPoint, collisionPack.intersectionPoint);
 
         velocity.set(newVelocity);

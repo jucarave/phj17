@@ -114,18 +114,19 @@ class Body {
             }
 
             if (!foundCollision) {
-                let squaredVel = collision.velocity.squaredLength,
+                let velocitySquaredVel = collision.velocity.squaredLength,
                     a: number, b: number, c: number, newT: number;
 
-                a = squaredVel;
+                a = velocitySquaredVel;
 
                 // Collision against vertices
                 for (let i=0;i<3;i++) {
                     let p = triangle.getPoint(i),
-                        len = Vector3.difference(p, collision.position);
+                        base_p = Vector3.difference(collision.position, p),
+                        p_base = Vector3.difference(p, collision.position);
 
-                    b = 2.0 * (Vector3.dot(collision.velocity, p));
-                    c = len.squaredLength - 1.0;
+                    b = 2.0 * (Vector3.dot(collision.velocity, base_p));
+                    c = p_base.squaredLength - 1.0;
                     
                     newT = getLowestRoot(a, b, c, t);
                     if (newT !== null) {
@@ -135,24 +136,25 @@ class Body {
                         collisionPoint = new Vector3(p);
                     }
 
-                    len.delete();
+                    p_base.delete();
+                    base_p.delete();
                 }
 
                 // Collision against edges
                 for (let i=0;i<3;i++) {
                     let edge = triangle.getEdge(i),
-                        len = Vector3.difference(triangle.getPoint(i), collision.position),
+                        p_base = Vector3.difference(triangle.getPoint(i), collision.position),
                         edgeSquaredLength = edge.squaredLength,
                         edgeDotVelocity = Vector3.dot(edge, collision.velocity),
-                        edgeDotBaseToVertex = Vector3.dot(edge, len);
+                        edgeDotPBase = Vector3.dot(edge, p_base);
 
-                    a = edgeSquaredLength * -squaredVel + edgeDotVelocity * edgeDotVelocity;
-                    b = edgeSquaredLength * (2 * Vector3.dot(collision.velocity, len)) - 2.0 * edgeDotVelocity * edgeDotBaseToVertex;
-                    c = edgeSquaredLength * (1 - len.squaredLength) + edgeDotBaseToVertex * edgeDotBaseToVertex;
+                    a = edgeSquaredLength * -velocitySquaredVel + edgeDotVelocity * edgeDotVelocity;
+                    b = edgeSquaredLength * (2 * Vector3.dot(collision.velocity, p_base)) - 2.0 * edgeDotVelocity * edgeDotPBase;
+                    c = edgeSquaredLength * (1 - p_base.squaredLength) + edgeDotPBase * edgeDotPBase;
 
                     newT = getLowestRoot(a, b, c, t);
                     if (newT !== null) {
-                        let f = (edgeDotVelocity * newT - edgeDotBaseToVertex) / edgeSquaredLength;
+                        let f = (edgeDotVelocity * newT - edgeDotPBase) / edgeSquaredLength;
                         if (f >= 0.0 && f <= 1.0) {
                             t = newT;
                             foundCollision = true;
@@ -165,14 +167,11 @@ class Body {
                         }
                     }
 
-                    len.delete();
+                    p_base.delete();
                 }
             }
 
             if (foundCollision) {
-                if (t != 0) {
-                    console.log(t);
-                }
                 let distToCollision = t * collision.velocity.length;
 
                 if (collision.foundCollision == false || distToCollision < collision.nearestDistance) {
