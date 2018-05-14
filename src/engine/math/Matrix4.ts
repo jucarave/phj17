@@ -1,6 +1,6 @@
-import { Vector4 } from 'engine/math/Vector4';
-import Poolify from 'engine/Poolify';
-import { PoolClass } from 'engine/Poolify';
+import { Vector4 } from '../math/Vector4';
+import Poolify from '../Poolify';
+import { PoolClass } from '../Poolify';
 
 class Matrix4 implements PoolClass {
     public data                 : Array<number>;

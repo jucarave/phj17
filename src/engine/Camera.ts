@@ -1,6 +1,6 @@
-import Matrix4 from 'engine/math/Matrix4';
-import { Vector3, vec3 } from 'engine/math/Vector3';
-import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
+import Matrix4 from './math/Matrix4';
+import { Vector3, vec3 } from './math/Vector3';
+import { rememberPoolAlloc as rpa, freePoolAlloc } from './Utils';
 
 class Camera {
     private _transform           : Matrix4;

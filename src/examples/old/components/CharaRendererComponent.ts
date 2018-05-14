@@ -1,7 +1,5 @@
-import Component from 'engine/Component';
-import BasicMaterial from 'engine/materials/BasicMaterial';
-import Instance from 'engine/entities/Instance';
-import { get2DAngle, degToRad } from 'engine/Utils';
+import { Component, BasicMaterial, Instance, get2DAngle, degToRad } from '../../../engine';
+
 import { CHARA_UVS} from 'managers/UVManager';
 import DemoScene from 'scenes/DemoScene';
 import CharaComponent from 'components/CharaComponent';

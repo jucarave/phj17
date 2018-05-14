@@ -1,9 +1,5 @@
-import Scene from 'engine/Scene';
-import Renderer from 'engine/Renderer';
-import Instance from 'engine/entities/Instance';
-import { Vector3, vec3 } from 'engine/math/Vector3';
-import { pixelCoordsToWorld as pctw } from 'engine/Utils';
-import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
+import { Renderer, Scene, Instance, Vector3, vec3, pixelCoordsToWorld as pctw, rememberPoolAlloc as rpa, freePoolAlloc } from '../../../engine';
+
 import EntityFactory from 'factories/EntityFactory';
 import SectorsManager from 'managers/SectorsManager';
 import App from 'App';
@@ -24,10 +20,12 @@ class DemoScene extends Scene {
     private _player             : Instance;
     private _playerComponent    : PlayerComponent;
     private _sectors            : Array<Sector>;
+    private _app                : App;
 
     constructor(app: App, renderer: Renderer) {
-        super(app, renderer);
+        super(renderer);
 
+        this._app = app;
         this._triggers = [];
         this._sectors = [];
         this._buildScene();

@@ -1,22 +1,19 @@
-import Camera from 'engine/Camera';
-import Renderer from 'engine/Renderer';
-import RenderingLayer from 'engine/RenderingLayer';
-import { InstancesMap } from 'engine/RenderingLayer';
-import List from 'engine/List';
-import { getSquaredDistance } from 'engine/Utils';
-import Instance from 'engine/entities/Instance';
-import { Vector3 } from 'engine/math/Vector3';
-import App from 'App';
+import Camera from './Camera';
+import Renderer from './Renderer';
+import RenderingLayer from './RenderingLayer';
+import { InstancesMap } from './RenderingLayer';
+import List from './List';
+import { getSquaredDistance } from './Utils';
+import Instance from './entities/Instance';
+import { Vector3 } from './math/Vector3';
 
 class Scene {
-    protected _app                      : App;
     protected _renderer                 : Renderer;
     protected _camera                   : Camera;
     protected _started                  : boolean;
     protected _renderingLayers          : List<RenderingLayer>;
 
-    constructor(app: App, renderer: Renderer) {
-        this._app = app;
+    constructor(renderer: Renderer) {
         this._renderer = renderer;
         this._camera = null;
         this._started = false;

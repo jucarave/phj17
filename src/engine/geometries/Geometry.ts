@@ -1,7 +1,7 @@
-import { VERTICE_SIZE, TEXCOORD_SIZE } from 'engine/Constants';
-import Renderer from 'engine/Renderer';
-import Shader from 'engine/shaders/Shader';
-import { Vector3 } from 'engine/math/Vector3';
+import { VERTICE_SIZE, TEXCOORD_SIZE } from '../Constants';
+import Renderer from '../Renderer';
+import Shader from '../shaders/Shader';
+import { Vector3 } from '../math/Vector3';
 
 class Geometry {
     private _vertices                : Array<number>;

@@ -1,5 +1,4 @@
-import Renderer from 'engine/Renderer';
-import Texture from 'engine/Texture';
+import { Renderer, Texture } from '../../../engine';
 
 interface TexturesMap {
     [index: string] : Texture

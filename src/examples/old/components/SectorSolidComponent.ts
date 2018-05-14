@@ -1,4 +1,5 @@
-import Component from 'engine/Component';
+import { Component } from '../../../engine';
+
 import Sector from 'scenes/Sector';
 import DemoScene from 'scenes/DemoScene';
 

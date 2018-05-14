@@ -1,10 +1,5 @@
-import Renderer from 'engine/Renderer';
-import Scene from 'engine/Scene';
-import Config from 'engine/Config';
-import { Vector3 } from 'engine/math/Vector3';
-import Instance from 'engine/entities/Instance';
-import Collision from 'engine/collisions/Collision';
-import BoxCollision from 'engine/collisions/BoxCollision';
+import { Renderer, Scene, Config, Vector3, Instance, Collision, BoxCollision } from '../../../engine';
+
 import PropsFactory from 'factories/PropsFactory';
 import {PropsNames} from 'factories/PropsFactory';
 import EntityFactory from 'factories/EntityFactory';

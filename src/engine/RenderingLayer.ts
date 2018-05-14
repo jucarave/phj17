@@ -1,6 +1,6 @@
-import Instance from 'engine/entities/Instance';
-import List from 'engine/List';
-import Camera from 'engine/Camera';
+import Instance from './entities/Instance';
+import List from './List';
+import Camera from './Camera';
 
 interface Params {
     [index: string] : any

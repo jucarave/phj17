@@ -1,9 +1,6 @@
 declare var Stats: any;
 
-import Renderer from 'engine/Renderer';
-import Input from 'engine/Input';
-import Scene from 'engine/Scene';
-import Camera from 'engine/Camera';
+import { Renderer, Input, Scene, Camera } from '../../engine';
 import TexturesManager from 'managers/TexturesManager';
 import ModelsManager from 'managers/ModelsManager';
 import SectorsManager from 'managers/SectorsManager';

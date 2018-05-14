@@ -1,4 +1,4 @@
-import { Vector4 } from 'engine/math/Vector4';
+import { Vector4 } from '../../../engine';
 
 export type CHARA_UVS = {
     FRONT: Vector4,

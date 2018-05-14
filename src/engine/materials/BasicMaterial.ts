@@ -1,7 +1,7 @@
-import Material from 'engine/materials/Material';
-import Renderer from 'engine/Renderer';
-import Texture from 'engine/Texture';
-import Shader from 'engine/shaders/Shader';
+import Material from '../materials/Material';
+import Renderer from '../Renderer';
+import Texture from '../Texture';
+import Shader from '../shaders/Shader';
 
 class BasicMaterial extends Material {
     private _texture         : Texture;

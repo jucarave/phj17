@@ -1,5 +1,5 @@
-import Poolify from 'engine/Poolify';
-import { PoolClass } from 'engine/Poolify';
+import Poolify from './Poolify';
+import { PoolClass } from './Poolify';
 
 class Node implements PoolClass {
     public prev        : Node;

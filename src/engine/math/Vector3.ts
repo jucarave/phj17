@@ -1,5 +1,5 @@
-import Poolify from 'engine/Poolify';
-import { PoolClass } from 'engine/Poolify';
+import Poolify from '../Poolify';
+import { PoolClass } from '../Poolify';
 
 export class Vector3 implements PoolClass {
     private _x                  : number;

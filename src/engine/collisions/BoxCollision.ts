@@ -1,10 +1,10 @@
-import Collision from 'engine/collisions/Collision';
-import ColorMaterial from 'engine/materials/ColorMaterial';
-import CubeGeometry from 'engine/geometries/CubeGeometry';
-import Renderer from 'engine/Renderer';
-import { Vector3 } from 'engine/math/Vector3';
-import { Vector4 } from 'engine/math/Vector4';
-import Instance from 'engine/entities/Instance';
+import Collision from './Collision';
+import ColorMaterial from '../materials/ColorMaterial';
+import CubeGeometry from '../geometries/CubeGeometry';
+import Renderer from '../Renderer';
+import { Vector3 } from '../math/Vector3';
+import { Vector4 } from '../math/Vector4';
+import Instance from '../entities/Instance';
 
 class BoxCollision extends Collision {
     private _size                   : Vector3;

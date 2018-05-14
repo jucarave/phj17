@@ -1,7 +1,7 @@
-import Shader from 'engine/shaders/Shader';
-import Basic from 'engine/shaders/Basic';
-import Color from 'engine/shaders/Color';
-import { ShaderMap, ShadersNames } from 'engine/shaders/ShaderStruct';
+import Shader from './shaders/Shader';
+import Basic from './shaders/Basic';
+import Color from './shaders/Color';
+import { ShaderMap, ShadersNames } from './shaders/ShaderStruct';
 
 class Renderer {
     private _canvas              : HTMLCanvasElement;

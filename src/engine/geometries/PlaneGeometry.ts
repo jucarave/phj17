@@ -1,5 +1,5 @@
-import Geometry from 'engine/geometries/Geometry';
-import Renderer from 'engine/Renderer';
+import Geometry from '../geometries/Geometry';
+import Renderer from '../Renderer';
 
 class PlaneGeometry extends Geometry {
     constructor(renderer: Renderer, width: number, height: number) {

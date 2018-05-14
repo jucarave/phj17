@@ -1,8 +1,5 @@
-import { PI_2, PI3_2 } from 'engine/Constants';
-import Renderer from 'engine/Renderer';
-import { pixelCoordsToWorld as pctw } from 'engine/Utils';
-import BoxCollision from 'engine/collisions/BoxCollision';
-import { Vector3 } from 'engine/math/Vector3';
+import { Renderer, BoxCollision, Vector3, PI_2, PI3_2, pixelCoordsToWorld as pctw } from '../../../engine';
+
 import Sector from 'scenes/Sector';
 import { PropOptions } from 'factories/PropsFactory';
 import UVManager from 'managers/UVManager';

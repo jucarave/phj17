@@ -1,17 +1,11 @@
-import Instance from 'engine/entities/Instance';
+import { Instance, Renderer, Camera, WallGeometry, BasicMaterial, Vector3, vec3, BoxCollision, pixelCoordsToWorld as pctw, rememberPoolAlloc as rpa, freePoolAlloc } from '../../../engine';
+
 import PlayerComponent from 'components/PlayerComponent';
 import CharaComponent from 'components/CharaComponent';
 import CharaRendererComponent from 'components/CharaRendererComponent';
 import SectorSolidComponent from 'components/SectorSolidComponent';
-import Renderer from 'engine/Renderer';
-import Camera from 'engine/Camera';
-import WallGeometry from 'engine/geometries/WallGeometry';
-import BasicMaterial from 'engine/materials/BasicMaterial';
 import TextureManager from 'managers/TexturesManager';
 import UVManager from 'managers/UVManager';
-import { pixelCoordsToWorld as pctw, rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
-import { Vector3, vec3 } from 'engine/math/Vector3';
-import BoxCollision from 'engine/collisions/BoxCollision';
 
 export type EntitiesNames = 'ALLEY_GUY';
 

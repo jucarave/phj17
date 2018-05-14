@@ -1,7 +1,7 @@
-import Material from 'engine/materials/Material';
-import { Vector4 } from 'engine/math/Vector4';
-import Renderer from 'engine/Renderer';
-import Shader from 'engine/shaders/Shader';
+import Material from '../materials/Material';
+import { Vector4 } from '../math/Vector4';
+import Renderer from '../Renderer';
+import Shader from '../shaders/Shader';
 
 class ColorMaterial extends Material {
     private _color              : Array<number>;

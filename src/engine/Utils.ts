@@ -1,7 +1,7 @@
-import { Vector3, vec3 } from 'engine/math/Vector3';
-import Config from 'engine/Config';
-import { PI2 } from 'engine/Constants';
-import Camera from 'engine/Camera';
+import { Vector3, vec3 } from './math/Vector3';
+import Config from './Config';
+import { PI2 } from './Constants';
+import Camera from './Camera';
 
 export function createUUID(): string {
     let date = (new Date()).getTime(),

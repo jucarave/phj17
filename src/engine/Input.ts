@@ -1,5 +1,5 @@
-import { createUUID } from 'engine/Utils';
-import Config from 'engine/Config';
+import { createUUID } from './Utils';
+import Config from './Config';
 
 interface Callback {
     id: string;

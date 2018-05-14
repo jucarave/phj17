@@ -1,7 +1,7 @@
-import Scene from 'engine/Scene';
-import Instance from 'engine/entities/Instance';
-import { Vector3 } from 'engine/math/Vector3';
-import Renderer from 'engine/Renderer';
+import Scene from '../Scene';
+import Instance from '../entities/Instance';
+import { Vector3 } from '../math/Vector3';
+import Renderer from '../Renderer';
 
 abstract class Collision {
     protected _scene                : Scene;

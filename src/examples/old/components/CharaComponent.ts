@@ -1,5 +1,4 @@
-import Component from 'engine/Component';
-import { vec3 } from 'engine/math/Vector3';
+import { Component, vec3 } from '../../../engine';
 
 class CharaComponent extends Component {
     private _moved          : boolean;

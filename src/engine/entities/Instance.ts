@@ -1,19 +1,19 @@
-import Renderer from 'engine/Renderer';
-import Camera from 'engine/Camera';
-import Scene from 'engine/Scene';
-import Collision from 'engine/collisions/Collision';
-import Geometry from 'engine/geometries/Geometry';
-import Material from 'engine/materials/Material';
-import Shader from 'engine/shaders/Shader';
-import Component from 'engine/Component';
-import Matrix4 from 'engine/math/Matrix4';
-import { Vector3 } from 'engine/math/Vector3';
-import { get2DAngle } from 'engine/Utils';
-import Config from 'engine/Config';
-import { rememberPoolAlloc as rpa, freePoolAlloc } from 'engine/Utils';
-import Poolify from 'engine/Poolify';
-import { PoolClass } from 'engine/Poolify';
-import List from 'engine/List';
+import Renderer from '../Renderer';
+import Camera from '../Camera';
+import Scene from '../Scene';
+import Collision from '../collisions/Collision';
+import Geometry from '../geometries/Geometry';
+import Material from '../materials/Material';
+import Shader from '../shaders/Shader';
+import Component from '../Component';
+import Matrix4 from '../math/Matrix4';
+import { Vector3 } from '../math/Vector3';
+import { get2DAngle } from '../Utils';
+import Config from '../Config';
+import { rememberPoolAlloc as rpa, freePoolAlloc } from '../Utils';
+import Poolify from '../Poolify';
+import { PoolClass } from '../Poolify';
+import List from '../List';
 
 class Instance implements PoolClass {
     protected _renderer           : Renderer;
