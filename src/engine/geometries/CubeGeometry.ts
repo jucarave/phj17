@@ -1,11 +1,9 @@
 import Geometry from '../geometries/Geometry';
-import Renderer from '../Renderer';
 
 class CubeGeometry extends Geometry {
-    constructor(renderer: Renderer, width: number, height: number, length: number) {
+    constructor(width: number, height: number, length: number) {
         super();
 
-        this._renderer = renderer;
         this._dynamic = true;
 
         this._buildCube(width, height, length);
@@ -63,8 +61,6 @@ class CubeGeometry extends Geometry {
             this.addTexCoord(0.0, 0.0);
             this.addTexCoord(1.0, 0.0);
         }
-
-        this.build(this._renderer);
     }
 }
 

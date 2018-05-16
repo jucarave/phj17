@@ -1,10 +1,8 @@
-import Renderer from '../Renderer';
 import { ShadersNames } from '../shaders/ShaderStruct';
-import Shader from '../shaders/Shader';
 import { createUUID } from '../Utils';
+import Renderer from '../Renderer';
 
 abstract class Material {
-    protected _renderer                : Renderer;
     protected _isOpaque                : boolean;
     protected _renderBothFaces         : boolean;
     
@@ -13,19 +11,14 @@ abstract class Material {
 
     public static lastRendered        : Material = null;
 
-    constructor(renderer: Renderer, shaderName: ShadersNames) {
-        this._renderer = renderer;
+    constructor(shaderName: ShadersNames) {
         this.shaderName = shaderName;
         this.uuid = createUUID();
         this._isOpaque = true;
         this._renderBothFaces = false;
     }
 
-    public getShader(): Shader {
-        return this._renderer.getShader(this.shaderName);
-    }
-
-    public abstract render(): void;
+    public abstract render(renderer: Renderer): void;
     public abstract get isReady(): boolean;
 
     public get isOpaque(): boolean {

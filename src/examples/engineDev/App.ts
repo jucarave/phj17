@@ -9,11 +9,11 @@ class App {
         camera.setPosition(10, 10, 10);
         camera.setTarget(0, 0, 0);
         
-        const geo = new CubeGeometry(render, 2, 2, 2);
-        const mat = new ColorMaterial(render, new Vector4(1.0, 1.0, 1.0, 1.0));
-        const inst = new Instance(render, geo, mat);
+        const geo = new CubeGeometry(2, 2, 2);
+        const mat = new ColorMaterial(new Vector4(1.0, 1.0, 1.0, 1.0));
+        const inst = new Instance(geo, mat);
 
-        const scene = new Scene(render);
+        const scene = new Scene();
         scene.setCamera(camera);
         scene.addGameObject(inst);
 
@@ -25,7 +25,7 @@ class App {
     private _loop(render: Renderer, scene: Scene) {
         render.clear();
 
-        scene.render();
+        scene.render(render);
 
         requestAnimationFrame(() => this._loop(render, scene));
     }

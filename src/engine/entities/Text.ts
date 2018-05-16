@@ -1,5 +1,4 @@
 import Texture from '../Texture';
-import Renderer from '../Renderer';
 import BasicMaterial from '../materials/BasicMaterial';
 import WallGeometry from '../geometries/WallGeometry';
 import Vector3 from '../math/Vector3';
@@ -31,8 +30,8 @@ class Text extends Instance {
     private _font               : string;
     private _options            : TextOptions;
     
-    constructor(renderer: Renderer, text: string, font: string, options?: TextOptions) {
-        super(renderer);
+    constructor(text: string, font: string, options?: TextOptions) {
+        super();
 
         this._text = text;
         this._font = font;
@@ -88,9 +87,9 @@ class Text extends Instance {
         }
 
         let uvs = [0, 0, (size.width + 4) / canvas.width, (this._options.size + 8) / canvas.height],
-            texture = new Texture(canvas, this._renderer),
-            material = new BasicMaterial(this._renderer, texture),
-            geometry = new WallGeometry(this._renderer, size.width / 100, this._options.size / 100);
+            texture = new Texture(canvas),
+            material = new BasicMaterial(texture),
+            geometry = new WallGeometry(size.width / 100, this._options.size / 100);
 
         material.setUv(uvs[0], uvs[1], uvs[2], uvs[3]);
         material.setOpaque(false);

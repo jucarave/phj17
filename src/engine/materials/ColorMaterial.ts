@@ -6,16 +6,16 @@ import Shader from '../shaders/Shader';
 class ColorMaterial extends Material {
     private _color              : Array<number>;
 
-    constructor(renderer: Renderer, color: Vector4) {
-        super(renderer, "COLOR");
+    constructor(color: Vector4) {
+        super("COLOR");
 
         this._color = color.toArray();
     }
 
-    public render(): void {
+    public render(renderer: Renderer): void {
         if (Material.lastRendered == this) { return; }
 
-        let gl = this._renderer.GL,
+        let gl = renderer.GL,
             shader = Shader.lastProgram;
 
         gl.uniform4fv(shader.uniforms["uColor"], this._color);

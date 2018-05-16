@@ -1,11 +1,9 @@
 import Geometry from '../geometries/Geometry';
-import Renderer from '../Renderer';
 
 class WallGeometry extends Geometry {
-    constructor(renderer: Renderer, width: number, height: number) {
+    constructor(width: number, height: number) {
         super();
 
-        this._renderer = renderer;
         this._dynamic = true;
 
         this._buildWall(width, height);
@@ -27,8 +25,6 @@ class WallGeometry extends Geometry {
         this.addTexCoord(1.0, 1.0);
         this.addTexCoord(0.0, 0.0);
         this.addTexCoord(1.0, 0.0);
-
-        this.build(this._renderer);
     }
 }
 

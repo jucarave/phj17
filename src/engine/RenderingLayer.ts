@@ -1,6 +1,7 @@
 import Instance from './entities/Instance';
 import List from './List';
 import Camera from './Camera';
+import Renderer from './Renderer';
 
 interface Params {
     [index: string] : any
@@ -72,13 +73,13 @@ class RenderingLayer {
         });
     }
 
-    public render(camera: Camera): void {
+    public render(renderer: Renderer, camera: Camera): void {
         if (this.onPrerender) { 
             this.onPrerender(this._instances);
         }
 
         this._instances.each((instance: InstancesMap) => {
-            instance.instance.render(camera);
+            instance.instance.render(renderer, camera);
         });
     }
 }

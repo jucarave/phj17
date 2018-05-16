@@ -13,7 +13,6 @@ import Config from '../Config';
 import List from '../List';
 
 class Instance {
-    protected _renderer           : Renderer;
     protected _geometry           : Geometry;
     protected _material           : Material;
     protected _rotation           : Vector3;
@@ -27,7 +26,7 @@ class Instance {
     public position            : Vector3;
     public isBillboard         : boolean;
     
-    constructor(renderer: Renderer = null, geometry: Geometry = null, material: Material = null) {
+    constructor(geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
         this.position = new Vector3(0.0);
         this._rotation = new Vector3(0.0);
@@ -35,7 +34,6 @@ class Instance {
         this._needsUpdate = true;
         this._geometry = geometry;
         this._material = material;
-        this._renderer = renderer;
         this._scene = null;
         this._components = new List();
         this._collision = null;
@@ -133,18 +131,10 @@ class Instance {
         collision.setInstance(this);
     }
 
-    public set(renderer: Renderer, geometry: Geometry = null, material: Material = null): void {
-        this._renderer = renderer;
-        this._geometry = geometry;
-        this._material = material;
-        this._destroyed = false;
-    }
-
     public clear(): void {
         this.position.set(0, 0, 0);
         this._rotation.set(0, 0, 0);
         this._transform.setIdentity();
-        this._renderer = null;
         this._geometry = null;
         this._material = null;
         this.isBillboard = false;
@@ -164,7 +154,7 @@ class Instance {
             let collision = this._collision;
 
             collision.setScene(this._scene);
-            collision.addCollisionInstance(this._renderer);
+            // collision.addCollisionInstance(this._renderer);
         }
     }
 
@@ -190,13 +180,13 @@ class Instance {
         this._destroyed = true;
     }
 
-    public render(camera: Camera): void {
+    public render(renderer: Renderer, camera: Camera): void {
         if (!this._geometry || !this._material) { return; }
         if (!this._material.isReady) { return; }
 
-        this._renderer.switchShader(this._material.shaderName);
+        renderer.switchShader(this._material.shaderName);
 
-        const gl = this._renderer.GL,
+        const gl = renderer.GL,
             shader = Shader.lastProgram;
 
         if (this.isBillboard) {
@@ -210,9 +200,9 @@ class Instance {
         gl.uniformMatrix4fv(shader.uniforms["uProjection"], false, camera.projection.data);
         gl.uniformMatrix4fv(shader.uniforms["uPosition"], false, uPosition.data);
 
-        this._material.render();
+        this._material.render(renderer);
 
-        this._geometry.render();
+        this._geometry.render(renderer);
     }
 
     public get geometry(): Geometry {

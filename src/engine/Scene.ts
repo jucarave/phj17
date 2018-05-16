@@ -8,13 +8,11 @@ import Instance from './entities/Instance';
 import Vector3 from './math/Vector3';
 
 class Scene {
-    protected _renderer                 : Renderer;
     protected _camera                   : Camera;
     protected _started                  : boolean;
     protected _renderingLayers          : List<RenderingLayer>;
 
-    constructor(renderer: Renderer) {
-        this._renderer = renderer;
+    constructor() {
         this._camera = null;
         this._started = false;
 
@@ -81,9 +79,9 @@ class Scene {
         });
     }
 
-    public render(): void {
+    public render(renderer: Renderer): void {
         this._renderingLayers.each((layer: RenderingLayer) => {
-            layer.render(this._camera);
+            layer.render(renderer, this._camera);
         });
     }
 }

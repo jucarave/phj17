@@ -2,13 +2,18 @@ import Shader from './shaders/Shader';
 import Basic from './shaders/Basic';
 import Color from './shaders/Color';
 import { ShaderMap, ShadersNames } from './shaders/ShaderStruct';
+import { createUUID } from './Utils';
 
 class Renderer {
     private _canvas              : HTMLCanvasElement;
     private _gl                  : WebGLRenderingContext;
     private _shaders             : ShaderMap;
+
+    public readonly id           : string;
     
     constructor(width: number, height: number) {
+        this.id = createUUID();
+        
         this._createCanvas(width, height);
         this._initGL();
         this._initShaders();

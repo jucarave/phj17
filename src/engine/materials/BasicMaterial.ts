@@ -8,8 +8,8 @@ class BasicMaterial extends Material {
     private _uv              : Array<number>;
     private _repeat          : Array<number>;
 
-    constructor(renderer: Renderer, texture: Texture) {
-        super(renderer, "BASIC");
+    constructor(texture: Texture) {
+        super("BASIC");
 
         this._texture = texture;
         this._uv = [0.0, 0.0, 1.0, 1.0];
@@ -24,14 +24,14 @@ class BasicMaterial extends Material {
         this._repeat = [x, y];
     }
 
-    public render(): void {
+    public render(renderer: Renderer): void {
         if (Material.lastRendered == this) { return; }
 
-        let gl = this._renderer.GL,
+        const gl = renderer.GL,
             shader = Shader.lastProgram;
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this._texture.texture);
+        gl.bindTexture(gl.TEXTURE_2D, this._texture.getTexture(renderer));
         gl.uniform1i(shader.uniforms["uTexture"], 0);
 
         gl.uniform4fv(shader.uniforms["uUV"], this._uv);

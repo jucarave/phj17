@@ -3,13 +3,22 @@ import Renderer from '../Renderer';
 import Shader from '../shaders/Shader';
 import Vector3 from '../math/Vector3';
 
+interface BufferMap {
+    vertexBuffer?               : WebGLBuffer;
+    texCoordsBuffer?            : WebGLBuffer;
+    indexBuffer?                : WebGLBuffer;
+    glContext                   : WebGLRenderingContext;
+}
+
+interface RendererBufferMap {
+    [index: string] : BufferMap;
+}
+
 class Geometry {
     private _vertices                : Array<number>;
     private _triangles               : Array<number>;
     private _texCoords               : Array<number>;
-    private _vertexBuffer            : WebGLBuffer;
-    private _texBuffer               : WebGLBuffer;
-    private _indexBuffer             : WebGLBuffer;
+    private _buffers                 : RendererBufferMap;
     private _indexLength             : number;
     private _boundingBox             : Array<number>;
     
@@ -22,6 +31,7 @@ class Geometry {
         this._vertices = [];
         this._texCoords = [];
         this._triangles = [];
+        this._buffers = {};
         this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
         this.offset = new Vector3(0, 0, 0);
 
@@ -55,27 +65,26 @@ class Geometry {
     }
 
     public build(renderer: Renderer): void {
-        let gl = renderer.GL;
+        const gl = renderer.GL,
+            bufferMap: BufferMap = { glContext: gl };
 
         this._renderer = renderer;
 
-        this._vertexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+        bufferMap.vertexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._vertices), gl.STATIC_DRAW);
 
-        this._texBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._texBuffer);
+        bufferMap.texCoordsBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.texCoordsBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._texCoords), gl.STATIC_DRAW);
 
-        this._indexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+        bufferMap.indexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this._triangles), gl.STATIC_DRAW);
 
         this._indexLength = this._triangles.length;
 
-        this._vertices = null;
-        this._texCoords = null;
-        this._triangles = null;
+        this._buffers[renderer.id] = bufferMap;
     }
 
     public clearBoundBoxAxis(x: number = 0, y: number = 0, z: number = 0): Geometry {
@@ -98,26 +107,34 @@ class Geometry {
     }
 
     public destroy(): void {
-        let gl = this._renderer.GL;
+        for (let i in this._buffers){
+            const bufferMap = this._buffers[i],
+                gl = bufferMap.glContext;
 
-        gl.deleteBuffer(this._vertexBuffer);
-        gl.deleteBuffer(this._texBuffer);
-        gl.deleteBuffer(this._indexBuffer);
+            gl.deleteBuffer(bufferMap.vertexBuffer);
+            gl.deleteBuffer(bufferMap.texCoordsBuffer);
+            gl.deleteBuffer(bufferMap.indexBuffer);
+        }
     }
 
-    public render(): void {
-        let gl = this._renderer.GL,
-            shader = Shader.lastProgram;
+    public render(renderer: Renderer): void {
+        if (!this._buffers[renderer.id]) {
+            this.build(renderer);
+        }
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+        const gl = renderer.GL,
+            shader = Shader.lastProgram,
+            bufferMap = this._buffers[renderer.id];
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.vertexBuffer);
         gl.vertexAttribPointer(shader.attributes["aVertexPosition"], VERTICE_SIZE, gl.FLOAT, false, 0, 0);
 
         if (shader.attributes["aTexCoords"]) {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this._texBuffer);
+            gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.texCoordsBuffer);
             gl.vertexAttribPointer(shader.attributes["aTexCoords"], TEXCOORD_SIZE, gl.FLOAT, false, 0, 0);
         }
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
 
         gl.drawElements(gl.TRIANGLES, this._indexLength, gl.UNSIGNED_SHORT, 0);
     }

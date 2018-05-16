@@ -1,7 +1,6 @@
 import Collision from './Collision';
 import ColorMaterial from '../materials/ColorMaterial';
 import CubeGeometry from '../geometries/CubeGeometry';
-import Renderer from '../Renderer';
 import Vector3 from '../math/Vector3';
 import Vector4 from '../math/Vector4';
 import Instance from '../entities/Instance';
@@ -101,11 +100,11 @@ class BoxCollision extends Collision {
         return direction;
     }
 
-    public addCollisionInstance(renderer: Renderer): void {
-        let geometry = new CubeGeometry(renderer, this._size.x, this._size.y, this._size.z),
-            material = new ColorMaterial(renderer, new Vector4(0.0, 1.0, 0.0, 0.5)),
+    public addCollisionInstance(): void {
+        let geometry = new CubeGeometry(this._size.x, this._size.y, this._size.z),
+            material = new ColorMaterial(new Vector4(0.0, 1.0, 0.0, 0.5)),
             
-            object = new Instance(renderer, geometry, material);
+            object = new Instance(geometry, material);
 
         material.setOpaque(false);
 

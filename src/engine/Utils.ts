@@ -1,5 +1,4 @@
 import Vector3 from './math/Vector3';
-import Config from './Config';
 import { PI2 } from './Constants';
 import Camera from './Camera';
 
@@ -51,14 +50,6 @@ export function coordsToOrtho(camera: Camera, x: number, y: number): Vector3 {
         x - camera.screenSize.x / 2.0,
         (camera.screenSize.y / 2.0) - y,
         0.0
-    );
-}
-
-export function pixelCoordsToWorld(vector: Vector3): Vector3 {
-    return vector.set(
-        vector.x * Config.PIXEL_UNIT_RELATION,
-        vector.y * Config.PIXEL_UNIT_RELATION,
-        vector.z * Config.PIXEL_UNIT_RELATION
     );
 }
 
