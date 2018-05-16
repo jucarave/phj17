@@ -5,7 +5,7 @@ import { InstancesMap } from './RenderingLayer';
 import List from './List';
 import { getSquaredDistance } from './Utils';
 import Instance from './entities/Instance';
-import { Vector3 } from './math/Vector3';
+import Vector3 from './math/Vector3';
 
 class Scene {
     protected _renderer                 : Renderer;

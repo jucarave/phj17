@@ -1,8 +1,6 @@
-import { Vector4 } from '../math/Vector4';
-import Poolify from '../Poolify';
-import { PoolClass } from '../Poolify';
+import Vector4 from '../math/Vector4';
 
-class Matrix4 implements PoolClass {
+class Matrix4 {
     public data                 : Array<number>;
     public inUse                : boolean;
 
@@ -79,10 +77,6 @@ class Matrix4 implements PoolClass {
         return this;
     }
 
-    public delete(): void {
-        pool.free(this);
-    }
-
     public clear(): void {
         this.setIdentity();
     }
@@ -132,12 +126,8 @@ class Matrix4 implements PoolClass {
         );
     }
 
-    public static allocate(): Matrix4 {
-        return <Matrix4>pool.allocate();
-    }
-
     public static createTranslate(x: number, y: number, z: number): Matrix4 {
-        return Matrix4.allocate().set(
+        return new Matrix4(
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
@@ -149,7 +139,7 @@ class Matrix4 implements PoolClass {
         let C: number = Math.cos(radians),
             S: number = Math.sin(radians);
 
-        return Matrix4.allocate().set(
+        return new Matrix4(
              1, 0, 0, 0,
              0, C,-S, 0,
              0, S, C, 0,
@@ -161,7 +151,7 @@ class Matrix4 implements PoolClass {
         let C: number = Math.cos(radians),
             S: number = Math.sin(radians);
 
-        return Matrix4.allocate().set(
+        return new Matrix4(
              C, 0,-S, 0,
              0, 1, 0, 0,
              S, 0, C, 0,
@@ -173,7 +163,7 @@ class Matrix4 implements PoolClass {
         let C: number = Math.cos(radians),
             S: number = Math.sin(radians);
 
-        return Matrix4.allocate().set(
+        return new Matrix4(
              C,-S, 0, 0,
              S, C, 0, 0,
              0, 0, 1, 0,
@@ -181,7 +171,5 @@ class Matrix4 implements PoolClass {
         );
     }
 }
-
-const pool = new Poolify(5, Matrix4);
 
 export default Matrix4;

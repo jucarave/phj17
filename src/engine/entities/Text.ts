@@ -2,7 +2,7 @@ import Texture from '../Texture';
 import Renderer from '../Renderer';
 import BasicMaterial from '../materials/BasicMaterial';
 import WallGeometry from '../geometries/WallGeometry';
-import { Vector3 } from '../math/Vector3';
+import Vector3 from '../math/Vector3';
 import { roundUpPowerOf2 } from '../Utils';
 import Instance from '../entities/Instance';
 

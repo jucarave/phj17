@@ -5,7 +5,6 @@ export { default as Config } from './Config';
 export * from './Constants';
 export { default as Input } from './Input';
 export { default as List } from './List';
-export { default as Poolify } from './Poolify';
 export { default as RenderingLayer } from './RenderingLayer';
 export { default as Scene } from './Scene';
 export { default as Texture } from './Texture';
@@ -27,8 +26,8 @@ export { default as ColorMaterial } from './materials/ColorMaterial';
 export { default as Material } from './materials/Material';
 
 export { default as Matrix4 } from './math/Matrix4';
-export { Vector3, vec3 } from './math/Vector3';
-export { Vector4 } from './math/Vector4';
+export { default as Vector3 } from './math/Vector3';
+export { default as Vector4 } from './math/Vector4';
 
 export { default as Shader } from './shaders/Shader';
 export { ShaderStruct, ShaderMap, ShadersNames } from './shaders/ShaderStruct';

@@ -8,21 +8,17 @@ class Renderer {
     private _gl                  : WebGLRenderingContext;
     private _shaders             : ShaderMap;
     
-    constructor(width: number, height: number, container: HTMLElement) {
-        this._createCanvas(width, height, container);
+    constructor(width: number, height: number) {
+        this._createCanvas(width, height);
         this._initGL();
         this._initShaders();
     }
 
-    private _createCanvas(width: number, height: number, container: HTMLElement): void {
+    private _createCanvas(width: number, height: number): void {
         let canvas = document.createElement("canvas");
 
         canvas.width = width;
         canvas.height = height;
-
-        if (container) {
-            container.appendChild(canvas);
-        }
 
         this._canvas = canvas;
     }

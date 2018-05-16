@@ -1,7 +1,4 @@
-import Poolify from '../Poolify';
-import { PoolClass } from '../Poolify';
-
-export class Vector3 implements PoolClass {
+export default class Vector3 {
     private _x                  : number;
     private _y                  : number;
     private _z                  : number;
@@ -59,11 +56,7 @@ export class Vector3 implements PoolClass {
     }
 
     public clone(): Vector3 {
-        return vec3(this.x, this.y, this.z);
-    }
-
-    public delete(): void {
-        pool.free(this);
+        return new Vector3(this.x, this.y, this.z);
     }
 
     public equals(vector3: Vector3): boolean {
@@ -90,7 +83,7 @@ export class Vector3 implements PoolClass {
     }
 
     public static cross(vectorA: Vector3, vectorB: Vector3): Vector3 {
-        return vec3(
+        return new Vector3(
             vectorA.y * vectorB.z - vectorA.z * vectorB.y,
             vectorA.z * vectorB.x - vectorA.x * vectorB.z,
             vectorA.x * vectorB.y - vectorA.y * vectorB.x
@@ -100,14 +93,4 @@ export class Vector3 implements PoolClass {
     public static dot(vectorA: Vector3, vectorB: Vector3): number {
         return vectorA.x * vectorB.x + vectorA.y * vectorB.y + vectorA.z * vectorB.z;
     }
-}
-
-const pool = new Poolify(10, Vector3);
-export function vec3(x: number = 0, y?: number, z?: number): Vector3 {
-    if (y === undefined && z === undefined) { z = x; }
-    else if (z === undefined){ z = 0; }
-    if (y === undefined){ y = x; }
-
-    let obj = <Vector3>(pool.allocate());
-    return obj.set(x, y, z);
 }

@@ -7,15 +7,12 @@ import Material from '../materials/Material';
 import Shader from '../shaders/Shader';
 import Component from '../Component';
 import Matrix4 from '../math/Matrix4';
-import { Vector3 } from '../math/Vector3';
+import Vector3 from '../math/Vector3';
 import { get2DAngle } from '../Utils';
 import Config from '../Config';
-import { rememberPoolAlloc as rpa, freePoolAlloc } from '../Utils';
-import Poolify from '../Poolify';
-import { PoolClass } from '../Poolify';
 import List from '../List';
 
-class Instance implements PoolClass {
+class Instance {
     protected _renderer           : Renderer;
     protected _geometry           : Geometry;
     protected _material           : Material;
@@ -29,7 +26,6 @@ class Instance implements PoolClass {
     
     public position            : Vector3;
     public isBillboard         : boolean;
-    public inUse               : boolean;
     
     constructor(renderer: Renderer = null, geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
@@ -120,16 +116,14 @@ class Instance implements PoolClass {
 
         this._transform.setIdentity();
 
-        this._transform.multiply(rpa(Matrix4.createXRotation(this._rotation.x)));
-        this._transform.multiply(rpa(Matrix4.createZRotation(this._rotation.z)));
-        this._transform.multiply(rpa(Matrix4.createYRotation(this._rotation.y)));
+        this._transform.multiply(Matrix4.createXRotation(this._rotation.x));
+        this._transform.multiply(Matrix4.createZRotation(this._rotation.z));
+        this._transform.multiply(Matrix4.createYRotation(this._rotation.y));
 
         let offset = this._geometry.offset;
         this._transform.translate(this.position.x + offset.x, this.position.y + offset.y, this.position.z + offset.z);
 
         this._needsUpdate = false;
-
-        freePoolAlloc();
 
         return this._transform;
     }
@@ -159,10 +153,6 @@ class Instance implements PoolClass {
         this._components.clear();
         this._collision = null;
         this._destroyed = true;
-    }
-
-    public delete(): void {
-        pool.free(this);
     }
 
     public awake(): void {
@@ -198,8 +188,6 @@ class Instance implements PoolClass {
         }
 
         this._destroyed = true;
-
-        this.delete();
     }
 
     public render(camera: Camera): void {
@@ -208,14 +196,14 @@ class Instance implements PoolClass {
 
         this._renderer.switchShader(this._material.shaderName);
 
-        let gl = this._renderer.GL,
+        const gl = this._renderer.GL,
             shader = Shader.lastProgram;
 
         if (this.isBillboard) {
             this.rotate(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
         }
 
-        let uPosition = Matrix4.allocate();
+        const uPosition = Matrix4.createIdentity();
         uPosition.multiply(this.getTransformation());
         uPosition.multiply(camera.getTransformation());
         
@@ -225,16 +213,6 @@ class Instance implements PoolClass {
         this._material.render();
 
         this._geometry.render();
-
-        uPosition.delete();
-    }
-
-    public static allocate(renderer: Renderer, geometry: Geometry = null, material: Material = null): Instance {
-        let ins = <Instance>pool.allocate();
-
-        ins.set(renderer, geometry, material);
-
-        return ins;
     }
 
     public get geometry(): Geometry {
@@ -261,7 +239,5 @@ class Instance implements PoolClass {
         return this._destroyed;
     }
 }
-
-let pool = new Poolify(20, Instance);
 
 export default Instance;

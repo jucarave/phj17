@@ -1,5 +1,5 @@
 import Renderer from './Renderer';
-import { Vector4 } from './math/Vector4';
+import Vector4 from './math/Vector4';
 
 class Texture {
     private _src               : string;

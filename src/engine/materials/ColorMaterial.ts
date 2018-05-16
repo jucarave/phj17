@@ -1,5 +1,5 @@
 import Material from '../materials/Material';
-import { Vector4 } from '../math/Vector4';
+import Vector4 from '../math/Vector4';
 import Renderer from '../Renderer';
 import Shader from '../shaders/Shader';
 

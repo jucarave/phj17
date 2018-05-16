@@ -1,7 +1,7 @@
 import { VERTICE_SIZE, TEXCOORD_SIZE } from '../Constants';
 import Renderer from '../Renderer';
 import Shader from '../shaders/Shader';
-import { Vector3 } from '../math/Vector3';
+import Vector3 from '../math/Vector3';
 
 class Geometry {
     private _vertices                : Array<number>;

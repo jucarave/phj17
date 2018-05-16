@@ -1,6 +1,6 @@
 import Scene from '../Scene';
 import Instance from '../entities/Instance';
-import { Vector3 } from '../math/Vector3';
+import Vector3 from '../math/Vector3';
 import Renderer from '../Renderer';
 
 abstract class Collision {
