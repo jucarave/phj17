@@ -8,12 +8,12 @@ import Instance from './entities/Instance';
 import Vector3 from './math/Vector3';
 
 class Scene {
-    protected _camera                   : Camera;
+    private _currentCamera              : Camera;
+
     protected _started                  : boolean;
     protected _renderingLayers          : List<RenderingLayer>;
 
     constructor() {
-        this._camera = null;
         this._started = false;
 
         this._initLayers();
@@ -29,7 +29,7 @@ class Scene {
         this._renderingLayers.push(transparents);
 
         transparents.onPostUpdate = ((item: InstancesMap) => {
-            item.params.distance = getSquaredDistance(item.instance.position, this._camera.position);
+            item.params.distance = getSquaredDistance(item.instance.position, this._currentCamera.position);
         });
 
         transparents.onPrerender = (instances: List<InstancesMap>) => {
@@ -61,10 +61,6 @@ class Scene {
         return direction;
     }
 
-    public setCamera(camera: Camera): void {
-        this._camera = camera;
-    }
-
     public init(): void {
         this._renderingLayers.each((layer: RenderingLayer) => {
             layer.awake();
@@ -79,10 +75,14 @@ class Scene {
         });
     }
 
-    public render(renderer: Renderer): void {
+    public render(renderer: Renderer, camera: Camera): void {
+        this._currentCamera = camera;
+
         this._renderingLayers.each((layer: RenderingLayer) => {
-            layer.render(renderer, this._camera);
+            layer.render(renderer, camera);
         });
+
+        this._currentCamera = null;
     }
 }
 
