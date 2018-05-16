@@ -30,6 +30,14 @@ class Matrix4 {
         return this;
     }
 
+    public copy(matrix: Matrix4): Matrix4 {
+        for (let i=0;i<16;i++) {
+            this.data[i] = matrix.data[i];
+        }
+
+        return this;
+    }
+
     public multiply(matrixB: Matrix4): Matrix4 {
         let T: Array<number> = matrixB.data;
 

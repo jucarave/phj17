@@ -17,6 +17,7 @@ class Instance {
     protected _material           : Material;
     protected _rotation           : Vector3;
     protected _transform          : Matrix4;
+    protected _worldMatrix        : Matrix4;
     protected _scene              : Scene;
     protected _components         : List<Component>;
     protected _collision          : Collision;
@@ -28,6 +29,7 @@ class Instance {
     
     constructor(geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
+        this._worldMatrix = Matrix4.createIdentity();
         this.position = new Vector3(0.0);
         this._rotation = new Vector3(0.0);
         this.isBillboard = false;
@@ -191,12 +193,11 @@ class Instance {
             this.rotate(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
         }
 
-        const uPosition = Matrix4.createIdentity();
-        uPosition.multiply(this.getTransformation());
-        uPosition.multiply(camera.getTransformation());
+        this._worldMatrix.copy(this.getTransformation());
+        this._worldMatrix.multiply(camera.getTransformation());
         
         gl.uniformMatrix4fv(shader.uniforms["uProjection"], false, camera.projection.data);
-        gl.uniformMatrix4fv(shader.uniforms["uPosition"], false, uPosition.data);
+        gl.uniformMatrix4fv(shader.uniforms["uPosition"], false, this._worldMatrix.data);
 
         this._material.render(renderer);
 
