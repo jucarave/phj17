@@ -4,8 +4,6 @@ class WallGeometry extends Geometry {
     constructor(width: number, height: number) {
         super();
 
-        this._dynamic = true;
-
         this._buildWall(width, height);
     }
 

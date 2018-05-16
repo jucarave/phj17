@@ -4,8 +4,6 @@ class CubeGeometry extends Geometry {
     constructor(width: number, height: number, length: number) {
         super();
 
-        this._dynamic = true;
-
         this._buildCube(width, height, length);
     }
 

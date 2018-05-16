@@ -169,9 +169,7 @@ class Instance {
             component.destroy();
         });
 
-        if (this._geometry.isDynamic) {
-            this._geometry.destroy();
-        }
+        this._geometry.destroy();
 
         if (this._collision && Config.DISPLAY_COLLISIONS) {
             this._collision.destroy();

@@ -22,9 +22,6 @@ class Geometry {
     private _indexLength             : number;
     private _boundingBox             : Array<number>;
     
-    protected _renderer              : Renderer;
-    protected _dynamic               : boolean;
-
     public offset                    : Vector3;
 
     constructor() {
@@ -34,8 +31,6 @@ class Geometry {
         this._buffers = {};
         this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
         this.offset = new Vector3(0, 0, 0);
-
-        this._dynamic = false;
     }
 
     public addVertice(x: number, y: number, z: number): void {
@@ -67,8 +62,6 @@ class Geometry {
     public build(renderer: Renderer): void {
         const gl = renderer.GL,
             bufferMap: BufferMap = { glContext: gl };
-
-        this._renderer = renderer;
 
         bufferMap.vertexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.vertexBuffer);
@@ -137,10 +130,6 @@ class Geometry {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
 
         gl.drawElements(gl.TRIANGLES, this._indexLength, gl.UNSIGNED_SHORT, 0);
-    }
-
-    public get isDynamic(): boolean {
-        return this._dynamic;
     }
 
     public get boundingBox(): Array<number> {
