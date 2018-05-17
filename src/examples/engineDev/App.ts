@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, CubeGeometry, ColorMaterial, Vector4, Instance } from '../../engine';
+import { Renderer, Camera, Scene, CubeGeometry, ColorMaterial, Vector4, Instance, PlaneGeometry } from '../../engine';
 
 class App {
     constructor() {
@@ -9,27 +9,23 @@ class App {
         document.getElementById("divGame").appendChild(render_2.canvas);
 
         const camera = Camera.createPerspective(90, 854/480, 0.1, 1000.0);
-        camera.setPosition(10, 10, 10);
-        camera.setTarget(0, 0, 0);
+        camera.position.set(10, 10, 10);
+        camera.lookTo.set(0, 0, 0);
 
         const camera_2 = Camera.createPerspective(90, 854/480, 0.1, 1000.0);
-        camera_2.setPosition(0, 0, 10);
-        camera_2.setTarget(0, 0, 0);
+        camera_2.position.set(0, 0, 10);
+        camera_2.lookTo.set(0, 0, 0);
         
         const geo = new CubeGeometry(2, 2, 2);
         const mat = new ColorMaterial(new Vector4(1.0, 1.0, 1.0, 1.0));
         const inst = new Instance(geo, mat);
 
-        const geo2 = new CubeGeometry(0.5, 0.5, 0.5);
-        const mat2 = new ColorMaterial(new Vector4(1.0, 0.0, 0.0, 1.0));
+        const geo2 = new PlaneGeometry(5, 5);
+        const mat2 = new ColorMaterial(new Vector4(0.0, 1.0, 0.0, 1.0));
         const inst2 = new Instance(geo2, mat2);
-        inst2.position.set(2, 2, 2);
+        inst2.position.y = -1;
 
-        setTimeout(() => { 
-            inst2.removeParent(); 
-        }, 9000);
-
-        inst.addChild(inst2);
+        inst.addChild(camera);
 
         const scene = new Scene();
         scene.addGameObject(inst);
@@ -44,8 +40,9 @@ class App {
         render.clear();
         render_2.clear();
 
-        inst.rotation.y += 0.5 * Math.PI / 180;
-        inst.rotation.x += 0.5 * Math.PI / 180;
+        //inst.rotation.y += 0.5 * Math.PI / 180;
+
+        camera.lookTo.set(0,0,0);
 
         scene.update();
 

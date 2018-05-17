@@ -1,48 +1,38 @@
-import Matrix4 from './math/Matrix4';
-import Vector3 from './math/Vector3';
-import { degToRad } from './Utils';
+import Matrix4 from '../math/Matrix4';
+import Vector3 from '../math/Vector3';
+import Vector4 from '../math/Vector4';
+import { degToRad } from '../Utils';
+import Instance from './Instance';
 
-class Camera {
-    private _transform           : Matrix4;
-    private _target              : Vector3;
+class Camera extends Instance {
     private _up                  : Vector3;
-    private _needsUpdate         : boolean;
 
-    public position              : Vector3;
     public screenSize            : Vector3;
-
+    
     public readonly projection          : Matrix4;
+    public readonly lookTo             : Vector3;
 
     constructor(projection: Matrix4) {
+        super(null, null);
+
         this.projection = projection;
         this._transform = Matrix4.createIdentity();
 
-        this.position = new Vector3(0, 0, 0);
-        this._target = new Vector3(0, 0, 0);
+        this.lookTo = new Vector3(0, 0, 0);
         this._up = new Vector3(0, 1, 0);
         this.screenSize = new Vector3(0.0);
 
+        this.lookTo.onChange = () => this._onLookToChange();
+
         this._needsUpdate = true;
     }
 
-    public setPosition(x: number, y: number, z: number): Camera {
-        this.position.set(x, y, z);
-
-        this._needsUpdate = true;
-
-        return this;
+    private _onLookToChange() {
+        this.emmitNeedsUpdate();
     }
 
-    public setTarget(x: number, y: number, z: number): Camera {
-        this._target.set(x, y, z);
-
-        this._needsUpdate = true;
-
-        return this;
-    }
-
-    public getTransformation(): Matrix4 {
-        if (!this._needsUpdate) {
+    public getTransformation(force: boolean = false): Matrix4 {
+        if (!force && !this._needsUpdate && (this._parent === null || !this._parent.needsUpdate)) {
             return this._transform;
         }
 
@@ -50,7 +40,7 @@ class Camera {
             l = Vector3.cross(this._up, f).normalize(),
             u = Vector3.cross(f, l).normalize();
 
-        let cp = this.position,
+        let cp = this.globalPosition,
             x = -Vector3.dot(l, cp),
             y = -Vector3.dot(u, cp),
             z = -Vector3.dot(f, cp);
@@ -68,14 +58,19 @@ class Camera {
     }
 
     public get forward(): Vector3 {
-        let cp = this.position,
-            t = this._target;
+        let cp = this.globalPosition,
+            t = this.globalLookTo;
 
         return new Vector3(cp.x - t.x, cp.y - t.y, cp.z - t.z).normalize();
     }
 
-    public get isUpdated(): boolean {
-        return !this._needsUpdate;
+    public get globalLookTo(): Vector3 {
+        if (!this._parent) { return this.lookTo; }
+        
+        const t = this._parent.getTransformation();
+        const p = t.multiplyVector(new Vector4(this.lookTo.x, this.lookTo.y, this.lookTo.z, 1));
+
+        return p.xyz;
     }
 
     public static createPerspective(fovDegrees: number, ratio: number, znear: number, zfar: number): Camera {

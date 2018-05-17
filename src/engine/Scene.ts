@@ -1,4 +1,4 @@
-import Camera from './Camera';
+import Camera from './entities/Camera';
 import Renderer from './Renderer';
 import RenderingLayer from './RenderingLayer';
 import { InstancesMap } from './RenderingLayer';

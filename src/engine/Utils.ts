@@ -1,6 +1,6 @@
 import Vector3 from './math/Vector3';
 import { PI2 } from './Constants';
-import Camera from './Camera';
+import Camera from './entities/Camera';
 
 export function createUUID(): string {
     let date = (new Date()).getTime(),

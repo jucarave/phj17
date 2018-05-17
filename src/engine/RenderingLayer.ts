@@ -1,6 +1,6 @@
 import Instance from './entities/Instance';
+import Camera from './entities/Camera';
 import List from './List';
-import Camera from './Camera';
 import Renderer from './Renderer';
 
 interface Params {

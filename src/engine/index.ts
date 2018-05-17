@@ -1,5 +1,4 @@
 export { default as Renderer } from './Renderer';
-export { default as Camera } from './Camera';
 export { default as Component } from './Component';
 export { default as Config } from './Config';
 export * from './Constants';
@@ -11,6 +10,7 @@ export { default as Texture } from './Texture';
 export * from './Utils';
 
 export { default as Instance } from './entities/Instance';
+export { default as Camera } from './entities/Camera';
 export { default as Text } from './entities/Text';
 
 export { default as CubeGeometry } from './geometries/CubeGeometry';

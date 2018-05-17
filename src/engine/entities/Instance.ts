@@ -1,13 +1,13 @@
 import Renderer from '../Renderer';
-import Camera from '../Camera';
+import Camera from './Camera';
 import Scene from '../Scene';
 import Geometry from '../geometries/Geometry';
 import Material from '../materials/Material';
 import Component from '../Component';
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
+import Vector4 from '../math/Vector4';
 import { get2DAngle, createUUID } from '../Utils';
-import { Vector4 } from '..';
 
 class Instance {
     protected _geometry           : Geometry;
@@ -43,10 +43,10 @@ class Instance {
         this._destroyed = false;
 
         this.position = new Vector3(0.0);
-        this.position.onChange = () => this._needsUpdate = true;
+        this.position.onChange = () => this.emmitNeedsUpdate();
 
         this.rotation = new Vector3(0.0);
-        this.rotation.onChange = () => this._needsUpdate = true;
+        this.rotation.onChange = () => this.emmitNeedsUpdate();
     }
     
     public setScene(scene: Scene): void {
@@ -68,8 +68,8 @@ class Instance {
         return null;
     }
     
-    public getTransformation(): Matrix4 {
-        if (!this._needsUpdate && (this._parent === null || !this._parent.needsUpdate)) {
+    public getTransformation(force: boolean = false): Matrix4 {
+        if (!force && !this._needsUpdate && (this._parent === null || !this._parent.needsUpdate)) {
             return this._transform;
         }
 
@@ -215,6 +215,14 @@ class Instance {
         const p = t.multiplyVector(new Vector4(this.position.x, this.position.y, this.position.z, 1));
 
         return p.xyz;
+    }
+
+    public emmitNeedsUpdate() {
+        for (let i=0,child;child=this._children[i];i++) {
+            child.emmitNeedsUpdate();
+        }
+
+        this._needsUpdate = true;
     }
 }
 
