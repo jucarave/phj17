@@ -30,6 +30,6 @@ export { default as Vector3 } from './math/Vector3';
 export { default as Vector4 } from './math/Vector4';
 
 export { default as Shader } from './shaders/Shader';
-export { ShaderStruct, ShaderMap, ShadersNames } from './shaders/ShaderStruct';
+export { ShaderStruct, ShaderMap } from './shaders/ShaderStruct';
 export { default as Basic } from './shaders/Basic';
 export { default as Color } from './shaders/Color';

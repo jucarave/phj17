@@ -36,7 +36,7 @@ class RenderingLayer {
         let added = false;
         for (let i=0,ins;ins=this._instances.getAt(i);i++) {
             let cond1 = (!ins.instance.material && !instance.material),
-                cond2 = (ins.instance.material && instance.material && ins.instance.material.shaderName == instance.material.shaderName);
+                cond2 = (ins.instance.material && instance.material && ins.instance.material.shader.id == instance.material.shader.id);
 
             if (cond1 || cond2) {
                 this._instances.insertAt(i, this._createInstanceMap(instance));

@@ -1,18 +1,17 @@
-import { ShadersNames } from '../shaders/ShaderStruct';
+import { ShaderStruct } from '../shaders/ShaderStruct';
 import { createUUID } from '../Utils';
 import Renderer from '../Renderer';
+import Shader from '../shaders/Shader';
 
 abstract class Material {
     protected _isOpaque                : boolean;
     protected _renderBothFaces         : boolean;
     
-    public readonly shaderName        : ShadersNames;
+    public readonly shader        : Shader;
     public readonly uuid              : string;
 
-    public static lastRendered        : Material = null;
-
-    constructor(shaderName: ShadersNames) {
-        this.shaderName = shaderName;
+    constructor(shader: ShaderStruct) {
+        this.shader = Shader.getShader(shader);
         this.uuid = createUUID();
         this._isOpaque = true;
         this._renderBothFaces = false;

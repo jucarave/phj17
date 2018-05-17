@@ -1,6 +1,9 @@
 import { ShaderStruct } from '../shaders/ShaderStruct';
+import { createUUID } from '../Utils';
 
 let Color: ShaderStruct = {
+    id: createUUID(),
+    
     vertexShader: `
         precision mediump float;
 

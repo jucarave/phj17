@@ -1,13 +1,8 @@
-import Shader from './shaders/Shader';
-import Basic from './shaders/Basic';
-import Color from './shaders/Color';
-import { ShaderMap, ShadersNames } from './shaders/ShaderStruct';
 import { createUUID } from './Utils';
 
 class Renderer {
     private _canvas              : HTMLCanvasElement;
     private _gl                  : WebGLRenderingContext;
-    private _shaders             : ShaderMap;
 
     public readonly id           : string;
     
@@ -16,7 +11,6 @@ class Renderer {
         
         this._createCanvas(width, height);
         this._initGL();
-        this._initShaders();
     }
 
     private _createCanvas(width: number, height: number): void {
@@ -43,29 +37,11 @@ class Renderer {
         this._gl = gl;
     }
 
-    private _initShaders(): void {
-        this._shaders = {};
-
-        this._shaders.BASIC = new Shader(this._gl, Basic);
-        this._shaders.COLOR = new Shader(this._gl, Color);
-
-        this._shaders.BASIC.useProgram();
-    }
-
     public clear(): void {
         let gl = this._gl;
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
-
-    public switchShader(shaderName: ShadersNames): void {
-        this._shaders[shaderName].useProgram();
-    }
-
-    public getShader(shaderName: ShadersNames): Shader {
-        return this._shaders[shaderName];
-    }
-
     public get GL(): WebGLRenderingContext {
         return this._gl;
     }

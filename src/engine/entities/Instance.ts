@@ -4,7 +4,6 @@ import Scene from '../Scene';
 import Collision from '../collisions/Collision';
 import Geometry from '../geometries/Geometry';
 import Material from '../materials/Material';
-import Shader from '../shaders/Shader';
 import Component from '../Component';
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
@@ -184,10 +183,11 @@ class Instance {
         if (!this._geometry || !this._material) { return; }
         if (!this._material.isReady) { return; }
 
-        renderer.switchShader(this._material.shaderName);
+        this._material.shader.useProgram(renderer);
 
         const gl = renderer.GL,
-            shader = Shader.lastProgram;
+            shader = this._material.shader,
+            program = shader.getProgram(renderer);
 
         if (this.isBillboard) {
             this.rotate(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
@@ -196,12 +196,12 @@ class Instance {
         this._worldMatrix.copy(this.getTransformation());
         this._worldMatrix.multiply(camera.getTransformation());
         
-        gl.uniformMatrix4fv(shader.uniforms["uProjection"], false, camera.projection.data);
-        gl.uniformMatrix4fv(shader.uniforms["uPosition"], false, this._worldMatrix.data);
+        gl.uniformMatrix4fv(program.uniforms["uProjection"], false, camera.projection.data);
+        gl.uniformMatrix4fv(program.uniforms["uPosition"], false, this._worldMatrix.data);
 
         this._material.render(renderer);
 
-        this._geometry.render(renderer);
+        this._geometry.render(renderer, shader);
     }
 
     public get geometry(): Geometry {

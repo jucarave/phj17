@@ -110,21 +110,21 @@ class Geometry {
         }
     }
 
-    public render(renderer: Renderer): void {
+    public render(renderer: Renderer, shader: Shader): void {
         if (!this._buffers[renderer.id]) {
             this.build(renderer);
         }
 
         const gl = renderer.GL,
-            shader = Shader.lastProgram,
-            bufferMap = this._buffers[renderer.id];
+            bufferMap = this._buffers[renderer.id],
+            program = shader.getProgram(renderer);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.vertexBuffer);
-        gl.vertexAttribPointer(shader.attributes["aVertexPosition"], VERTICE_SIZE, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(program.attributes["aVertexPosition"], VERTICE_SIZE, gl.FLOAT, false, 0, 0);
 
-        if (shader.attributes["aTexCoords"]) {
+        if (program.attributes["aTexCoords"]) {
             gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.texCoordsBuffer);
-            gl.vertexAttribPointer(shader.attributes["aTexCoords"], TEXCOORD_SIZE, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(program.attributes["aTexCoords"], TEXCOORD_SIZE, gl.FLOAT, false, 0, 0);
         }
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
