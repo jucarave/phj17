@@ -10,9 +10,6 @@ export { default as Scene } from './Scene';
 export { default as Texture } from './Texture';
 export * from './Utils';
 
-export { default as BoxCollision } from './collisions/BoxCollision';
-export { default as Collision } from './collisions/Collision';
-
 export { default as Instance } from './entities/Instance';
 export { default as Text } from './entities/Text';
 

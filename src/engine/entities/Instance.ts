@@ -1,14 +1,12 @@
 import Renderer from '../Renderer';
 import Camera from '../Camera';
 import Scene from '../Scene';
-import Collision from '../collisions/Collision';
 import Geometry from '../geometries/Geometry';
 import Material from '../materials/Material';
 import Component from '../Component';
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
 import { get2DAngle } from '../Utils';
-import Config from '../Config';
 import List from '../List';
 
 class Instance {
@@ -18,7 +16,6 @@ class Instance {
     protected _worldMatrix        : Matrix4;
     protected _scene              : Scene;
     protected _components         : List<Component>;
-    protected _collision          : Collision;
     protected _destroyed          : boolean;
     protected _needsUpdate        : boolean;
     
@@ -36,7 +33,6 @@ class Instance {
         this._material = material;
         this._scene = null;
         this._components = new List();
-        this._collision = null;
         this._destroyed = false;
 
         this.position = new Vector3(0.0);
@@ -84,11 +80,6 @@ class Instance {
         return this._transform;
     }
 
-    public setCollision(collision: Collision): void {
-        this._collision = collision;
-        collision.setInstance(this);
-    }
-
     public clear(): void {
         this.position.set(0, 0, 0);
         this.rotation.set(0, 0, 0);
@@ -99,7 +90,6 @@ class Instance {
         this._needsUpdate = true;
         this._scene = null;
         this._components.clear();
-        this._collision = null;
         this._destroyed = true;
     }
 
@@ -107,13 +97,6 @@ class Instance {
         this._components.each((component: Component) => {
             component.awake();
         });
-
-        if (this._collision && Config.DISPLAY_COLLISIONS) {
-            let collision = this._collision;
-
-            collision.setScene(this._scene);
-            // collision.addCollisionInstance(this._renderer);
-        }
     }
 
     public update(): void {
@@ -128,10 +111,6 @@ class Instance {
         });
 
         this._geometry.destroy();
-
-        if (this._collision && Config.DISPLAY_COLLISIONS) {
-            this._collision.destroy();
-        }
 
         this._destroyed = true;
     }
@@ -167,10 +146,6 @@ class Instance {
     
     public get material(): Material {
         return this._material;
-    }
-
-    public get collision(): Collision {
-        return this._collision;
     }
 
     public get scene(): Scene {
