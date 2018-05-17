@@ -33,7 +33,6 @@ class App {
         render_2.clear();
 
         inst.rotation.y += 3 * Math.PI / 180;
-        inst.rotation.x += 3 * Math.PI / 180;
 
         scene.update();
 

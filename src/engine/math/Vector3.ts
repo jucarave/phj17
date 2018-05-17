@@ -2,7 +2,6 @@ export default class Vector3 {
     private _x                  : number;
     private _y                  : number;
     private _z                  : number;
-    private _length             : number;
     private _onChange           : Function;
 
     public inUse                : boolean;
@@ -95,9 +94,7 @@ export default class Vector3 {
     }
 
     public get length(): number {
-        this._length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-
-        return this._length;
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
     public set onChange(onChange: Function) {
