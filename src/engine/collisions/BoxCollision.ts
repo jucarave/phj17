@@ -108,7 +108,7 @@ class BoxCollision extends Collision {
 
         material.setOpaque(false);
 
-        object.position = this._position;
+        object.position.copy(this._position);
 
         geometry.offset = this._offset;
 

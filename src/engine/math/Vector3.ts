@@ -3,12 +3,14 @@ export default class Vector3 {
     private _y                  : number;
     private _z                  : number;
     private _length             : number;
-    private needsUpdate         : boolean;
+    private _onChange           : Function;
 
     public inUse                : boolean;
 
     constructor(x: number = 0, y: number = 0, z: number = 0) {
         this.set(x, y, z);
+
+        this._onChange = null;
     }
 
     public clear(): Vector3 {
@@ -22,7 +24,7 @@ export default class Vector3 {
         this._y = y;
         this._z = z;
 
-        this.needsUpdate = true;
+        if (this._onChange) { this._onChange(); }
 
         return this;
     }
@@ -32,7 +34,17 @@ export default class Vector3 {
         this._y += y;
         this._z += z;
 
-        this.needsUpdate = true;
+        if (this._onChange) { this._onChange(); }
+
+        return this;
+    }
+
+    public copy(vector: Vector3): Vector3 {
+        this._x = vector.x;
+        this._y = vector.y;
+        this._z = vector.z;
+
+        if (this._onChange) { this._onChange(); }
 
         return this;
     }
@@ -42,7 +54,7 @@ export default class Vector3 {
         this._y *= num;
         this._z *= num;
 
-        this.needsUpdate = true;
+        if (this._onChange) { this._onChange(); }
 
         return this;
     }
@@ -67,19 +79,33 @@ export default class Vector3 {
     public get y(): number { return this._y; }
     public get z(): number { return this._z; }
 
-    public set x(x: number) { this._x = x; this.needsUpdate = true; }
-    public set y(y: number) { this._y = y; this.needsUpdate = true; }
-    public set z(z: number) { this._z = z; this.needsUpdate = true; }
+    public set x(x: number) { 
+        this._x = x; 
+        if (this._onChange) { this._onChange(); }
+    }
+
+    public set y(y: number) { 
+        this._y = y; 
+        if (this._onChange) { this._onChange(); }
+    }
+
+    public set z(z: number) { 
+        this._z = z; 
+        if (this._onChange) { this._onChange(); }
+    }
 
     public get length(): number {
-        if (!this.needsUpdate) {
-            return this._length;
-        }
-
         this._length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        this.needsUpdate =  false;
 
         return this._length;
+    }
+
+    public set onChange(onChange: Function) {
+        if (this._onChange !== null) {
+            console.warn("Vector3 already has a onChange Callback", this);
+        }
+
+        this._onChange = onChange;
     }
 
     public static cross(vectorA: Vector3, vectorB: Vector3): Vector3 {

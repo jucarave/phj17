@@ -97,8 +97,8 @@ class Text extends Instance {
         this._material = material;        
         this._geometry = geometry;
 
-        this.translate(this._options.position.x, this._options.position.y, this._options.position.z);
-        this.rotate(this._options.rotation.x, this._options.rotation.y, this._options.rotation.z);
+        this.position.set(this._options.position.x, this._options.position.y, this._options.position.z);
+        this.rotation.set(this._options.rotation.x, this._options.rotation.y, this._options.rotation.z);
     }
 }
 

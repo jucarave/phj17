@@ -7,12 +7,12 @@ abstract class Material {
     protected _isOpaque                : boolean;
     protected _renderBothFaces         : boolean;
     
-    public readonly shader        : Shader;
-    public readonly uuid              : string;
+    public readonly shader             : Shader;
+    public readonly id                 : string;
 
     constructor(shader: ShaderStruct) {
         this.shader = Shader.getShader(shader);
-        this.uuid = createUUID();
+        this.id = createUUID();
         this._isOpaque = true;
         this._renderBothFaces = false;
     }

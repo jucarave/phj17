@@ -25,17 +25,22 @@ class App {
 
         scene.init();
 
-        this._loop(render, render_2, camera, camera_2, scene);
+        this._loop(render, render_2, camera, camera_2, inst, scene);
     }
 
-    private _loop(render: Renderer, render_2: Renderer, camera: Camera, camera_2: Camera, scene: Scene) {
+    private _loop(render: Renderer, render_2: Renderer, camera: Camera, camera_2: Camera, inst: Instance, scene: Scene) {
         render.clear();
         render_2.clear();
+
+        inst.rotation.y += 3 * Math.PI / 180;
+        inst.rotation.x += 3 * Math.PI / 180;
+
+        scene.update();
 
         scene.render(render, camera);
         scene.render(render_2, camera_2);
 
-        requestAnimationFrame(() => this._loop(render, render_2, camera, camera_2, scene));
+        requestAnimationFrame(() => this._loop(render, render_2, camera, camera_2, inst, scene));
     }
 }
 

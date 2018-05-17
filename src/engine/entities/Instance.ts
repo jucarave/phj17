@@ -14,23 +14,22 @@ import List from '../List';
 class Instance {
     protected _geometry           : Geometry;
     protected _material           : Material;
-    protected _rotation           : Vector3;
     protected _transform          : Matrix4;
     protected _worldMatrix        : Matrix4;
     protected _scene              : Scene;
     protected _components         : List<Component>;
     protected _collision          : Collision;
-    protected _needsUpdate        : boolean;
     protected _destroyed          : boolean;
+    protected _needsUpdate        : boolean;
     
-    public position            : Vector3;
+    public readonly position            : Vector3;
+    public readonly rotation            : Vector3;
+
     public isBillboard         : boolean;
     
     constructor(geometry: Geometry = null, material: Material = null) {
         this._transform = Matrix4.createIdentity();
         this._worldMatrix = Matrix4.createIdentity();
-        this.position = new Vector3(0.0);
-        this._rotation = new Vector3(0.0);
         this.isBillboard = false;
         this._needsUpdate = true;
         this._geometry = geometry;
@@ -39,54 +38,12 @@ class Instance {
         this._components = new List();
         this._collision = null;
         this._destroyed = false;
-    }
-    
-    public translate(x: number|Vector3, y: number = 0, z: number = 0, relative: boolean = false): Instance {
-        let _x: number;
 
-        if ((<Vector3>x).length) {
-            _x = (<Vector3>x).x;
-            y = (<Vector3>x).y;
-            z = (<Vector3>x).z;
-        } else {
-            _x = <number>x;
-        }
+        this.position = new Vector3(0.0);
+        this.position.onChange = () => this._needsUpdate = true;
 
-        if (relative) {
-            this.position.add(_x, y, z);
-        } else {
-            this.position.set(_x, y, z);
-        }
-
-        this._needsUpdate = true;
-
-        if (this._collision && this._collision.displayInstance) {
-            this._collision.displayInstance.translate(x, y, z, true);
-        }
-
-        return this;
-    }
-    
-    public rotate(x: number|Vector3, y: number = 0, z: number = 0, relative: boolean = false): Instance {
-        let _x: number;
-        
-        if ((<Vector3>x).length) {
-            _x = (<Vector3>x).x;
-            y = (<Vector3>x).y;
-            z = (<Vector3>x).z;
-        } else {
-            _x = <number>x;
-        }
-        
-        if (relative) {
-            this._rotation.add(_x, y, z);
-        } else {
-            this._rotation.set(_x, y, z);
-        }
-
-        this._needsUpdate = true;
-
-        return this;
+        this.rotation = new Vector3(0.0);
+        this.rotation.onChange = () => this._needsUpdate = true;
     }
     
     public setScene(scene: Scene): void {
@@ -115,9 +72,9 @@ class Instance {
 
         this._transform.setIdentity();
 
-        this._transform.multiply(Matrix4.createXRotation(this._rotation.x));
-        this._transform.multiply(Matrix4.createZRotation(this._rotation.z));
-        this._transform.multiply(Matrix4.createYRotation(this._rotation.y));
+        this._transform.multiply(Matrix4.createXRotation(this.rotation.x));
+        this._transform.multiply(Matrix4.createZRotation(this.rotation.z));
+        this._transform.multiply(Matrix4.createYRotation(this.rotation.y));
 
         let offset = this._geometry.offset;
         this._transform.translate(this.position.x + offset.x, this.position.y + offset.y, this.position.z + offset.z);
@@ -134,7 +91,7 @@ class Instance {
 
     public clear(): void {
         this.position.set(0, 0, 0);
-        this._rotation.set(0, 0, 0);
+        this.rotation.set(0, 0, 0);
         this._transform.setIdentity();
         this._geometry = null;
         this._material = null;
@@ -190,7 +147,7 @@ class Instance {
             program = shader.getProgram(renderer);
 
         if (this.isBillboard) {
-            this.rotate(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
+            this.rotation.set(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
         }
 
         this._worldMatrix.copy(this.getTransformation());
@@ -210,10 +167,6 @@ class Instance {
     
     public get material(): Material {
         return this._material;
-    }
-    
-    public get rotation(): Vector3 {
-        return this._rotation;
     }
 
     public get collision(): Collision {
