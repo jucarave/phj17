@@ -6,8 +6,8 @@ import Material from '../materials/Material';
 import Component from '../Component';
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
-import { get2DAngle } from '../Utils';
-import List from '../List';
+import { get2DAngle, createUUID } from '../Utils';
+import { Vector4 } from '..';
 
 class Instance {
     protected _geometry           : Geometry;
@@ -15,16 +15,21 @@ class Instance {
     protected _transform          : Matrix4;
     protected _worldMatrix        : Matrix4;
     protected _scene              : Scene;
-    protected _components         : List<Component>;
+    protected _components         : Array<Component>;
     protected _destroyed          : boolean;
     protected _needsUpdate        : boolean;
+    protected _parent             : Instance;
+    protected _children           : Array<Instance>
     
+    public readonly id                  : string;
     public readonly position            : Vector3;
     public readonly rotation            : Vector3;
 
     public isBillboard         : boolean;
     
     constructor(geometry: Geometry = null, material: Material = null) {
+        this.id = createUUID();
+
         this._transform = Matrix4.createIdentity();
         this._worldMatrix = Matrix4.createIdentity();
         this.isBillboard = false;
@@ -32,7 +37,9 @@ class Instance {
         this._geometry = geometry;
         this._material = material;
         this._scene = null;
-        this._components = new List();
+        this._components = [];
+        this._children = [];
+        this._parent = null;
         this._destroyed = false;
 
         this.position = new Vector3(0.0);
@@ -52,7 +59,7 @@ class Instance {
     }
 
     public getComponent<T>(componentName: string): T {
-        for (let i=0,comp;comp=this._components.getAt(i);i++) {
+        for (let i=0,comp;comp=this._components[i];i++) {
             if (comp.name == componentName) {
                 return <T>(<any>comp);
             }
@@ -62,7 +69,7 @@ class Instance {
     }
     
     public getTransformation(): Matrix4 {
-        if (!this._needsUpdate) {
+        if (!this._needsUpdate && (this._parent === null || !this._parent.needsUpdate)) {
             return this._transform;
         }
 
@@ -74,6 +81,10 @@ class Instance {
 
         let offset = this._geometry.offset;
         this._transform.translate(this.position.x + offset.x, this.position.y + offset.y, this.position.z + offset.z);
+
+        if (this._parent) {
+            this._transform.multiply(this._parent.getTransformation());
+        }
 
         this._needsUpdate = false;
 
@@ -89,26 +100,26 @@ class Instance {
         this.isBillboard = false;
         this._needsUpdate = true;
         this._scene = null;
-        this._components.clear();
+        this._components = [];
         this._destroyed = true;
     }
 
     public awake(): void {
-        this._components.each((component: Component) => {
+        for (let i=0,component;component=this._components[i];i++) {
             component.awake();
-        });
+        };
     }
 
     public update(): void {
-        this._components.each((component: Component) => {
+        for (let i=0,component;component=this._components[i];i++) {
             component.update();
-        });
+        };
     }
 
     public destroy(): void {
-        this._components.each((component: Component) => {
+        for (let i=0,component;component=this._components[i];i++) {
             component.destroy();
-        });
+        };
 
         this._geometry.destroy();
 
@@ -140,6 +151,43 @@ class Instance {
         this._geometry.render(renderer, shader);
     }
 
+    public addChild(instance: Instance): void {
+        instance.removeParent();
+
+        this._children.push(instance);
+        instance._parent = this;
+
+        const p = this.position;
+        instance.position.add(-p.x, -p.y, -p.z);
+
+        const r = this.rotation;
+        instance.rotation.add(-r.x, -r.y, -r.z);
+    }
+
+    public removeChild(instance: Instance): boolean {
+        for (let i=0,child;child=this._children[i];i++) {
+            if (child.id == instance.id) {
+                this._children.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public removeParent(): void {
+        if (!this._parent) { return; }
+
+        const p = this.globalPosition;
+        this.position.set(p.x, p.y, p.z);
+
+        const r = this._parent.rotation;
+        this.rotation.add(r.x, r.y, r.z);
+
+        this._parent.removeChild(this);
+        this._parent = null;
+    }
+
     public get geometry(): Geometry {
         return this._geometry;
     }
@@ -154,6 +202,19 @@ class Instance {
 
     public get isDestroyed(): boolean {
         return this._destroyed;
+    }
+
+    public get needsUpdate(): boolean {
+        return this._needsUpdate;
+    }
+
+    public get globalPosition(): Vector3 {
+        if (!this._parent) { return this.position; }
+        
+        const t = this._parent.getTransformation();
+        const p = t.multiplyVector(new Vector4(this.position.x, this.position.y, this.position.z, 1));
+
+        return p.xyz;
     }
 }
 

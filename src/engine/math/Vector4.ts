@@ -1,3 +1,5 @@
+import Vector3 from "./Vector3";
+
 export default class Vector4 {
     private _x                  : number;
     private _y                  : number;
@@ -79,6 +81,10 @@ export default class Vector4 {
     public set w(w: number) { 
         this._w = w;
         if (this._onChange) { this._onChange(); } 
+    }
+
+    public get xyz(): Vector3 {
+        return new Vector3(this.x, this.y, this.z);
     }
 
     public get length(): number {

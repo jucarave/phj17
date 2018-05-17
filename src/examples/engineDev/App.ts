@@ -20,8 +20,20 @@ class App {
         const mat = new ColorMaterial(new Vector4(1.0, 1.0, 1.0, 1.0));
         const inst = new Instance(geo, mat);
 
+        const geo2 = new CubeGeometry(0.5, 0.5, 0.5);
+        const mat2 = new ColorMaterial(new Vector4(1.0, 0.0, 0.0, 1.0));
+        const inst2 = new Instance(geo2, mat2);
+        inst2.position.set(2, 2, 2);
+
+        setTimeout(() => { 
+            inst2.removeParent(); 
+        }, 9000);
+
+        inst.addChild(inst2);
+
         const scene = new Scene();
         scene.addGameObject(inst);
+        scene.addGameObject(inst2);
 
         scene.init();
 
@@ -32,7 +44,8 @@ class App {
         render.clear();
         render_2.clear();
 
-        inst.rotation.y += 3 * Math.PI / 180;
+        inst.rotation.y += 0.5 * Math.PI / 180;
+        inst.rotation.x += 0.5 * Math.PI / 180;
 
         scene.update();
 

@@ -62,6 +62,17 @@ class Matrix4 {
         return this;
     }
 
+    public multiplyVector(vector: Vector4): Vector4 {
+        const T = this.data;
+
+        return new Vector4(
+            vector.x * T[0] + vector.y * T[4] + vector.z * T[8] + vector.w * T[12],
+            vector.x * T[1] + vector.y * T[5] + vector.z * T[9] + vector.w * T[13],
+            vector.x * T[2] + vector.y * T[6] + vector.z * T[10] + vector.w * T[14],
+            vector.x * T[3] + vector.y * T[7] + vector.z * T[11] + vector.w * T[15]
+        );
+    }
+
     public translate(x: number, y: number, z: number = 0, relative: boolean = false): void {
         if (relative) {
             this.data[12] += x;
