@@ -7,6 +7,7 @@ import Component from '../Component';
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
 import Vector4 from '../math/Vector4';
+import Quaternion from '../math/Quaternion';
 import Euler from '../math/Euler';
 import { get2DAngle, createUUID } from '../Utils';
 
@@ -25,8 +26,10 @@ class Instance {
     public readonly id                  : string;
     public readonly position            : Vector3;
     public readonly rotation            : Euler;
+    public readonly quaternion          : Quaternion;
 
     public isBillboard         : boolean;
+    public useQuaternion       : boolean = false;
     
     constructor(geometry: Geometry = null, material: Material = null) {
         this.id = createUUID();
@@ -48,6 +51,8 @@ class Instance {
 
         this.rotation = new Euler();
         this.rotation.onChange = () => this.emmitNeedsUpdate();
+
+        this.quaternion = new Quaternion();
     }
     
     public setScene(scene: Scene): void {
@@ -76,7 +81,11 @@ class Instance {
 
         this._transform.setIdentity();
 
-        this._transform.multiply(this.rotation.getRotationMatrix());
+        if (!this.useQuaternion) {
+            this._transform.multiply(this.rotation.getRotationMatrix());
+        } else {
+            this._transform.multiply(this.quaternion.getRotationMatrix());
+        }
 
         this._transform.translate(this.position.x, this.position.y, this.position.z);
 

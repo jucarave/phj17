@@ -1,10 +1,11 @@
 import Vector3 from './Vector3';
+import Matrix4 from './Matrix4';
 
 class Quaternion {
     private _s              : number;
     private _axis           : Vector3;
 
-    constructor(scalar: number, axis: Vector3) {
+    constructor(scalar: number = 1, axis: Vector3 = new Vector3(0, 0, 0)) {
         this._s = scalar;
         this._axis = axis;
     }
@@ -56,6 +57,28 @@ class Quaternion {
         this._axis.multiply(Math.sin(angle));
 
         return this;
+    }
+
+    public getRotationMatrix(): Matrix4 {
+        const ret = Matrix4.createIdentity(),
+        
+            qx = this._axis.x,
+            qy = this._axis.y,
+            qz = this._axis.z,
+            qw = this._s,
+            
+            m11 = 1 - 2*qy*qy - 2*qz*qz,        m12 = 2*qx*qy - 2*qz*qw,        m13 = 2*qx*qz + 2*qy*qw,
+            m21 = 2*qx*qy + 2*qz*qw,            m22 = 1 - 2*qx*qx - 2*qz*qz,    m23 = 2*qy*qz - 2*qx*qw,
+            m31 = 2*qx*qz - 2*qy*qw,            m32 = 2*qy*qz + 2*qx*qw,        m33 = 1 - 2*qx*qx - 2*qy*qy;
+
+        ret.set(
+            m11, m12, m13, 0,
+            m21, m22, m23, 0,
+            m31, m32, m33, 0,
+              0,   0,   0, 1
+        );
+
+        return ret;
     }
 
     public clone(): Quaternion {

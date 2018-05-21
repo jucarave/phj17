@@ -96,8 +96,20 @@ class Matrix4 {
         return this;
     }
 
-    public clear(): void {
-        this.setIdentity();
+    public printDebug(): void {
+        let str: string = "";
+
+        for (let i=0;i<16;i++) {
+            let n = this.data[i];
+
+            if (i % 4 == 0) { 
+                str += "\n" + n.toFixed(2); 
+            } else {
+                str += " " + n.toFixed(2);
+            }
+        }
+
+        console.log(str.trim());
     }
 
     public static createIdentity(): Matrix4 {
