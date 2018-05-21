@@ -1,7 +1,6 @@
 import { VERTICE_SIZE, TEXCOORD_SIZE } from '../Constants';
 import Renderer from '../Renderer';
 import Shader from '../shaders/Shader';
-import Vector3 from '../math/Vector3';
 
 interface BufferMap {
     vertexBuffer?               : WebGLBuffer;
@@ -22,15 +21,12 @@ class Geometry {
     private _indexLength             : number;
     private _boundingBox             : Array<number>;
     
-    public offset                    : Vector3;
-
     constructor() {
         this._vertices = [];
         this._texCoords = [];
         this._triangles = [];
         this._buffers = {};
         this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
-        this.offset = new Vector3(0, 0, 0);
     }
 
     public addVertice(x: number, y: number, z: number): void {

@@ -2,14 +2,23 @@ export default class Vector3 {
     private _x                  : number;
     private _y                  : number;
     private _z                  : number;
-    private _onChange           : Function;
+    private _onChange           : Array<Function>;
 
     public inUse                : boolean;
 
-    constructor(x: number = 0, y: number = 0, z: number = 0) {
-        this.set(x, y, z);
+    public static readonly RIGHT        = new Vector3(1.0, 0.0, 0.0);
+    public static readonly UP           = new Vector3(0.0, 1.0, 0.0);
+    public static readonly FORWARD      = new Vector3(0.0, 0.0, -1.0);
 
-        this._onChange = null;
+    constructor(x: number = 0, y: number = 0, z: number = 0) {
+        this._onChange = [];
+        this.set(x, y, z);
+    }
+
+    private _callOnChange(): void {
+        for (let i=0,onChange;onChange=this._onChange[i];i++) {
+            onChange();
+        }
     }
 
     public clear(): Vector3 {
@@ -23,7 +32,7 @@ export default class Vector3 {
         this._y = y;
         this._z = z;
 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
 
         return this;
     }
@@ -33,7 +42,7 @@ export default class Vector3 {
         this._y += y;
         this._z += z;
 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
 
         return this;
     }
@@ -43,7 +52,7 @@ export default class Vector3 {
         this._y = vector.y;
         this._z = vector.z;
 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
 
         return this;
     }
@@ -53,7 +62,7 @@ export default class Vector3 {
         this._y *= num;
         this._z *= num;
 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
 
         return this;
     }
@@ -80,17 +89,17 @@ export default class Vector3 {
 
     public set x(x: number) { 
         this._x = x; 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
     }
 
     public set y(y: number) { 
         this._y = y; 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
     }
 
     public set z(z: number) { 
         this._z = z; 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
     }
 
     public get length(): number {
@@ -98,11 +107,7 @@ export default class Vector3 {
     }
 
     public set onChange(onChange: Function) {
-        if (this._onChange !== null) {
-            console.warn("Vector3 already has a onChange Callback", this);
-        }
-
-        this._onChange = onChange;
+        this._onChange.push(onChange);
     }
 
     public static cross(vectorA: Vector3, vectorB: Vector3): Vector3 {

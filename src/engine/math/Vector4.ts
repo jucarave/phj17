@@ -5,12 +5,22 @@ export default class Vector4 {
     private _y                  : number;
     private _z                  : number;
     private _w                  : number;
-    private _onChange           : Function;
+    private _onChange           : Array<Function>;
+
+    public static UP           = new Vector4(0, 1, 0, 0);
+    public static LEFT         = new Vector4(0, 0, -1, 0);
+    public static FORWARD      = new Vector4(1, 0, 0, 0);
 
     constructor(x: number, y: number, z: number, w: number) {
+        this._onChange = [];
+        
         this.set(x, y, z, w);
+    }
 
-        this._onChange = null;
+    private _callOnChange(): void {
+        for (let i=0,onChange;onChange=this._onChange[i];i++) {
+            onChange();
+        }
     }
 
     public set(x: number, y: number, z: number, w: number): Vector4 {
@@ -19,7 +29,7 @@ export default class Vector4 {
         this._z = z;
         this._w = w;
 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
 
         return this;
     }
@@ -30,7 +40,7 @@ export default class Vector4 {
         this._z += z;
         this._w += w;
 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
 
         return this;
     }
@@ -41,7 +51,7 @@ export default class Vector4 {
         this._z *= num;
         this._w *= num;
 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
 
         return this;
     }
@@ -65,22 +75,22 @@ export default class Vector4 {
     
     public set x(x: number) { 
         this._x = x; 
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
     }
 
     public set y(y: number) { 
         this._y = y;
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
     }
 
     public set z(z: number) { 
         this._z = z;
-        if (this._onChange) { this._onChange(); }
+        this._callOnChange();
     }
 
     public set w(w: number) { 
         this._w = w;
-        if (this._onChange) { this._onChange(); } 
+        this._callOnChange(); 
     }
 
     public get xyz(): Vector3 {
@@ -97,10 +107,6 @@ export default class Vector4 {
     }
 
     public set onChange(onChange: Function) {
-        if (this._onChange !== null) {
-            console.warn("Vector3 already has a onChange Callback", this);
-        }
-
-        this._onChange = onChange;
+        this._onChange.push(onChange);
     }
 }

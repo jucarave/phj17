@@ -7,6 +7,7 @@ import Component from '../Component';
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
 import Vector4 from '../math/Vector4';
+import Euler from '../math/Euler';
 import { get2DAngle, createUUID } from '../Utils';
 
 class Instance {
@@ -23,7 +24,7 @@ class Instance {
     
     public readonly id                  : string;
     public readonly position            : Vector3;
-    public readonly rotation            : Vector3;
+    public readonly rotation            : Euler;
 
     public isBillboard         : boolean;
     
@@ -45,7 +46,7 @@ class Instance {
         this.position = new Vector3(0.0);
         this.position.onChange = () => this.emmitNeedsUpdate();
 
-        this.rotation = new Vector3(0.0);
+        this.rotation = new Euler();
         this.rotation.onChange = () => this.emmitNeedsUpdate();
     }
     
@@ -68,19 +69,16 @@ class Instance {
         return null;
     }
     
-    public getTransformation(force: boolean = false): Matrix4 {
-        if (!force && !this._needsUpdate && (this._parent === null || !this._parent.needsUpdate)) {
+    public getTransformation(): Matrix4 {
+        if (!this._needsUpdate) {
             return this._transform;
         }
 
         this._transform.setIdentity();
 
-        this._transform.multiply(Matrix4.createXRotation(this.rotation.x));
-        this._transform.multiply(Matrix4.createZRotation(this.rotation.z));
-        this._transform.multiply(Matrix4.createYRotation(this.rotation.y));
+        this._transform.multiply(this.rotation.getRotationMatrix());
 
-        let offset = this._geometry.offset;
-        this._transform.translate(this.position.x + offset.x, this.position.y + offset.y, this.position.z + offset.z);
+        this._transform.translate(this.position.x, this.position.y, this.position.z);
 
         if (this._parent) {
             this._transform.multiply(this._parent.getTransformation());
@@ -141,7 +139,7 @@ class Instance {
         }
 
         this._worldMatrix.copy(this.getTransformation());
-        this._worldMatrix.multiply(camera.getTransformation());
+        this._worldMatrix.multiply(camera.getViewMatrix());
         
         gl.uniformMatrix4fv(program.uniforms["uProjection"], false, camera.projection.data);
         gl.uniformMatrix4fv(program.uniforms["uPosition"], false, this._worldMatrix.data);
