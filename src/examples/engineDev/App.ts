@@ -49,7 +49,17 @@ class App {
 
         scene.init();
 
+        this._quaternionTest();
+
         this._loop(render, render_2, camera, camera_2, inst, scene);
+    }
+
+    private _quaternionTest() {
+        const v = new Vector3(0, 1, 0),
+            axis = new Vector3(1, 0, 0),
+            angle = 90 * Math.PI / 180;
+
+        console.log(v.rotateOnAxis(angle, axis));
     }
 
     private _loop(render: Renderer, render_2: Renderer, camera: Camera, camera_2: Camera, inst: Instance, scene: Scene) {

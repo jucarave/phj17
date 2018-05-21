@@ -1,3 +1,5 @@
+import Quaternion from './Quaternion';
+
 export default class Vector3 {
     private _x                  : number;
     private _y                  : number;
@@ -47,6 +49,12 @@ export default class Vector3 {
         return this;
     }
 
+    public sum(vector: Vector3): Vector3 {
+        this.add(vector.x, vector.y, vector.z);
+
+        return this;
+    }
+
     public copy(vector: Vector3): Vector3 {
         this._x = vector.x;
         this._y = vector.y;
@@ -73,6 +81,19 @@ export default class Vector3 {
         this.multiply(1 / l);
 
         return this;
+    }
+
+    public rotateOnAxis(radians: number, axis: Vector3): Vector3 {
+        axis = axis.clone().normalize();
+
+        const q = (new Quaternion(radians, axis)).toUnitNormQuaternion(),
+            qInv = q.inverse,
+            
+            p = new Quaternion(0, this);
+
+        q.multiplyQuaternion(p).multiplyQuaternion(qInv);
+
+        return q.axis;
     }
 
     public clone(): Vector3 {
