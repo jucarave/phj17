@@ -2,24 +2,46 @@ import Vector3 from './Vector3';
 import Matrix4 from './Matrix4';
 
 class Quaternion {
-    private _s              : number;
-    private _axis           : Vector3;
+    private _s                   : number;
+    private _imaginary           : Vector3;
+    private _axisX               : Vector3;
+    private _axisY               : Vector3;
+    private _axisZ               : Vector3;
+    
+    public _onChange             : Array<Function>;
 
-    constructor(scalar: number = 1, axis: Vector3 = new Vector3(0, 0, 0)) {
+
+    constructor(scalar: number = 1, imaginary: Vector3 = new Vector3(0, 0, 0)) {
         this._s = scalar;
-        this._axis = axis;
+        this._imaginary = imaginary;
+
+        this._axisX = new Vector3(1, 0, 0);
+        this._axisY = new Vector3(0, -1, 0);
+        this._axisZ = new Vector3(0, 0, 1);
+
+        this._onChange = [];
+    }
+
+    private _callOnChange(): void {
+        for (let i=0,onChange;onChange=this._onChange[i];i++) {
+            onChange();
+        }
     }
 
     public sum(q: Quaternion): Quaternion {
         this._s += q.s;
-        this._axis.sum(q.axis);
+        this._imaginary.sum(q.imaginary);
+
+        this._callOnChange();
 
         return this;
     }
 
     public multiplyScalar(s: number): Quaternion {
         this._s *= s;
-        this._axis.multiply(s);
+        this._imaginary.multiply(s);
+
+        this._callOnChange();
 
         return this;
     }
@@ -28,13 +50,15 @@ class Quaternion {
         const sA = this.s,
             sB = q.s,
             
-            axisB = q.axis.clone(),
+            imaginaryB = q.imaginary.clone(),
             
-            cross = Vector3.cross(this.axis, q.axis);
+            cross = Vector3.cross(this.imaginary, q.imaginary);
 
-        this._s = sA * sB - Vector3.dot(this._axis, axisB);
+        this._s = sA * sB - Vector3.dot(this._imaginary, imaginaryB);
 
-        this._axis.multiply(sB).sum(axisB.multiply(sA)).sum(cross);
+        this._imaginary.multiply(sB).sum(imaginaryB.multiply(sA)).sum(cross);
+
+        this._callOnChange();
 
         return this;
     }
@@ -45,16 +69,37 @@ class Quaternion {
             this.multiplyScalar(1 / this.norm);
         }
 
+        this._callOnChange();
+
         return this;
     }
 
-    public toUnitNormQuaternion(): Quaternion {
-        const angle = this._s * 0.5;
-        
-        this._axis.normalize();
+    public rotateX(radians: number): Quaternion {
+        const rotation = Quaternion.createRotationOnAxis(radians, this._axisX);
 
-        this._s = Math.cos(angle);
-        this._axis.multiply(Math.sin(angle));
+        this.multiplyQuaternion(rotation);
+        this._axisY.rotateOnQuaternion(rotation).normalize();
+        this._axisZ.rotateOnQuaternion(rotation).normalize();
+
+        return this;
+    }
+
+    public rotateY(radians: number): Quaternion {
+        const rotation = Quaternion.createRotationOnAxis(radians, this._axisY);
+
+        this.multiplyQuaternion(rotation);
+        this._axisX.rotateOnQuaternion(rotation).normalize();
+        this._axisZ.rotateOnQuaternion(rotation).normalize();
+
+        return this;
+    }
+
+    public rotateZ(radians: number): Quaternion {
+        const rotation = Quaternion.createRotationOnAxis(radians, this._axisZ);
+
+        this.multiplyQuaternion(rotation);
+        this._axisX.rotateOnQuaternion(rotation).normalize();
+        this._axisY.rotateOnQuaternion(rotation).normalize();
 
         return this;
     }
@@ -62,9 +107,9 @@ class Quaternion {
     public getRotationMatrix(): Matrix4 {
         const ret = Matrix4.createIdentity(),
         
-            qx = this._axis.x,
-            qy = this._axis.y,
-            qz = this._axis.z,
+            qx = this._imaginary.x,
+            qy = this._imaginary.y,
+            qz = this._imaginary.z,
             qw = this._s,
             
             m11 = 1 - 2*qy*qy - 2*qz*qz,        m12 = 2*qx*qy - 2*qz*qw,        m13 = 2*qx*qz + 2*qy*qw,
@@ -81,19 +126,32 @@ class Quaternion {
         return ret;
     }
 
+    public setIdentity(): Quaternion {
+        this._s = 1;
+        this._imaginary.multiply(0);
+
+        this._axisX.set(1, 0, 0);
+        this._axisY.set(0, -1, 0);
+        this._axisZ.set(0, 0, 1);
+
+        this._callOnChange();
+
+        return this;
+    }
+
     public clone(): Quaternion {
-        return new Quaternion(this._s, this._axis.clone());
+        return new Quaternion(this._s, this._imaginary.clone());
     }
 
     public get norm(): number {
         const s2 = this._s * this._s,
-            v2 = Vector3.dot(this._axis, this._axis);
+            v2 = Vector3.dot(this._imaginary, this._imaginary);
 
         return Math.sqrt(s2 + v2);
     }
 
     public get conjugate(): Quaternion {
-        return new Quaternion(this._s, this._axis.clone().multiply(-1));
+        return new Quaternion(this._s, this._imaginary.clone().multiply(-1));
     }
 
     public get inverse(): Quaternion {
@@ -102,7 +160,26 @@ class Quaternion {
     }
 
     public get s(): number { return this._s; }
-    public get axis(): Vector3 { return this._axis; }
+    public set s(s: number) {
+        this._s = s;
+        this._callOnChange();
+    }
+
+    public get imaginary(): Vector3 { return this._imaginary; }
+
+    public set onChange(onChange: Function) {
+        this._onChange.push(onChange);
+    }
+
+    public static createRotationOnAxis(radians: number, axis: Vector3): Quaternion {
+        const angle = radians * 0.5,
+            ret = new Quaternion(radians, axis.clone().normalize());
+
+        ret.s = Math.cos(angle);
+        ret.imaginary.multiply(Math.sin(angle));
+
+        return ret;
+    }
 }
 
 export default Quaternion;

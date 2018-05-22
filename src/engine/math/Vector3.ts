@@ -83,17 +83,17 @@ export default class Vector3 {
         return this;
     }
 
-    public rotateOnAxis(radians: number, axis: Vector3): Vector3 {
-        axis = axis.clone().normalize();
-
-        const q = (new Quaternion(radians, axis)).toUnitNormQuaternion(),
+    public rotateOnQuaternion(quaternion: Quaternion): Vector3 {
+        const q = quaternion.clone(),
             qInv = q.inverse,
             
             p = new Quaternion(0, this);
 
-        q.multiplyQuaternion(p).multiplyQuaternion(qInv);
+        qInv.multiplyQuaternion(p).multiplyQuaternion(q);
 
-        return q.axis;
+        this.copy(qInv.imaginary);
+
+        return this;
     }
 
     public clone(): Vector3 {

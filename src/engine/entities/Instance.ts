@@ -53,6 +53,7 @@ class Instance {
         this.rotation.onChange = () => this.emmitNeedsUpdate();
 
         this.quaternion = new Quaternion();
+        this.quaternion.onChange = () => this.emmitNeedsUpdate();
     }
     
     public setScene(scene: Scene): void {
