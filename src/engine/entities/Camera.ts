@@ -1,6 +1,5 @@
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
-import Vector4 from '../math/Vector4';
 import { degToRad } from '../Utils';
 import Instance from './Instance';
 
@@ -23,6 +22,13 @@ class Camera extends Instance {
     }
 
     public getViewMatrix(): Matrix4 {
+        this._viewMatrix.copy(Matrix4.createTranslate(-this.position.x, -this.position.y, -this.position.z));
+        this._viewMatrix.multiply(this.quaternion.inverse.getRotationMatrix());
+
+        return this._viewMatrix;
+    }
+
+    /*public getViewMatrix(): Matrix4 {
         const transform = this.getTransformation();
 
         const f = transform.multiplyVector(Vector4.FORWARD).xyz,
@@ -42,7 +48,7 @@ class Camera extends Instance {
         );
 
         return this._viewMatrix;
-    }
+    }*/
 
     public static createPerspective(fovDegrees: number, ratio: number, znear: number, zfar: number): Camera {
         const fov = degToRad(fovDegrees);

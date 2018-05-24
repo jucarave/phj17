@@ -1,7 +1,11 @@
-import Vector3 from './Vector3';
+import { default as Vector3 } from './Vector3';
 import Matrix4 from './Matrix4';
 
 class Quaternion {
+    protected static axisGlobalX: Vector3;
+    protected static axisGlobalY: Vector3;
+    protected static axisGlobalZ: Vector3;
+
     private _s                   : number;
     private _imaginary           : Vector3;
     private _axisX               : Vector3;
@@ -9,17 +13,23 @@ class Quaternion {
     private _axisZ               : Vector3;
     
     public _onChange             : Array<Function>;
-
+    public local                 : boolean;
 
     constructor(scalar: number = 1, imaginary: Vector3 = new Vector3(0, 0, 0)) {
         this._s = scalar;
         this._imaginary = imaginary;
 
-        this._axisX = new Vector3(1, 0, 0);
-        this._axisY = new Vector3(0, -1, 0);
-        this._axisZ = new Vector3(0, 0, 1);
+        Quaternion.axisGlobalX = new Vector3(1, 0, 0);
+        Quaternion.axisGlobalY = new Vector3(0, -1, 0);
+        Quaternion.axisGlobalZ = new Vector3(0, 0, 1);
+
+        this._axisX = Quaternion.axisGlobalX.clone();
+        this._axisY = Quaternion.axisGlobalY.clone();
+        this._axisZ = Quaternion.axisGlobalZ.clone();
 
         this._onChange = [];
+
+        this.local = false;
     }
 
     private _callOnChange(): void {
@@ -75,7 +85,8 @@ class Quaternion {
     }
 
     public rotateX(radians: number): Quaternion {
-        const rotation = Quaternion.createRotationOnAxis(radians, this._axisX);
+        const axis = (this.local)? this._axisX : Quaternion.axisGlobalX,
+            rotation = Quaternion.createRotationOnAxis(radians, axis);
 
         this.multiplyQuaternion(rotation);
         this._axisY.rotateOnQuaternion(rotation).normalize();
@@ -85,7 +96,8 @@ class Quaternion {
     }
 
     public rotateY(radians: number): Quaternion {
-        const rotation = Quaternion.createRotationOnAxis(radians, this._axisY);
+        const axis = (this.local)? this._axisY : Quaternion.axisGlobalY,
+            rotation = Quaternion.createRotationOnAxis(radians, axis);
 
         this.multiplyQuaternion(rotation);
         this._axisX.rotateOnQuaternion(rotation).normalize();
@@ -95,7 +107,8 @@ class Quaternion {
     }
 
     public rotateZ(radians: number): Quaternion {
-        const rotation = Quaternion.createRotationOnAxis(radians, this._axisZ);
+        const axis = (this.local)? this._axisZ : Quaternion.axisGlobalZ,
+            rotation = Quaternion.createRotationOnAxis(radians, axis);
 
         this.multiplyQuaternion(rotation);
         this._axisX.rotateOnQuaternion(rotation).normalize();
@@ -130,9 +143,9 @@ class Quaternion {
         this._s = 1;
         this._imaginary.multiply(0);
 
-        this._axisX.set(1, 0, 0);
-        this._axisY.set(0, -1, 0);
-        this._axisZ.set(0, 0, 1);
+        this._axisX.copy(Quaternion.axisGlobalX);
+        this._axisY.copy(Quaternion.axisGlobalY);
+        this._axisZ.copy(Quaternion.axisGlobalZ);
 
         this._callOnChange();
 

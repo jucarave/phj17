@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, CubeGeometry, ColorMaterial, Vector4, Instance, Vector3, Input } from '../../engine';
+import { Renderer, Camera, Scene, CubeGeometry, ColorMaterial, Vector4, Instance, Input } from '../../engine';
 
 const keyboard = new Array(255);
 
@@ -12,8 +12,11 @@ class App {
         Input.onKeyup((keycode: number) => { this._handleKeyboard(keycode, 0); });
 
         const camera = Camera.createPerspective(90, 854/480, 0.1, 1000.0);
-        camera.position.set(-7, -7, -7);
-        camera.rotation.lookToDirection(new Vector3(7, 7, 7));
+        camera.position.set(10, 0, 10);
+        //camera.rotation.lookToDirection(new Vector3(7, 7, 7));
+        camera.useQuaternion = true;
+        camera.quaternion.local = true;
+        camera.quaternion.rotateY(45*Math.PI/180);
         
         const geo = new CubeGeometry(0.5, 2, 4);
         const mat = new ColorMaterial(new Vector4(1.0, 1.0, 1.0, 1.0));
@@ -101,6 +104,8 @@ class App {
         //inst.quaternion.rotateZ(3*Math.PI/180);/**/
 
         //camera_2.rotation.y += 3 * Math.PI / 180;
+
+        camera.quaternion.rotateZ(0.5*Math.PI/180);
 
         this._updateRotation(inst);
 
