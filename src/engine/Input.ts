@@ -1,3 +1,4 @@
+import Vector3 from './math/Vector3';
 import { createUUID } from './Utils';
 import Config from './Config';
 
@@ -13,12 +14,16 @@ class Input {
     private _mousemoveCallbacks      : Array<Callback>;
     private _elementFocus            : boolean;
 
+    public readonly mousePosition    : Vector3;
+
     constructor() {
         this._element = null;
         this._keydownCallbacks = [];
         this._keyupCallbacks = [];
         this._mousemoveCallbacks = [];
         this._elementFocus = false;
+
+        this.mousePosition = new Vector3(0, 0, 0);
     }
     
     private _handleKeydown(keyEvent: KeyboardEvent): void {
@@ -38,6 +43,9 @@ class Input {
     private _handleMouseMove(mouseEvent: MouseEvent): void {
         if (!this._elementFocus) { return; }
 
+        const position = this._element.getBoundingClientRect();
+        this.mousePosition.set(mouseEvent.clientX - position.left, mouseEvent.clientY - position.top, 0);
+        
         for (let i=0,callback;callback=this._mousemoveCallbacks[i];i++) {
             callback.callback(mouseEvent.movementX, mouseEvent.movementY);
         }
@@ -83,10 +91,16 @@ class Input {
 
         this._element.requestFullscreen = this._element.requestFullscreen || this._element.webkitRequestFullScreen || (<any>this._element).mozRequestFullScreen;
 
-        this._element.addEventListener("click", () => {
-            if (Config.PLAY_FULLSCREEN && this._element.requestFullscreen) this._element.requestFullscreen();
+        document.addEventListener("click", (event: MouseEvent) => {
+            if (Config.PLAY_FULLSCREEN && this._element.requestFullscreen) {
+                this._element.requestFullscreen();
+            }
 
-            this._element.requestPointerLock();
+            if (Config.LOCK_POINTER && this._element.requestPointerLock) {
+                this._element.requestPointerLock();
+            } else {
+                this._elementFocus = (event.target == this._element);
+            }
         });
     } 
 
