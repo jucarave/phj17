@@ -8,9 +8,12 @@ export default class Vector3 {
 
     public inUse                : boolean;
 
+    public static readonly LEFT         = new Vector3(-1.0, 0.0, 0.0);
     public static readonly RIGHT        = new Vector3(1.0, 0.0, 0.0);
     public static readonly UP           = new Vector3(0.0, 1.0, 0.0);
+    public static readonly DOWN         = new Vector3(0.0, -1.0, 0.0);
     public static readonly FORWARD      = new Vector3(0.0, 0.0, -1.0);
+    public static readonly BACK         = new Vector3(0.0, 0.0, 1.0);
 
     constructor(x: number = 0, y: number = 0, z: number = 0) {
         this._onChange = [];

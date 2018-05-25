@@ -225,7 +225,7 @@ class Instance {
         return p.xyz;
     }
 
-    public emmitNeedsUpdate() {
+    public emmitNeedsUpdate(): void {
         for (let i=0,child;child=this._children[i];i++) {
             child.emmitNeedsUpdate();
         }

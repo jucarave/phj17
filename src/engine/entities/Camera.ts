@@ -4,7 +4,8 @@ import { degToRad } from '../Utils';
 import Instance from './Instance';
 
 class Camera extends Instance {
-    private _viewMatrix          : Matrix4;
+    private _viewMatrix              : Matrix4;
+    private _viewMatrixNeedsUpdate   : boolean;
 
     public screenSize            : Vector3;
     
@@ -19,36 +20,25 @@ class Camera extends Instance {
         this.screenSize = new Vector3(0.0);
 
         this._needsUpdate = true;
+        this._viewMatrixNeedsUpdate = true;
     }
 
     public getViewMatrix(): Matrix4 {
+        if (!this._viewMatrixNeedsUpdate) {
+            return this._viewMatrix;
+        }
+
         this._viewMatrix.copy(Matrix4.createTranslate(-this.position.x, -this.position.y, -this.position.z));
         this._viewMatrix.multiply(this.quaternion.inverse.getRotationMatrix());
 
         return this._viewMatrix;
     }
 
-    /*public getViewMatrix(): Matrix4 {
-        const transform = this.getTransformation();
+    public emmitNeedsUpdate(): void {
+        super.emmitNeedsUpdate();
 
-        const f = transform.multiplyVector(Vector4.FORWARD).xyz,
-            l = transform.multiplyVector(Vector4.LEFT).xyz,
-            u = transform.multiplyVector(Vector4.UP).xyz;
-
-        let cp = this.globalPosition,
-            x = Vector3.dot(l, cp),
-            y = Vector3.dot(u, cp),
-            z = Vector3.dot(f, cp);
-
-        this._viewMatrix.set(
-            l.x, u.x, f.x, 0,
-            l.y, u.y, f.y, 0,
-            l.z, u.z, f.z, 0,
-              x,   y,   z, 1
-        );
-
-        return this._viewMatrix;
-    }*/
+        this._viewMatrixNeedsUpdate = true;
+    }
 
     public static createPerspective(fovDegrees: number, ratio: number, znear: number, zfar: number): Camera {
         const fov = degToRad(fovDegrees);
