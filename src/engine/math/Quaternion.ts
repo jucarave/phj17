@@ -30,6 +30,13 @@ class Quaternion {
         }
     }
 
+    public copy(q: Quaternion): Quaternion {
+        this._s = q.s;
+        this._imaginary.copy(q.imaginary);
+
+        return this;
+    }
+
     public sum(q: Quaternion): Quaternion {
         this._s += q.s;
         this._imaginary.sum(q.imaginary);

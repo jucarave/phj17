@@ -8,8 +8,7 @@ import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
 import Vector4 from '../math/Vector4';
 import Quaternion from '../math/Quaternion';
-import Euler from '../math/Euler';
-import { get2DAngle, createUUID } from '../Utils';
+import { createUUID } from '../Utils';
 
 class Instance {
     protected _geometry           : Geometry;
@@ -25,18 +24,13 @@ class Instance {
     
     public readonly id                  : string;
     public readonly position            : Vector3;
-    public readonly rotation            : Euler;
-    public readonly quaternion          : Quaternion;
-
-    public isBillboard         : boolean;
-    public useQuaternion       : boolean = false;
+    public readonly rotation            : Quaternion;
     
     constructor(geometry: Geometry = null, material: Material = null) {
         this.id = createUUID();
 
         this._transform = Matrix4.createIdentity();
         this._worldMatrix = Matrix4.createIdentity();
-        this.isBillboard = false;
         this._needsUpdate = true;
         this._geometry = geometry;
         this._material = material;
@@ -49,11 +43,8 @@ class Instance {
         this.position = new Vector3(0.0);
         this.position.onChange = () => this.emmitNeedsUpdate();
 
-        this.rotation = new Euler();
+        this.rotation = new Quaternion();
         this.rotation.onChange = () => this.emmitNeedsUpdate();
-
-        this.quaternion = new Quaternion();
-        this.quaternion.onChange = () => this.emmitNeedsUpdate();
     }
     
     public setScene(scene: Scene): void {
@@ -82,11 +73,7 @@ class Instance {
 
         this._transform.setIdentity();
 
-        if (!this.useQuaternion) {
-            this._transform.multiply(this.rotation.getRotationMatrix());
-        } else {
-            this._transform.multiply(this.quaternion.getRotationMatrix());
-        }
+        this._transform.multiply(this.rotation.getRotationMatrix());
 
         this._transform.translate(this.position.x, this.position.y, this.position.z);
 
@@ -101,11 +88,10 @@ class Instance {
 
     public clear(): void {
         this.position.set(0, 0, 0);
-        this.rotation.set(0, 0, 0);
+        this.rotation.setIdentity();
         this._transform.setIdentity();
         this._geometry = null;
         this._material = null;
-        this.isBillboard = false;
         this._needsUpdate = true;
         this._scene = null;
         this._components = [];
@@ -144,10 +130,6 @@ class Instance {
             shader = this._material.shader,
             program = shader.getProgram(renderer);
 
-        if (this.isBillboard) {
-            this.rotation.set(0, get2DAngle(this.position, camera.position) + Math.PI / 2, 0);
-        }
-
         this._worldMatrix.copy(this.getTransformation());
         this._worldMatrix.multiply(camera.getViewMatrix());
         
@@ -167,9 +149,6 @@ class Instance {
 
         const p = this.position;
         instance.position.add(-p.x, -p.y, -p.z);
-
-        const r = this.rotation;
-        instance.rotation.add(-r.x, -r.y, -r.z);
     }
 
     public removeChild(instance: Instance): boolean {
@@ -189,8 +168,7 @@ class Instance {
         const p = this.globalPosition;
         this.position.set(p.x, p.y, p.z);
 
-        const r = this._parent.rotation;
-        this.rotation.add(r.x, r.y, r.z);
+        this.rotation.copy(this.globalRotation);
 
         this._parent.removeChild(this);
         this._parent = null;
@@ -223,6 +201,12 @@ class Instance {
         const p = t.multiplyVector(new Vector4(this.position.x, this.position.y, this.position.z, 1));
 
         return p.xyz;
+    }
+
+    public get globalRotation(): Quaternion {
+        if (!this._parent) { return this.rotation; }
+
+        return this.rotation.clone().multiplyQuaternion(this._parent.globalRotation);
     }
 
     public emmitNeedsUpdate(): void {

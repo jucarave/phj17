@@ -29,7 +29,7 @@ class Camera extends Instance {
         }
 
         this._viewMatrix.copy(Matrix4.createTranslate(-this.position.x, -this.position.y, -this.position.z));
-        this._viewMatrix.multiply(this.quaternion.inverse.getRotationMatrix());
+        this._viewMatrix.multiply(this.rotation.inverse.getRotationMatrix());
 
         return this._viewMatrix;
     }

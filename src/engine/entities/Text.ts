@@ -2,6 +2,7 @@ import Texture from '../Texture';
 import BasicMaterial from '../materials/BasicMaterial';
 import WallGeometry from '../geometries/WallGeometry';
 import Vector3 from '../math/Vector3';
+import Quaternion from '../math/Quaternion';
 import { roundUpPowerOf2 } from '../Utils';
 import Instance from '../entities/Instance';
 
@@ -12,7 +13,7 @@ export interface TextOptions {
     fillColor?: string;
     strokeColor?: string;
     position?: Vector3;
-    rotation?: Vector3;
+    rotation?: Quaternion;
 }
 
 const OptionsDefault: TextOptions = {
@@ -22,7 +23,7 @@ const OptionsDefault: TextOptions = {
     fillColor: '#FFFFFF',
     strokeColor: '#FFFFFF',
     position: new Vector3(0.0, 0.0, 0.0),
-    rotation: new Vector3(0.0, 0.0, 0.0)
+    rotation: new Quaternion()
 };
 
 class Text extends Instance {
@@ -97,8 +98,8 @@ class Text extends Instance {
         this._material = material;        
         this._geometry = geometry;
 
-        this.position.set(this._options.position.x, this._options.position.y, this._options.position.z);
-        this.rotation.set(this._options.rotation.x, this._options.rotation.y, this._options.rotation.z);
+        this.position.copy(this._options.position);
+        this.rotation.copy(this._options.rotation);
     }
 }
 
