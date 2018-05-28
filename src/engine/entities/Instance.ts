@@ -71,9 +71,7 @@ class Instance {
             return this._transform;
         }
 
-        this._transform.setIdentity();
-
-        this._transform.multiply(this.rotation.getRotationMatrix());
+        this._transform.copy(this.rotation.getRotationMatrix());
 
         this._transform.translate(this.position.x, this.position.y, this.position.z);
 

@@ -28,8 +28,12 @@ class Camera extends Instance {
             return this._viewMatrix;
         }
 
-        this._viewMatrix.copy(Matrix4.createTranslate(-this.position.x, -this.position.y, -this.position.z));
-        this._viewMatrix.multiply(this.rotation.inverse.getRotationMatrix());
+        const p = this.globalPosition;
+
+        this._viewMatrix.copy(Matrix4.createTranslate(-p.x, -p.y, -p.z));
+        this._viewMatrix.multiply(this.globalRotation.inverse.getRotationMatrix());
+
+        this._viewMatrixNeedsUpdate = false;
 
         return this._viewMatrix;
     }

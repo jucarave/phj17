@@ -13,40 +13,25 @@ class App {
 
         const camera = Camera.createPerspective(90, 854/480, 0.1, 1000.0);
         camera.rotation.local = true;
-        camera.position.set(10, 10, 10);
-        camera.rotation.lookToDirection(new Vector3(-10, -10, -10));
+        camera.position.set(0, 4, 0);
+        camera.rotation.lookToDirection(new Vector3(0,0,-10));
         
-        const geo = new CubeGeometry(0.5, 2, 4);
+        const geo = new CubeGeometry(4, 4, 4);
         const mat = new ColorMaterial(new Vector4(1.0, 1.0, 1.0, 1.0));
         const inst = new Instance(geo, mat);
-        inst.rotation.local = true;
-        inst.rotation.rotateY(45*Math.PI/180);
 
-        const geo2 = new CubeGeometry(10, 0.1, 0.1);
-        const mat2 = new ColorMaterial(new Vector4(1.0, 0.0, 0.0, 1.0));
-        const inst2 = new Instance(geo2, mat2);
-
-        const geo3 = new CubeGeometry(0.1, 10, 0.1);
-        const mat3 = new ColorMaterial(new Vector4(0.0, 1.0, 0.0, 1.0));
-        const inst3 = new Instance(geo3, mat3);
-
-        const geo4 = new CubeGeometry(0.1, 0.1, 10);
-        const mat4 = new ColorMaterial(new Vector4(0.0, 0.0, 1.0, 1.0));
-        const inst4 = new Instance(geo4, mat4);
-        
-        inst.addChild(inst2);
-        inst.addChild(inst3);
-        inst.addChild(inst4);
+        const cameraInst = new Instance();
+        cameraInst.rotation.local = true;
+        cameraInst.addChild(camera);
+        cameraInst.position.set(0, 0, 10);
 
         const scene = new Scene();
         scene.addGameObject(inst);
-        scene.addGameObject(inst2);
-        scene.addGameObject(inst3);
-        scene.addGameObject(inst4);
+        scene.addGameObject(cameraInst);
 
         scene.init();
         
-        this._loop(render, camera, inst, scene);
+        this._loop(render, camera, cameraInst, scene);
     }
 
     private _handleKeyboard(key: number, status: number): void {
