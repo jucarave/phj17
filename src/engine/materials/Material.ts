@@ -2,26 +2,54 @@ import { ShaderStruct } from '../shaders/ShaderStruct';
 import { createUUID } from '../Utils';
 import Renderer from '../Renderer';
 import Shader from '../shaders/Shader';
+import Instance from '../entities/Instance';
+import Camera from '../entities/Camera';
 
 abstract class Material {
     protected _isOpaque                : boolean;
     protected _renderBothFaces         : boolean;
+    protected _needsUpdate             : boolean;
+    protected _config                  : Array<string>;
     
     public readonly shader             : Shader;
     public readonly id                 : string;
 
     constructor(shader: ShaderStruct) {
-        this.shader = Shader.getShader(shader);
+        this.shader = new Shader(shader);
+        
         this.id = createUUID();
         this._isOpaque = true;
         this._renderBothFaces = false;
+        this._needsUpdate = false;
+        this._config = [];
+
+        this.shader.includes = this._config;
     }
 
-    public abstract render(renderer: Renderer): void;
+    public abstract render(renderer: Renderer, instance: Instance, camera: Camera): void;
     public abstract get isReady(): boolean;
 
     public get isOpaque(): boolean {
         return this._isOpaque;
+    }
+
+    public addConfig(configName: string): Material {
+        if (this._config.indexOf(configName) == -1) {
+            this._config.push(configName);
+            this._needsUpdate = true;
+        }
+
+        return this;
+    }
+
+    public removeConfig(configName: string): Material {
+        const ind = this._config.indexOf(configName);
+        if (ind != -1) {
+            this._config.splice(ind, 1);
+            this._needsUpdate = true;
+        }
+
+        return this;
     }
 
     public setOpaque(opaque: boolean): Material {

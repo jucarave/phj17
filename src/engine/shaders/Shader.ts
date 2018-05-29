@@ -10,10 +10,6 @@ interface Uniforms {
     [index: string]: WebGLUniformLocation
 }
 
-interface ShaderMap {
-    [index: string]: Shader
-}
-
 interface Program {
     program?                 : WebGLProgram;
     uniforms?                : Uniforms;
@@ -28,17 +24,17 @@ class Shader {
     private _shaderInfo              : ShaderStruct;
     private _programs                : RendererProgramsMap;
 
-    public attributesCount          : number;
+    public attributesCount           : number;
+    public includes                  : Array<string>;
 
-    public readonly id              : string;
+    public readonly id               : string;
 
-    private static shadersMap       : ShaderMap = {};
-
-    static maxAttribLength          : number;
+    public static maxAttribLength          : number;
 
     constructor(shader: ShaderStruct) {
         this.id = createUUID();
 
+        this.includes = [];
         this._shaderInfo = shader;
 
         this._programs = {};
@@ -51,15 +47,25 @@ class Shader {
         this._getShaderUniforms(renderer, this._shaderInfo);
     }
 
+    private _getSourceWithIncludes(shader: string): string {
+        let ret = shader;
+
+        for (let i=0,inc;inc=this.includes[i];i++) {
+            ret = "#define " + inc + "\n" + ret;
+        }
+
+        return ret;
+    }
+
     private _compileShaders(renderer: Renderer, shader: ShaderStruct): void {
         const gl: WebGLRenderingContext = renderer.GL;
 
         const vShader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
-        gl.shaderSource(vShader, shader.vertexShader);
+        gl.shaderSource(vShader, this._getSourceWithIncludes(shader.vertexShader));
         gl.compileShader(vShader);
 
         const fShader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
-        gl.shaderSource(fShader, shader.fragmentShader);
+        gl.shaderSource(fShader, this._getSourceWithIncludes(shader.fragmentShader));
         gl.compileShader(fShader);
 
         const program = gl.createProgram();
@@ -103,8 +109,6 @@ class Shader {
             if (c[0] == 'attribute') {
                 attribute = c.pop().replace(/;/g, "");
                 location = gl.getAttribLocation(program, attribute);
-
-                gl.enableVertexAttribArray(location);
 
                 attributes[attribute] = location;
                 this.attributesCount += 1;
@@ -157,7 +161,7 @@ class Shader {
 
         gl.useProgram(program);
 
-        const attribLength: number = this.attributesCount;
+        const attribLength: number = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
         for (var i = 0, len = Shader.maxAttribLength; i < len; i++) {
             if (i < attribLength) {
                 gl.enableVertexAttribArray(i);
@@ -167,23 +171,25 @@ class Shader {
         }
     }
 
+    public deleteProgram(renderer: Renderer): Shader {
+        if (!this._programs[renderer.id]) { return this; }
+
+        const gl = renderer.GL,
+            program = this._programs[renderer.id];
+
+        gl.deleteProgram(program.program);
+
+        this._programs[renderer.id] = null;
+
+        return this;
+    }
+
     public getProgram(renderer: Renderer): Program {
         if (!this._programs[renderer.id]) {
             this._createProgram(renderer);
         }
 
         return this._programs[renderer.id];
-    }
-
-    public static getShader(shader: ShaderStruct): Shader {
-        if (Shader.shadersMap[shader.id]) {
-            return Shader.shadersMap[shader.id];
-        }
-
-        const ret: Shader = new Shader(shader);
-        Shader.shadersMap[shader.id] = ret;
-
-        return ret;
     }
 }
 

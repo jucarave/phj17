@@ -122,21 +122,10 @@ class Instance {
         if (!this._geometry || !this._material) { return; }
         if (!this._material.isReady) { return; }
 
-        this._material.shader.useProgram(renderer);
-
-        const gl = renderer.GL,
-            shader = this._material.shader,
-            program = shader.getProgram(renderer);
-
         this._worldMatrix.copy(this.getTransformation());
         this._worldMatrix.multiply(camera.getViewMatrix());
-        
-        gl.uniformMatrix4fv(program.uniforms["uProjection"], false, camera.projection.data);
-        gl.uniformMatrix4fv(program.uniforms["uPosition"], false, this._worldMatrix.data);
 
-        this._material.render(renderer);
-
-        this._geometry.render(renderer, shader);
+        this._material.render(renderer, this, camera);
     }
 
     public addChild(instance: Instance): void {
@@ -170,6 +159,10 @@ class Instance {
 
         this._parent.removeChild(this);
         this._parent = null;
+    }
+
+    public get worldMatrix(): Matrix4 {
+        return this._worldMatrix;
     }
 
     public get geometry(): Geometry {

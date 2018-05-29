@@ -20,6 +20,7 @@ export { default as Geometry } from './geometries/Geometry';
 
 export { default as BasicMaterial } from './materials/BasicMaterial';
 export { default as ColorMaterial } from './materials/ColorMaterial';
+export { default as MaterialForward } from './materials/MaterialForward';
 export { default as Material } from './materials/Material';
 
 export { default as Euler } from './math/Euler';
@@ -32,3 +33,4 @@ export { default as Shader } from './shaders/Shader';
 export { ShaderStruct, ShaderMap } from './shaders/ShaderStruct';
 export { default as Basic } from './shaders/Basic';
 export { default as Color } from './shaders/Color';
+export { default as ForwardShader } from './shaders/Forward';

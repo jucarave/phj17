@@ -1,6 +1,5 @@
-import { VERTICE_SIZE, TEXCOORD_SIZE } from '../Constants';
+import { VERTICE_SIZE } from '../Constants';
 import Renderer from '../Renderer';
-import Shader from '../shaders/Shader';
 
 interface BufferMap {
     vertexBuffer?               : WebGLBuffer;
@@ -106,30 +105,20 @@ class Geometry {
         }
     }
 
-    public render(renderer: Renderer, shader: Shader): void {
+    public getBuffer(renderer: Renderer): BufferMap {
         if (!this._buffers[renderer.id]) {
             this.build(renderer);
         }
 
-        const gl = renderer.GL,
-            bufferMap = this._buffers[renderer.id],
-            program = shader.getProgram(renderer);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.vertexBuffer);
-        gl.vertexAttribPointer(program.attributes["aVertexPosition"], VERTICE_SIZE, gl.FLOAT, false, 0, 0);
-
-        if (program.attributes["aTexCoords"]) {
-            gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.texCoordsBuffer);
-            gl.vertexAttribPointer(program.attributes["aTexCoords"], TEXCOORD_SIZE, gl.FLOAT, false, 0, 0);
-        }
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
-
-        gl.drawElements(gl.TRIANGLES, this._indexLength, gl.UNSIGNED_SHORT, 0);
+        return this._buffers[renderer.id];
     }
 
     public get boundingBox(): Array<number> {
         return this._boundingBox;
+    }
+
+    public get indexLength(): number {
+        return this._indexLength;
     }
 }
 

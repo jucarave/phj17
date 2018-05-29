@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, CubeGeometry, ColorMaterial, Vector4, Instance, Input, Vector3 } from '../../engine';
+import { Renderer, Camera, Scene, CubeGeometry, MaterialForward, Instance, Input, Vector3 } from '../../engine';
 
 const keyboard = new Array(255);
 
@@ -13,25 +13,19 @@ class App {
 
         const camera = Camera.createPerspective(90, 854/480, 0.1, 1000.0);
         camera.rotation.local = true;
-        camera.position.set(0, 4, 0);
-        camera.rotation.lookToDirection(new Vector3(0,0,-10));
+        camera.position.set(10, 10, 10);
+        camera.rotation.lookToDirection(new Vector3(-10,-10,-10));
         
         const geo = new CubeGeometry(4, 4, 4);
-        const mat = new ColorMaterial(new Vector4(1.0, 1.0, 1.0, 1.0));
+        const mat = new MaterialForward();
         const inst = new Instance(geo, mat);
-
-        const cameraInst = new Instance();
-        cameraInst.rotation.local = true;
-        cameraInst.addChild(camera);
-        cameraInst.position.set(0, 0, 10);
 
         const scene = new Scene();
         scene.addGameObject(inst);
-        scene.addGameObject(cameraInst);
 
         scene.init();
         
-        this._loop(render, camera, cameraInst, scene);
+        this._loop(render, camera, inst, scene);
     }
 
     private _handleKeyboard(key: number, status: number): void {
