@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, CubeGeometry, MaterialForward, Instance, Input, Vector3 } from '../../engine';
+import { Renderer, Camera, Scene, CubeGeometry, MaterialForward, Instance, Input, Vector3, Texture } from '../../engine';
 
 const keyboard = new Array(255);
 
@@ -17,11 +17,30 @@ class App {
         camera.rotation.lookToDirection(new Vector3(-10,-10,-10));
         
         const geo = new CubeGeometry(4, 4, 4);
+        const text = new Texture('img/texture.png');
         const mat = new MaterialForward();
         const inst = new Instance(geo, mat);
 
+        mat.texture = text;
+        mat.setTextureUv(1/32,1/32,16/32,16/32);
+
+
+        const geo2 = new CubeGeometry(0.5, 0.5, 0.5);
+        const mat2 = new MaterialForward();
+        const inst2 = new Instance(geo2, mat2);
+        mat2.setColor(1.0, 0.0, 0.0, 1.0);
+        inst2.position.x = 3;
+
+        const geo3 = new CubeGeometry(0.5, 0.5, 0.5);
+        const mat3 = new MaterialForward();
+        const inst3 = new Instance(geo3, mat3);
+        mat3.setColor(0.0, 1.0, 0.0, 1.0);
+        inst3.position.y = 3;
+
         const scene = new Scene();
         scene.addGameObject(inst);
+        scene.addGameObject(inst2);
+        scene.addGameObject(inst3);
 
         scene.init();
         

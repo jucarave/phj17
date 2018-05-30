@@ -1,5 +1,5 @@
 import Texture from '../Texture';
-import BasicMaterial from '../materials/BasicMaterial';
+import MaterialForward from '../materials/MaterialForward';
 import WallGeometry from '../geometries/WallGeometry';
 import Vector3 from '../math/Vector3';
 import Quaternion from '../math/Quaternion';
@@ -89,10 +89,11 @@ class Text extends Instance {
 
         let uvs = [0, 0, (size.width + 4) / canvas.width, (this._options.size + 8) / canvas.height],
             texture = new Texture(canvas),
-            material = new BasicMaterial(texture),
+            material = new MaterialForward(),
             geometry = new WallGeometry(size.width / 100, this._options.size / 100);
 
-        material.setUv(uvs[0], uvs[1], uvs[2], uvs[3]);
+        material.texture = texture;
+        material.setTextureUv(uvs[0], uvs[1], uvs[2], uvs[3]);
         material.setOpaque(false);
 
         this._material = material;        
