@@ -10,12 +10,12 @@ abstract class Material {
     protected _renderBothFaces         : boolean;
     protected _needsUpdate             : boolean;
     protected _config                  : Array<string>;
-    
-    public readonly shader             : Shader;
+    protected _shader             : Shader;
+
     public readonly id                 : string;
 
     constructor(shader: ShaderStruct) {
-        this.shader = new Shader(shader);
+        this._shader = new Shader(shader);
         
         this.id = createUUID();
         this._isOpaque = true;
@@ -23,7 +23,7 @@ abstract class Material {
         this._needsUpdate = false;
         this._config = [];
 
-        this.shader.includes = this._config;
+        this._shader.includes = this._config;
     }
 
     public abstract render(renderer: Renderer, instance: Instance, camera: Camera): void;
@@ -60,6 +60,17 @@ abstract class Material {
     public setCulling(bothFaces: boolean): Material {
         this._renderBothFaces = bothFaces;
         return this;
+    }
+
+    public destroy(): void {
+        this._shader.destroy();
+        
+        this._config = null;
+        this._shader = null;
+    }
+
+    public get shader(): Shader {
+        return this._shader;
     }
 }
 

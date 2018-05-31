@@ -48,7 +48,7 @@ class List<T> {
         let node = this._head;
 
         while (node) {
-            if (node.item == item) {
+            if (node.item === item) {
                 if (node.prev){
                     if (this._tail == node) { this._tail = node.prev; }
                     node.prev.next = node.next;

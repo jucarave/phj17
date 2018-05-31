@@ -11,6 +11,11 @@ interface Uniforms {
 }
 
 interface Program {
+    rendererId               : string;
+    shaderId                 : string;
+    gl                       : WebGLRenderingContext;
+    config                   : Array<string>;
+    references               : number;
     program?                 : WebGLProgram;
     uniforms?                : Uniforms;
     attributes?              : Attributes;
@@ -19,6 +24,8 @@ interface Program {
 interface RendererProgramsMap {
     [index: string]: Program
 }
+
+let programsBucket: Array<Program> = []; 
 
 class Shader {
     private _shaderInfo              : ShaderStruct;
@@ -40,11 +47,52 @@ class Shader {
         this._programs = {};
     }
 
+    private _searchProgram(renderer: Renderer): Program {
+        const rId = renderer.id,
+            sId = this._shaderInfo.id;
+        
+        for (let i=0,program;program=programsBucket[i];i++) {
+            if (program.rendererId == rId && program.shaderId == sId && program.config.length == this.includes.length) {
+                let found = true;
+
+                for (let j=0,len=this.includes.length;j<len;j++) {
+                    if (program.config.indexOf(this.includes[j]) == -1) {
+                        found = false;
+                        j = len;
+                    }
+                }
+
+                if (found) {
+                    return program;
+                }
+            }
+        }
+
+        return null;
+    }
+
     private _createProgram(renderer: Renderer): void {
-        this._programs[renderer.id] = {};
+        const search = this._searchProgram(renderer);
+        if (search != null) {
+            search.references += 1;
+            this._programs[renderer.id] = search;
+
+            return;
+        }
+
+        this._programs[renderer.id] = {
+            rendererId: renderer.id,
+            shaderId: this._shaderInfo.id,
+            config: this.includes.slice(),
+            gl: renderer.GL,
+            references: 1
+        };
+
         this._compileShaders(renderer, this._shaderInfo);
         this._getShaderAttributes(renderer, this._shaderInfo);
         this._getShaderUniforms(renderer, this._shaderInfo);
+
+        programsBucket.push(this._programs[renderer.id]);
     }
 
     private _getSourceWithIncludes(shader: string): string {
@@ -156,30 +204,23 @@ class Shader {
             this._createProgram(renderer);
         }
 
-        const gl: WebGLRenderingContext = renderer.GL,
-            program = this._programs[renderer.id].program;
+        const program = this._programs[renderer.id].program;
 
-        gl.useProgram(program);
-
-        const attribLength: number = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
-        for (var i = 0, len = Shader.maxAttribLength; i < len; i++) {
-            if (i < attribLength) {
-                gl.enableVertexAttribArray(i);
-            } else {
-                gl.disableVertexAttribArray(i);
-            }
-        }
+        renderer.switchProgram(program);
     }
 
-    public deleteProgram(renderer: Renderer): Shader {
-        if (!this._programs[renderer.id]) { return this; }
+    public deleteProgram(rendererId: string): Shader {
+        if (!this._programs[rendererId]) { return this; }
 
-        const gl = renderer.GL,
-            program = this._programs[renderer.id];
+        const program = this._programs[rendererId];
 
-        gl.deleteProgram(program.program);
+        program.references -= 1;
+        if (program.references <= 0) {
+            programsBucket.splice(programsBucket.indexOf(program), 1);
+            program.gl.deleteProgram(program.program);
+        }
 
-        this._programs[renderer.id] = null;
+        this._programs[rendererId] = null;
 
         return this;
     }
@@ -190,6 +231,35 @@ class Shader {
         }
 
         return this._programs[renderer.id];
+    }
+
+    public destroy(): void {
+        for (let i in this._programs) {
+            const program = this._programs[i];
+
+            this.deleteProgram(program.rendererId);
+        }
+
+        this._programs = null;
+        this.includes = null;
+    }
+
+    public equals(shader: Shader): boolean {
+        if (this._shaderInfo.id == shader.shaderInfo.id && this.includes.length == shader.includes.length) {
+            for (let j=0,len=this.includes.length;j<len;j++) {
+                if (shader.includes.indexOf(this.includes[j]) == -1) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public get shaderInfo(): ShaderStruct {
+        return this._shaderInfo;
     }
 }
 

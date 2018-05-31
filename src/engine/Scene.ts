@@ -5,7 +5,6 @@ import { InstancesMap } from './RenderingLayer';
 import List from './List';
 import { getSquaredDistance } from './Utils';
 import Instance from './entities/Instance';
-import Vector3 from './math/Vector3';
 
 class Scene {
     private _currentCamera              : Camera;
@@ -22,10 +21,10 @@ class Scene {
     private _initLayers(): void {
         this._renderingLayers = new List();
 
-        let opaques = new RenderingLayer();
+        const opaques = new RenderingLayer();
         this._renderingLayers.push(opaques);
 
-        let transparents = new RenderingLayer();
+        const transparents = new RenderingLayer();
         this._renderingLayers.push(transparents);
 
         transparents.onPostUpdate = ((item: InstancesMap) => {
@@ -39,48 +38,35 @@ class Scene {
         };
     }
 
-    public addGameObject(instance: Instance): void {
-        let mat = instance.material;
-
+    public addGameObject(instance: Instance, layerId: number = 0): void {
         instance.setScene(this);
         
-        if (this._started) {
-            instance.awake();
-        }
-
-        let layer = this._renderingLayers.getAt(0);
-        if (mat && !mat.isOpaque) {
+        let layer = this._renderingLayers.getAt(layerId);
+        if (instance.material && !instance.material.isOpaque) {
             layer = this._renderingLayers.getAt(1);
         }
         
         layer.addInstance(instance);
-    }
 
-    public testCollision(instance: Instance, direction: Vector3): Vector3 {
-        instance;
-        return direction;
+        if (this._started) {
+            instance.awake();
+        }
     }
 
     public init(): void {
-        this._renderingLayers.each((layer: RenderingLayer) => {
-            layer.awake();
-        });
+        this._renderingLayers.each((layer: RenderingLayer) => layer.awake());
 
         this._started = true;
     }
 
     public update(): void {
-        this._renderingLayers.each((layer: RenderingLayer) => {
-            layer.update();
-        });
+        this._renderingLayers.each((layer: RenderingLayer) => layer.update());
     }
 
     public render(renderer: Renderer, camera: Camera): void {
         this._currentCamera = camera;
 
-        this._renderingLayers.each((layer: RenderingLayer) => {
-            layer.render(renderer, camera);
-        });
+        this._renderingLayers.each((layer: RenderingLayer) => layer.render(renderer, camera));
 
         this._currentCamera = null;
     }

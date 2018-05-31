@@ -33,22 +33,17 @@ class RenderingLayer {
     }
 
     public addInstance(instance: Instance): void {
-        let added = false;
         for (let i=0,ins;ins=this._instances.getAt(i);i++) {
             let cond1 = (!ins.instance.material && !instance.material),
-                cond2 = (ins.instance.material && instance.material && ins.instance.material.shader.id == instance.material.shader.id);
+                cond2 = (!cond1 && ins.instance.material.shader.equals(instance.material.shader));
 
             if (cond1 || cond2) {
-                this._instances.insertAt(i, this._createInstanceMap(instance));
-                i = this._instances.length;
-                added = true;
-                break;
+                this._instances.insertAt(i+1, this._createInstanceMap(instance));
+                return;
             }
         }
 
-        if (!added) {
-            this._instances.push(this._createInstanceMap(instance));
-        }
+        this._instances.push(this._createInstanceMap(instance));
     }
     
     public awake(): void {

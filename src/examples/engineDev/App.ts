@@ -38,8 +38,8 @@ class App {
         inst3.position.y = 3;
 
         const scene = new Scene();
-        scene.addGameObject(inst);
         scene.addGameObject(inst2);
+        scene.addGameObject(inst);
         scene.addGameObject(inst3);
 
         scene.init();

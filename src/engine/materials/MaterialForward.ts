@@ -89,7 +89,7 @@ class MaterialForward extends Material {
 
     public render(renderer: Renderer, instance: Instance, camera: Camera): void {
         if (this._needsUpdate) {
-            this.shader.deleteProgram(renderer);
+            this.shader.deleteProgram(renderer.id);
             this._needsUpdate = false;
         }
 
