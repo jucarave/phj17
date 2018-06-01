@@ -31,9 +31,8 @@ class App {
         mat2.setColor(1.0, 0.0, 0.0, 1.0);
         inst2.position.x = 3;
 
-        const geo3 = new CubeGeometry(0.5, 0.5, 0.5);
         const mat3 = new MaterialForward();
-        const inst3 = new Instance(geo3, mat3);
+        const inst3 = new Instance(geo2, mat3);
         mat3.setColor(0.0, 1.0, 0.0, 1.0);
         inst3.position.y = 3;
 

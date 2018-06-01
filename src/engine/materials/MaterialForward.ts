@@ -32,6 +32,8 @@ class MaterialForward extends Material {
     }
 
     private _renderMaterialProperties(renderer: Renderer): void {
+        if (!renderer.switchMaterial(this.id)) { return; }
+        
         const gl = renderer.GL,
             program = this.shader.getProgram(renderer);
 
@@ -48,9 +50,10 @@ class MaterialForward extends Material {
     }
 
     private _renderWebGLProperties(gl: WebGLRenderingContext): void {
-        if (this._renderBothFaces) {
+        const enabled = gl.isEnabled(gl.CULL_FACE);
+        if (this._renderBothFaces && enabled) {
             gl.disable(gl.CULL_FACE);
-        } else {
+        } else if (!enabled) {
             gl.enable(gl.CULL_FACE);
         }
     }

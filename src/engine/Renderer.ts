@@ -3,6 +3,7 @@ import Shader from './shaders/Shader';
 
 interface CachedGL {
     program             : WebGLProgram;
+    materialId          : string;
 }
 
 class Renderer {
@@ -19,7 +20,8 @@ class Renderer {
         this._initGL();
 
         this._cache = {
-            program: null
+            program: null,
+            materialId: null
         };
     }
 
@@ -71,6 +73,17 @@ class Renderer {
                 gl.disableVertexAttribArray(i);
             }
         }
+
+        return true;
+    }
+
+    public switchMaterial(materialId: string): boolean {
+        if (this._cache.materialId === materialId) {
+            return false;
+        }
+
+        this._cache.materialId = materialId;
+        return true;
     }
 
     public get GL(): WebGLRenderingContext {
