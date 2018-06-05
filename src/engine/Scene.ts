@@ -6,6 +6,7 @@ import List from './List';
 import { getSquaredDistance } from './Utils';
 import Instance from './entities/Instance';
 import Vector3 from './math/Vector3';
+import DirectionalLight from './lights/DirectionalLight';
 
 class Scene {
     private _currentCamera              : Camera;
@@ -14,10 +15,13 @@ class Scene {
     protected _renderingLayers          : List<RenderingLayer>;
 
     public readonly ambientLight        : Vector3;
+    public readonly directionalLight    : DirectionalLight;
 
     constructor() {
         this._started = false;
+        
         this.ambientLight = new Vector3(0.2, 0.2, 0.2);
+        this.directionalLight = new DirectionalLight();
 
         this._initLayers();
     }

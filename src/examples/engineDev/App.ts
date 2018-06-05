@@ -20,7 +20,6 @@ class App {
         const text = new Texture('img/texture.png');
         const mat = new MaterialForward();
         const inst = new Instance(geo, mat);
-        inst.rotation.local = true;
 
         mat.receiveLight = true;
         mat.texture = text;

@@ -31,6 +31,10 @@ class MaterialForward extends Material {
 
         gl.uniformMatrix4fv(program.uniforms["uProjection"], false, camera.projection.data);
         gl.uniformMatrix4fv(program.uniforms["uPosition"], false, instance.worldMatrix.data);
+
+        if (this._receiveLight) {
+            gl.uniformMatrix4fv(program.uniforms["uNormalMatrix"], false, instance.getTransformation().data);
+        }
     }
 
     private _renderMaterialProperties(renderer: Renderer): void {
@@ -89,6 +93,11 @@ class MaterialForward extends Material {
             program = this.shader.getProgram(renderer);
 
         gl.uniform3fv(program.uniforms["uAmbientLight"], scene.ambientLight.array);
+
+        const directionalLight = scene.directionalLight;
+        gl.uniform3fv(program.uniforms["uDirLight.direction"], directionalLight.direction.array);
+        gl.uniform3fv(program.uniforms["uDirLight.color"], directionalLight.color.array);
+        gl.uniform1f(program.uniforms["uDirLight.intensity"], directionalLight.intensity);
     }
 
     public setColor(r: number, g: number, b: number, a: number): MaterialForward {

@@ -4,13 +4,15 @@ const LightPerPixel = {
             #ifdef USE_LIGHT
                 attribute vec3 aVertexNormal;
 
+                uniform mat4 uNormalMatrix;
+
                 varying vec3 vNormal;
             #endif
         `,
 
         passVaryings: `
             #ifdef USE_LIGHT
-                vNormal = aVertexNormal;
+                vNormal = (uNormalMatrix * vec4(aVertexNormal, 1.0)).xyz;
             #endif
         `
     },
@@ -34,7 +36,7 @@ const LightPerPixel = {
         calculateLight: `
             #ifdef USE_LIGHT
                 vec3 normal = normalize(vNormal);
-                vec3 lightWeight = max(dot(normal, -uDirLight.direction), 0.0) * uDirLight.color * uDirLight.intensity;
+                vec3 lightWeight = max(dot(normal, normalize(-uDirLight.direction)), 0.0) * uDirLight.color * uDirLight.intensity;
 
                 lightWeight += uAmbientLight;
 
