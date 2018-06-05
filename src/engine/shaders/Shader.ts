@@ -2,6 +2,10 @@ import { ShaderStruct } from '../shaders/ShaderStruct';
 import { createUUID } from '../Utils';
 import Renderer from '../Renderer';
 
+interface StructMap {
+    [index: string]: Array<string>
+}
+
 interface Attributes {
     [index: string]: number
 };
@@ -181,18 +185,40 @@ class Shader {
 
         let uniforms: Uniforms = {};
 
+        let structMap: StructMap = {};
+        let lastStruct: string = null;
+
         for (let i = 0, len = code.length; i < len; i++) {
             const c: Array<string> = code[i].trim().split(/ /g);
 
-            if (c[0] == "uniform") {
+            if (c[0] == "struct") {
+                lastStruct = c[1];
+                structMap[lastStruct] = [];
+            } else if (c[0] == "uniform") {
                 uniform = c.pop().replace(/;/g, "");
                 if (usedUniforms.indexOf(uniform) != -1) { continue; }
 
-                location = gl.getUniformLocation(program, uniform);
-
-                usedUniforms.push(uniform);
-
-                uniforms[uniform] = location;
+                const type: string = c.pop();
+                if (structMap[type]) {
+                    const struct = structMap[type];
+                    for (let j=0,prop;prop=struct[j];j++) {
+                        let uniformProperty = uniform + "." + prop;
+                        location = gl.getUniformLocation(program, uniformProperty);
+                        usedUniforms.push(uniformProperty);
+                        uniforms[uniformProperty] = location;
+                    }
+                } else {
+                    location = gl.getUniformLocation(program, uniform);
+                    usedUniforms.push(uniform);
+                    uniforms[uniform] = location;
+                }
+            } else if (lastStruct != null) {
+                let property: string = c.pop().replace(/;/g, "");
+                if (property == "}") {
+                    lastStruct = null;
+                } else {
+                    structMap[lastStruct].push(property);
+                }
             }
         }
 

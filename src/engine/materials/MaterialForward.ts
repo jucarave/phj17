@@ -4,7 +4,8 @@ import Texture from '../Texture';
 import ForwardShader from '../shaders/Forward';
 import Instance from '../entities/Instance';
 import Camera from '../entities/Camera';
-import { VERTICE_SIZE, TEXCOORD_SIZE } from '../Constants';
+import Scene from '../Scene';
+import { VERTICE_SIZE, TEXCOORD_SIZE, NORMALS_SIZE } from '../Constants';
 
 class MaterialForward extends Material {
     private _color           : Array<number>;
@@ -12,6 +13,7 @@ class MaterialForward extends Material {
     private _texture         : Texture;
     private _uv              : Array<number>;
     private _repeat          : Array<number>;
+    private _receiveLight      : boolean;
 
     constructor() {
         super(ForwardShader);
@@ -72,7 +74,21 @@ class MaterialForward extends Material {
             gl.vertexAttribPointer(program.attributes["aTexCoords"], TEXCOORD_SIZE, gl.FLOAT, false, 0, 0);
         }
 
+        if (this._receiveLight) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.normalsBuffer);
+            gl.vertexAttribPointer(program.attributes["aVertexNormal"], NORMALS_SIZE, gl.FLOAT, false, 0, 0);
+        }
+
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
+    }
+
+    private _renderLights(renderer: Renderer, scene: Scene): void {
+        if (!this._receiveLight) { return; }
+
+        const gl = renderer.GL,
+            program = this.shader.getProgram(renderer);
+
+        gl.uniform3fv(program.uniforms["uAmbientLight"], scene.ambientLight.array);
     }
 
     public setColor(r: number, g: number, b: number, a: number): MaterialForward {
@@ -90,7 +106,7 @@ class MaterialForward extends Material {
         return this;
     }
 
-    public render(renderer: Renderer, instance: Instance, camera: Camera): void {
+    public render(renderer: Renderer, instance: Instance, scene: Scene, camera: Camera): void {
         if (this._needsUpdate) {
             this.shader.deleteProgram(renderer.id);
             this._needsUpdate = false;
@@ -101,6 +117,7 @@ class MaterialForward extends Material {
         this._renderWebGLProperties(renderer.GL);
         this._renderInstanceProperties(renderer, instance, camera);
         this._renderMaterialProperties(renderer);
+        this._renderLights(renderer, scene);
         this._renderGeometryProperties(renderer, instance);
 
         const gl = renderer.GL,
@@ -123,6 +140,16 @@ class MaterialForward extends Material {
         (texture != null)? this.addConfig("USE_TEXTURE") : this.removeConfig("USE_TEXTURE");
 
         this._texture = texture;
+    }
+
+    public set receiveLight(receiveLight: boolean) {
+        (receiveLight)? this.addConfig("USE_LIGHT") : this.removeConfig("USE_LIGHT");
+
+        this._receiveLight = receiveLight;
+    }
+
+    public get receiveLight(): boolean {
+        return this._receiveLight;
     }
 }
 

@@ -21,7 +21,7 @@ class Instance {
     protected _needsUpdate        : boolean;
     protected _parent             : Instance;
     protected _children           : Array<Instance>
-    
+
     public readonly id                  : string;
     public readonly position            : Vector3;
     public readonly rotation            : Quaternion;
@@ -123,7 +123,7 @@ class Instance {
         this._worldMatrix.copy(this.getTransformation());
         this._worldMatrix.multiply(camera.getViewMatrix());
 
-        this._material.render(renderer, this, camera);
+        this._material.render(renderer, this, this._scene, camera);
     }
 
     public addChild(instance: Instance): void {

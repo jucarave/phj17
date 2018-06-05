@@ -4,6 +4,7 @@ import Renderer from '../Renderer';
 interface BufferMap {
     vertexBuffer?               : WebGLBuffer;
     texCoordsBuffer?            : WebGLBuffer;
+    normalsBuffer?              : WebGLBuffer;
     indexBuffer?                : WebGLBuffer;
     glContext                   : WebGLRenderingContext;
 }
@@ -15,6 +16,7 @@ interface RendererBufferMap {
 class Geometry {
     private _vertices                : Array<number>;
     private _triangles               : Array<number>;
+    private _normals                 : Array<number>;
     private _texCoords               : Array<number>;
     private _buffers                 : RendererBufferMap;
     private _indexLength             : number;
@@ -24,6 +26,7 @@ class Geometry {
         this._vertices = [];
         this._texCoords = [];
         this._triangles = [];
+        this._normals = [];
         this._buffers = {};
         this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
     }
@@ -45,6 +48,10 @@ class Geometry {
     public addTexCoord(x: number, y: number): void {
         this._texCoords.push(x, y);
     }
+    
+    public addNormal(x: number, y: number, z: number): void {
+        this._normals.push(x, y, z);
+    }
 
     public addTriangle(vert1: number, vert2: number, vert3: number): void {
         if (this._vertices[vert1 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert1 + "] not found!")}
@@ -62,9 +69,17 @@ class Geometry {
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._vertices), gl.STATIC_DRAW);
 
-        bufferMap.texCoordsBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.texCoordsBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._texCoords), gl.STATIC_DRAW);
+        if (this._triangles.length > 0) {
+            bufferMap.texCoordsBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.texCoordsBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._texCoords), gl.STATIC_DRAW);
+        }
+
+        if (this._normals.length > 0) {
+            bufferMap.normalsBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.normalsBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._normals), gl.STATIC_DRAW);
+        }
 
         bufferMap.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);

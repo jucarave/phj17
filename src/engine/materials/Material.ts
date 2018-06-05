@@ -4,6 +4,7 @@ import Renderer from '../Renderer';
 import Shader from '../shaders/Shader';
 import Instance from '../entities/Instance';
 import Camera from '../entities/Camera';
+import Scene from '../Scene';
 
 abstract class Material {
     protected _isOpaque                : boolean;
@@ -26,7 +27,7 @@ abstract class Material {
         this._shader.includes = this._config;
     }
 
-    public abstract render(renderer: Renderer, instance: Instance, camera: Camera): void;
+    public abstract render(renderer: Renderer, instance: Instance, scene: Scene, camera: Camera): void;
     public abstract get isReady(): boolean;
 
     public get isOpaque(): boolean {

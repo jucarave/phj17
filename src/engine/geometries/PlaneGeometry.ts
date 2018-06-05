@@ -16,6 +16,7 @@ class PlaneGeometry extends Geometry {
         this.addVertice( w,  0,  h);
         this.addVertice(-w,  0, -h);
         this.addVertice( w,  0, -h);
+        for (let i=0;i<4;i++) { this.addNormal(0.0, 1.0, 0.0); }
 
         this.addTriangle(0, 1, 2);
         this.addTriangle(1, 3, 2);

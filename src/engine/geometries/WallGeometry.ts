@@ -15,6 +15,7 @@ class WallGeometry extends Geometry {
         this.addVertice( w, -h,  0);
         this.addVertice(-w,  h,  0);
         this.addVertice( w,  h,  0);
+        for (let i=0;i<4;i++) { this.addNormal(0.0, 0.0, 1.0); }
         
         this.addTriangle(0, 1, 2);
         this.addTriangle(1, 3, 2);

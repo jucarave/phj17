@@ -6,7 +6,7 @@ export default class Vector3 {
     private _z                  : number;
     private _onChange           : Array<Function>;
 
-    public inUse                : boolean;
+    public readonly array                : Array<number>;
 
     public static readonly LEFT         = new Vector3(-1.0, 0.0, 0.0);
     public static readonly RIGHT        = new Vector3(1.0, 0.0, 0.0);
@@ -17,10 +17,15 @@ export default class Vector3 {
 
     constructor(x: number = 0, y: number = 0, z: number = 0) {
         this._onChange = [];
+        this.array = [x, y, z];
         this.set(x, y, z);
     }
 
     private _callOnChange(): void {
+        this.array[0] = this.x;
+        this.array[1] = this.y;
+        this.array[2] = this.z;
+
         for (let i=0,onChange;onChange=this._onChange[i];i++) {
             onChange();
         }

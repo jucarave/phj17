@@ -17,36 +17,42 @@ class CubeGeometry extends Geometry {
         this.addVertice( w, -h,  l);
         this.addVertice(-w,  h,  l);
         this.addVertice( w,  h,  l);
+        for (let i=0;i<4;i++) { this.addNormal(0.0, 0.0, 1.0); }
 
         // Back face
         this.addVertice( w, -h, -l);
         this.addVertice(-w, -h, -l);
         this.addVertice( w,  h, -l);
         this.addVertice(-w,  h, -l);
+        for (let i=0;i<4;i++) { this.addNormal(0.0, 0.0, -1.0); }
 
         // Left face
         this.addVertice(-w, -h, -l);
         this.addVertice(-w, -h,  l);
         this.addVertice(-w,  h, -l);
         this.addVertice(-w,  h,  l);
+        for (let i=0;i<4;i++) { this.addNormal(-1.0, 0.0, 0.0); }
 
         // Right face
         this.addVertice( w, -h,  l);
         this.addVertice( w, -h, -l);
         this.addVertice( w,  h,  l);
         this.addVertice( w,  h, -l);
+        for (let i=0;i<4;i++) { this.addNormal(1.0, 0.0, 0.0); }
 
         // Top face
         this.addVertice(-w,  h,  l);
         this.addVertice( w,  h,  l);
         this.addVertice(-w,  h, -l);
         this.addVertice( w,  h, -l);
+        for (let i=0;i<4;i++) { this.addNormal(0.0, 1.0, 0.0); }
 
         // Bottom face
         this.addVertice( w, -h,  l);
         this.addVertice(-w, -h,  l);
         this.addVertice( w, -h, -l);
         this.addVertice(-w, -h, -l);
+        for (let i=0;i<4;i++) { this.addNormal(0.0, -1.0, 0.0); }
 
         for (let i=0;i<6;i++) {
             let ind = i * 4;
