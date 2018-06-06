@@ -92,12 +92,11 @@ class MaterialForward extends Material {
         const gl = renderer.GL,
             program = this.shader.getProgram(renderer);
 
-        gl.uniform3fv(program.uniforms["uAmbientLight"], scene.ambientLight.array);
-
         const directionalLight = scene.directionalLight;
         gl.uniform3fv(program.uniforms["uDirLight.direction"], directionalLight.direction.array);
         gl.uniform3fv(program.uniforms["uDirLight.color"], directionalLight.color.array);
-        gl.uniform1f(program.uniforms["uDirLight.intensity"], directionalLight.intensity);
+        gl.uniform1f(program.uniforms["uDirLight.ambientIntensity"], directionalLight.ambientIntensity);
+        gl.uniform1f(program.uniforms["uDirLight.diffuseIntensity"], directionalLight.diffuseIntensity);
     }
 
     public setColor(r: number, g: number, b: number, a: number): MaterialForward {

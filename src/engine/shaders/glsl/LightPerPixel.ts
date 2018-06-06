@@ -20,27 +20,33 @@ const LightPerPixel = {
     fragmentShader: {
         definitions: `
             #ifdef USE_LIGHT
-                struct DirectionalLight {
-                    vec3 direction;
+                struct Light {
                     vec3 color;
-                    float intensity;
+                    vec3 direction;
+                    float ambientIntensity;
+                    float diffuseIntensity;
                 };
-
-                uniform DirectionalLight uDirLight;
-                uniform vec3 uAmbientLight;
+                
+                uniform Light uDirLight;
 
                 varying vec3 vNormal;
+
+                vec3 calculateLightWeight(Light light, vec3 direction, vec3 normal) {
+                    vec3 ambientColor = light.color * light.ambientIntensity;
+                    vec3 diffuseColor = light.color * light.diffuseIntensity * max(dot(normal, direction), 0.0);
+
+                    return ambientColor + diffuseColor;
+                }
             #endif
         `,
 
         calculateLight: `
             #ifdef USE_LIGHT
                 vec3 normal = normalize(vNormal);
-                vec3 lightWeight = max(dot(normal, normalize(-uDirLight.direction)), 0.0) * uDirLight.color * uDirLight.intensity;
 
-                lightWeight += uAmbientLight;
+                vec3 dirLightWeight = calculateLightWeight(uDirLight, normalize(-uDirLight.direction), normal);
 
-                outColor.rgb *= lightWeight;
+                outColor.rgb *= dirLightWeight;
             #endif
         `
     }
