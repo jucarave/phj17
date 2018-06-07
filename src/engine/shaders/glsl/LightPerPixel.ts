@@ -7,12 +7,14 @@ const LightPerPixel = {
                 uniform mat4 uNormalMatrix;
 
                 varying vec3 vNormal;
+                varying vec3 vWorldPosition;
             #endif
         `,
 
         passVaryings: `
             #ifdef USE_LIGHT
-                vNormal = (uNormalMatrix * vec4(aVertexNormal, 1.0)).xyz;
+                vNormal = (uNormalMatrix * vec4(aVertexNormal, 0.0)).xyz;
+                vWorldPosition = (uNormalMatrix * vec4(aVertexPosition, 1.0)).xyz;
             #endif
         `
     },
@@ -20,22 +22,49 @@ const LightPerPixel = {
     fragmentShader: {
         definitions: `
             #ifdef USE_LIGHT
+                #define MAX_LIGHTS 4
+
                 struct Light {
                     vec3 color;
-                    vec3 direction;
+                    vec3 position;
+                    
                     float ambientIntensity;
                     float diffuseIntensity;
+
+                    vec3 attenuation;
                 };
                 
                 uniform Light uDirLight;
+                uniform Light uPointLights[MAX_LIGHTS];
+                uniform int numberOfLights;
 
                 varying vec3 vNormal;
+                varying vec3 vWorldPosition;
 
                 vec3 calculateLightWeight(Light light, vec3 direction, vec3 normal) {
                     vec3 ambientColor = light.color * light.ambientIntensity;
                     vec3 diffuseColor = light.color * light.diffuseIntensity * max(dot(normal, direction), 0.0);
 
                     return ambientColor + diffuseColor;
+                }
+
+                vec3 calculatePointLights(vec3 worldPosition, vec3 normal) {
+                    vec3 color = vec3(0.0);
+                    for (int i=0;i<MAX_LIGHTS;i++) {
+                        if (i == numberOfLights) { 
+                            break;
+                        }
+
+                        Light light = uPointLights[i];
+                        vec3 direction = light.position - worldPosition;
+                        float distance = length(direction);
+
+                        float attenuation = light.attenuation.x + light.attenuation.y * distance + light.attenuation.z * distance * distance;
+
+                        color += calculateLightWeight(light, normalize(direction), normal) / attenuation;
+                    }
+
+                    return color;
                 }
             #endif
         `,
@@ -44,9 +73,10 @@ const LightPerPixel = {
             #ifdef USE_LIGHT
                 vec3 normal = normalize(vNormal);
 
-                vec3 dirLightWeight = calculateLightWeight(uDirLight, normalize(-uDirLight.direction), normal);
+                vec3 dirLightWeight = calculateLightWeight(uDirLight, normalize(-uDirLight.position), normal);
+                vec3 pointLightWeight = calculatePointLights(vWorldPosition, normal);
 
-                outColor.rgb *= dirLightWeight;
+                outColor.rgb *= dirLightWeight + pointLightWeight;
             #endif
         `
     }

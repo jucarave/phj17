@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, CubeGeometry, MaterialForward, Instance, Input, Vector3, Texture } from '../../engine';
+import { Renderer, Camera, Scene, CubeGeometry, MaterialForward, Instance, Input, Vector3, Texture, PlaneGeometry } from '../../engine';
 
 const keyboard = new Array(255);
 
@@ -24,6 +24,7 @@ class App {
         mat.receiveLight = true;
         mat.texture = text;
         mat.setTextureUv(1/32,1/32,16/32,16/32);
+        
 
 
         const geo2 = new CubeGeometry(0.5, 0.5, 0.5);
@@ -37,10 +38,18 @@ class App {
         mat3.setColor(0.0, 1.0, 0.0, 1.0);
         inst3.position.y = 3;
 
+        const geo4 = new PlaneGeometry(20.0, 20.0);
+        const mat4 = new MaterialForward();
+        const inst4 = new Instance(geo4, mat4);
+        inst4.position.y = -2;
+        mat4.setColor(1.0, 1.0, 1.0, 1.0);
+        mat4.receiveLight = true;
+
         const scene = new Scene();
         scene.addGameObject(inst2);
         scene.addGameObject(inst);
         scene.addGameObject(inst3);
+        scene.addGameObject(inst4);
 
         scene.init();
         

@@ -188,30 +188,53 @@ class Shader {
         let structMap: StructMap = {};
         let lastStruct: string = null;
 
+        let defines: any = {};
+
         for (let i = 0, len = code.length; i < len; i++) {
             const c: Array<string> = code[i].trim().split(/ /g);
+            if (c[0] == "") { continue; }
 
             if (c[0] == "struct") {
                 lastStruct = c[1];
                 structMap[lastStruct] = [];
             } else if (c[0] == "uniform") {
                 uniform = c.pop().replace(/;/g, "");
-                if (usedUniforms.indexOf(uniform) != -1) { continue; }
+                let size: number = 0;
 
+                if (uniform.indexOf("[") != -1) {
+                    const ind = uniform.indexOf("[");
+                    const sizeStr = uniform.substring(ind+1, uniform.indexOf("]"));
+
+                    size = (defines[sizeStr])? parseInt(defines[sizeStr]) : parseInt(sizeStr);
+                    uniform = uniform.substring(0, ind);
+                }
+                
                 const type: string = c.pop();
+
                 if (structMap[type]) {
                     const struct = structMap[type];
-                    for (let j=0,prop;prop=struct[j];j++) {
-                        let uniformProperty = uniform + "." + prop;
+                    for (let k=0;k<Math.max(size, 1);k++) {
+                        for (let j=0,prop;prop=struct[j];j++) {
+                            let uniformProperty = uniform + ((size > 0)? "[" + k + "]" : "")  + "." + prop;
+                            if (usedUniforms.indexOf(uniformProperty) != -1) { continue; }
+
+                            location = gl.getUniformLocation(program, uniformProperty);
+                            usedUniforms.push(uniformProperty);
+                            uniforms[uniformProperty] = location;
+                        }
+                    }
+                } else {
+                    for (let k=0;k<Math.max(size, 1);k++) {
+                        let uniformProperty = uniform + ((size > 0)? "[" + k + "]" : "");
+                        if (usedUniforms.indexOf(uniformProperty) != -1) { continue; }
+
                         location = gl.getUniformLocation(program, uniformProperty);
                         usedUniforms.push(uniformProperty);
                         uniforms[uniformProperty] = location;
                     }
-                } else {
-                    location = gl.getUniformLocation(program, uniform);
-                    usedUniforms.push(uniform);
-                    uniforms[uniform] = location;
                 }
+            } else if (c[0] == "#define"){
+                defines[c[1]] = c[2];
             } else if (lastStruct != null) {
                 let property: string = c.pop().replace(/;/g, "");
                 if (property == "}") {

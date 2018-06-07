@@ -8,8 +8,8 @@ class DirectionalLight {
     public readonly direction       : Vector3;
 
     constructor() {
-        this.ambientIntensity = 0.2;
-        this.diffuseIntensity = 0.8;
+        this.ambientIntensity = 0.0;
+        this.diffuseIntensity = 0.0;
         
         this.color = new Vector3(1.0, 1.0, 1.0);
         this.direction = new Vector3(0.0, -1.0, 0.0);
