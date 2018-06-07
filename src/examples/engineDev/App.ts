@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, CubeGeometry, MaterialForward, Instance, Input, Vector3, Texture, PlaneGeometry } from '../../engine';
+import { Renderer, Camera, Scene, CubeGeometry, MaterialForward, Instance, Input, Vector3, Texture, PlaneGeometry, PointLight } from '../../engine';
 
 const keyboard = new Array(255);
 
@@ -51,9 +51,17 @@ class App {
         scene.addGameObject(inst3);
         scene.addGameObject(inst4);
 
+        const light = new PointLight();
+        light.color.set(0.0, 1.0, 0.0);
+        light.position.set(5.0, 5.0, 5.0);
+        scene.addLight(light);
+
+        const lightInst = new Instance();
+        lightInst.addChild(light);
+
         scene.init();
         
-        this._loop(render, camera, inst, scene);
+        this._loop(render, camera, lightInst, scene);
     }
 
     private _handleKeyboard(key: number, status: number): void {
@@ -89,6 +97,7 @@ class App {
         render.clear();
 
         this._updateRotation(inst);
+        inst.rotation.rotateY(3 * Math.PI / 180);
 
         scene.update();
 

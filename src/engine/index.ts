@@ -28,6 +28,7 @@ export { default as Vector3 } from './math/Vector3';
 export { default as Vector4 } from './math/Vector4';
 
 export { default as DirectionalLight } from './lights/DirectionalLight';
+export { default as PointLight } from './lights/PointLight';
 
 export { default as Shader } from './shaders/Shader';
 export { ShaderStruct, ShaderMap } from './shaders/ShaderStruct';

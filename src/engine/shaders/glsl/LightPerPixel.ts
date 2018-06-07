@@ -27,23 +27,20 @@ const LightPerPixel = {
                 struct Light {
                     vec3 color;
                     vec3 position;
-                    
-                    float ambientIntensity;
-                    float diffuseIntensity;
-
                     vec3 attenuation;
+                    vec2 intensity;
                 };
                 
                 uniform Light uDirLight;
                 uniform Light uPointLights[MAX_LIGHTS];
-                uniform int numberOfLights;
+                uniform int uNumberOfLights;
 
                 varying vec3 vNormal;
                 varying vec3 vWorldPosition;
 
                 vec3 calculateLightWeight(Light light, vec3 direction, vec3 normal) {
-                    vec3 ambientColor = light.color * light.ambientIntensity;
-                    vec3 diffuseColor = light.color * light.diffuseIntensity * max(dot(normal, direction), 0.0);
+                    vec3 ambientColor = light.color * light.intensity.x;
+                    vec3 diffuseColor = light.color * light.intensity.y * max(dot(normal, direction), 0.0);
 
                     return ambientColor + diffuseColor;
                 }
@@ -51,7 +48,7 @@ const LightPerPixel = {
                 vec3 calculatePointLights(vec3 worldPosition, vec3 normal) {
                     vec3 color = vec3(0.0);
                     for (int i=0;i<MAX_LIGHTS;i++) {
-                        if (i == numberOfLights) { 
+                        if (i == uNumberOfLights) { 
                             break;
                         }
 

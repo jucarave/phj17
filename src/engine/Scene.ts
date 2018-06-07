@@ -6,12 +6,14 @@ import List from './List';
 import { getSquaredDistance } from './Utils';
 import Instance from './entities/Instance';
 import DirectionalLight from './lights/DirectionalLight';
+import PointLight from './lights/PointLight';
 
 class Scene {
     private _currentCamera              : Camera;
 
     protected _started                  : boolean;
     protected _renderingLayers          : List<RenderingLayer>;
+    protected _lights                   : Array<PointLight>;
 
     public readonly directionalLight    : DirectionalLight;
 
@@ -19,6 +21,7 @@ class Scene {
         this._started = false;
         
         this.directionalLight = new DirectionalLight();
+        this._lights = [];
 
         this._initLayers();
     }
@@ -44,8 +47,12 @@ class Scene {
     }
 
     public addGameObject(instance: Instance, layerId: number = 0): void {
+        if (instance instanceof PointLight) {
+            return this.addLight(<PointLight> instance);
+        }
+
         instance.setScene(this);
-        
+
         let layer = this._renderingLayers.getAt(layerId);
         if (instance.material && !instance.material.isOpaque) {
             layer = this._renderingLayers.getAt(1);
@@ -56,6 +63,11 @@ class Scene {
         if (this._started) {
             instance.awake();
         }
+    }
+
+    public addLight(light: PointLight): void {
+        light.setScene(this);
+        this._lights.push(light);
     }
 
     public init(): void {
@@ -74,6 +86,10 @@ class Scene {
         this._renderingLayers.each((layer: RenderingLayer) => layer.render(renderer, camera));
 
         this._currentCamera = null;
+    }
+
+    public get lights(): Array<PointLight> {
+        return this._lights;
     }
 }
 

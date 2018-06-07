@@ -95,16 +95,21 @@ class MaterialForward extends Material {
         const directionalLight = scene.directionalLight;
         gl.uniform3fv(program.uniforms["uDirLight.position"], directionalLight.direction.array);
         gl.uniform3fv(program.uniforms["uDirLight.color"], directionalLight.color.array);
-        gl.uniform1f(program.uniforms["uDirLight.ambientIntensity"], directionalLight.ambientIntensity);
-        gl.uniform1f(program.uniforms["uDirLight.diffuseIntensity"], directionalLight.diffuseIntensity);
+        gl.uniform2fv(program.uniforms["uDirLight.intensity"], [directionalLight.ambientIntensity, directionalLight.diffuseIntensity]);
 
-        gl.uniform3fv(program.uniforms["uPointLights[0].position"], [5.0, 5.0, 5.0]);
-        gl.uniform3fv(program.uniforms["uPointLights[0].color"], [1.0, 1.0, 1.0]);
-        gl.uniform1f(program.uniforms["uPointLights[0].ambientIntensity"], 0.5);
-        gl.uniform1f(program.uniforms["uPointLights[0].diffuseIntensity"], 10.0);
-        gl.uniform3fv(program.uniforms["uPointLights[0].attenuation"], [1.0, 0.09, 0.032]);
+        const pointLights = scene.lights,
+            numberOfLights = Math.min(pointLights.length, 4);
 
-        gl.uniform1i(program.uniforms["numberOfLights"], 1);
+        for (let i=0;i<numberOfLights;i++) {
+            const light = pointLights[i];
+
+            gl.uniform3fv(program.uniforms[`uPointLights[${i}].position`], light.globalPosition.array);
+            gl.uniform3fv(program.uniforms[`uPointLights[${i}].color`], light.color.array);
+            gl.uniform2f(program.uniforms[`uPointLights[${i}].intensity`], light.ambientIntensity, light.diffuseIntensity);
+            gl.uniform3f(program.uniforms[`uPointLights[${i}].attenuation`], light.constantAttenuation, light.linearAttenuation, light.quadraticAttenuation);
+        }
+
+        gl.uniform1i(program.uniforms["uNumberOfLights"], numberOfLights);
     }
 
     public setColor(r: number, g: number, b: number, a: number): MaterialForward {
