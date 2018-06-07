@@ -1,0 +1,3 @@
+node_modules/*
+dist/js/app.js
+examples/*/js/app.js
