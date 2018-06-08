@@ -9,6 +9,7 @@ import Vector3 from '../math/Vector3';
 import Vector4 from '../math/Vector4';
 import Quaternion from '../math/Quaternion';
 import { createUUID } from '../Utils';
+import PointLight from '../lights/PointLight';
 
 class Instance {
     protected _geometry           : Geometry;
@@ -21,6 +22,7 @@ class Instance {
     protected _needsUpdate        : boolean;
     protected _parent             : Instance;
     protected _children           : Array<Instance>
+    protected _lightLayers        : Array<number>;
 
     public readonly id                  : string;
     public readonly position            : Vector3;
@@ -39,6 +41,7 @@ class Instance {
         this._children = [];
         this._parent = null;
         this._destroyed = false;
+        this._lightLayers = [0];
 
         this.position = new Vector3(0.0);
         this.position.onChange = () => this.emmitNeedsUpdate();
@@ -157,6 +160,52 @@ class Instance {
 
         this._parent.removeChild(this);
         this._parent = null;
+    }
+
+    public getIntersectingLights(): Array<PointLight> {
+        if (!this._geometry) { return []; }
+
+        let ret: Array<PointLight> = [];
+        const lights = this._scene.lights,
+            bb = this._geometry.boundingBox;
+
+        for (let i=0,light;light=lights[i];i++) {
+            if (this._lightLayers.indexOf(light.layer) == -1) { continue; }
+
+            const r = light.radius,
+                pos = light.globalPosition,
+                x1 = pos.x - r,
+                x2 = pos.x + r,
+                y1 = pos.y - r,
+                y2 = pos.y + r,
+                z1 = pos.z - r,
+                z2 = pos.z + r; 
+
+            if (bb[0] >= x2 || bb[3] < x1 || bb[1] >= y2 || bb[4] < y1 || bb[2] >= z2 || bb[5] < z1) {
+                continue;
+            }
+
+            ret.push(light);
+        }
+        
+        return ret;
+    }
+
+    public addLightLayer(layer: number): Instance {
+        if (this._lightLayers.indexOf(layer) == -1) {
+            this._lightLayers.push(layer);
+        }
+
+        return this;
+    }
+
+    public removeLightLayer(layer: number): Instance {
+        const ind = this._lightLayers.indexOf(layer);
+        if (ind != -1) {
+            this._lightLayers.splice(ind, 1);
+        }
+
+        return this;
     }
 
     public get worldMatrix(): Matrix4 {

@@ -9,6 +9,8 @@ class PointLight extends Instance {
     public linearAttenuation        : number;
     public quadraticAttenuation     : number;
 
+    public layer                    : number;
+
     public readonly color           : Vector3;
 
     constructor(color: Vector3 = new Vector3(1.0, 1.0, 1.0), ambientIntensity: number = 0.2, diffuseIntensity: number = 5.0, constantAttenuation: number = 1.0, linearAttenuation: number = 0.09, quadraticAttenuation: number = 0.032) {
@@ -20,8 +22,14 @@ class PointLight extends Instance {
         this.constantAttenuation = constantAttenuation;
         this.linearAttenuation = linearAttenuation;
         this.quadraticAttenuation = quadraticAttenuation;
+
+        this.layer = 0;
         
         this.color = color;
+    }
+
+    public get radius(): number {
+        return (this.diffuseIntensity + this.ambientIntensity) * 10;
     }
 }
 

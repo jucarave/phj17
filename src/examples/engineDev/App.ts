@@ -13,8 +13,8 @@ class App {
 
         const camera = Camera.createPerspective(90, 854/480, 0.1, 1000.0);
         camera.rotation.local = true;
-        camera.position.set(10, 10, 10);
-        camera.rotation.lookToDirection(new Vector3(-10,-10,-10));
+        camera.position.set(20, 20, 20);
+        camera.rotation.lookToDirection(new Vector3(-5,-20,-20));
         
         const geo = new CubeGeometry(4, 4, 4);
         const text = new Texture('img/texture.png');
@@ -31,7 +31,7 @@ class App {
         const mat2 = new MaterialForward();
         const inst2 = new Instance(geo2, mat2);
         mat2.setColor(1.0, 0.0, 0.0, 1.0);
-        inst2.position.x = 3;
+        inst2.position.x = 10;
 
         const mat3 = new MaterialForward();
         const inst3 = new Instance(geo2, mat3);
@@ -45,23 +45,36 @@ class App {
         mat4.setColor(1.0, 1.0, 1.0, 1.0);
         mat4.receiveLight = true;
 
+        const geo5 = new PlaneGeometry(20.0, 20.0);
+        const mat5 = new MaterialForward();
+        const inst5 = new Instance(geo5, mat5);
+        inst5.position.set(20.0, -2.0, 0.0);
+        inst5.removeLightLayer(0).addLightLayer(1);
+        mat5.setColor(1.0, 1.0, 1.0, 1.0);
+        mat5.receiveLight = true;
+
         const scene = new Scene();
         scene.addGameObject(inst2);
         scene.addGameObject(inst);
         scene.addGameObject(inst3);
         scene.addGameObject(inst4);
+        scene.addGameObject(inst5);
 
         const light = new PointLight();
         light.color.set(0.0, 1.0, 0.0);
-        light.position.set(5.0, 5.0, 5.0);
+        light.position.set(0.0, 3.0, 0.0);
         scene.addLight(light);
+        inst3.addChild(light);
 
-        const lightInst = new Instance();
-        lightInst.addChild(light);
+        const lightRed = new PointLight();
+        lightRed.color.set(1.0, 0.0, 0.0);
+        lightRed.position.set(10.0, 0.0, 0.0);
+        lightRed.layer = 1;
+        scene.addLight(lightRed);
 
         scene.init();
         
-        this._loop(render, camera, lightInst, scene);
+        this._loop(render, camera, inst3, scene);
     }
 
     private _handleKeyboard(key: number, status: number): void {
@@ -97,7 +110,7 @@ class App {
         render.clear();
 
         this._updateRotation(inst);
-        inst.rotation.rotateY(3 * Math.PI / 180);
+        inst.position.y += 0.1;
 
         scene.update();
 

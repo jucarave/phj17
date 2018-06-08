@@ -86,7 +86,7 @@ class MaterialForward extends Material {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
     }
 
-    private _renderLights(renderer: Renderer, scene: Scene): void {
+    private _renderLights(renderer: Renderer, instance: Instance, scene: Scene): void {
         if (!this._receiveLight) { return; }
 
         const gl = renderer.GL,
@@ -97,7 +97,7 @@ class MaterialForward extends Material {
         gl.uniform3fv(program.uniforms["uDirLight.color"], directionalLight.color.array);
         gl.uniform2fv(program.uniforms["uDirLight.intensity"], [directionalLight.ambientIntensity, directionalLight.diffuseIntensity]);
 
-        const pointLights = scene.lights,
+        const pointLights = instance.getIntersectingLights(),
             numberOfLights = Math.min(pointLights.length, 4);
 
         for (let i=0;i<numberOfLights;i++) {
@@ -138,7 +138,7 @@ class MaterialForward extends Material {
         this._renderWebGLProperties(renderer.GL);
         this._renderInstanceProperties(renderer, instance, camera);
         this._renderMaterialProperties(renderer);
-        this._renderLights(renderer, scene);
+        this._renderLights(renderer, instance, scene);
         this._renderGeometryProperties(renderer, instance);
 
         const gl = renderer.GL,
