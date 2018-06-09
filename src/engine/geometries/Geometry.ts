@@ -5,6 +5,7 @@ interface BufferMap {
     vertexBuffer?               : WebGLBuffer;
     texCoordsBuffer?            : WebGLBuffer;
     normalsBuffer?              : WebGLBuffer;
+    jointBuffer?                : WebGLBuffer;
     indexBuffer?                : WebGLBuffer;
     glContext                   : WebGLRenderingContext;
 }
@@ -18,6 +19,7 @@ class Geometry {
     private _triangles               : Array<number>;
     private _normals                 : Array<number>;
     private _texCoords               : Array<number>;
+    private _jointWeights            : Array<number>;
     private _buffers                 : RendererBufferMap;
     private _indexLength             : number;
     private _boundingBox             : Array<number>;
@@ -26,12 +28,13 @@ class Geometry {
         this._vertices = [];
         this._texCoords = [];
         this._triangles = [];
+        this._jointWeights = [];
         this._normals = [];
         this._buffers = {};
         this._boundingBox = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity];
     }
 
-    public addVertice(x: number, y: number, z: number): void {
+    public addVertice(x: number, y: number, z: number): Geometry {
         this._vertices.push(x, y, z);
 
         // Calculate bounding box
@@ -43,22 +46,34 @@ class Geometry {
             Math.max(this._boundingBox[4], y),
             Math.max(this._boundingBox[5], z)
         ];
+
+        return this;
     }
     
-    public addTexCoord(x: number, y: number): void {
+    public addTexCoord(x: number, y: number): Geometry {
         this._texCoords.push(x, y);
+        return this;
     }
     
-    public addNormal(x: number, y: number, z: number): void {
+    public addNormal(x: number, y: number, z: number): Geometry {
         this._normals.push(x, y, z);
+        return this;
     }
 
-    public addTriangle(vert1: number, vert2: number, vert3: number): void {
+    public addTriangle(vert1: number, vert2: number, vert3: number): Geometry {
         if (this._vertices[vert1 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert1 + "] not found!")}
         if (this._vertices[vert2 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert2 + "] not found!")}
         if (this._vertices[vert3 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert3 + "] not found!")}
 
         this._triangles.push(vert1, vert2, vert3);
+
+        return this;
+    }
+
+    public addJointWeight(jointIndex: number, weight: number): Geometry {
+        this._jointWeights.push(jointIndex, weight);
+
+        return this;
     }
 
     public build(renderer: Renderer): void {
@@ -79,6 +94,12 @@ class Geometry {
             bufferMap.normalsBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.normalsBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._normals), gl.STATIC_DRAW);
+        }
+
+        if (this._jointWeights.length > 0) {
+            bufferMap.jointBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.jointBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._jointWeights), gl.STATIC_DRAW);
         }
 
         bufferMap.indexBuffer = gl.createBuffer();

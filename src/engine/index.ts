@@ -16,6 +16,7 @@ export { default as Text } from './entities/Text';
 export { default as CubeGeometry } from './geometries/CubeGeometry';
 export { default as PlaneGeometry } from './geometries/PlaneGeometry';
 export { default as WallGeometry } from './geometries/WallGeometry';
+export { default as CylinderGeometry } from './geometries/CylinderGeometry';
 export { default as Geometry } from './geometries/Geometry';
 
 export { default as MaterialForward } from './materials/MaterialForward';

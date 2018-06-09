@@ -56,10 +56,9 @@ class MaterialForward extends Material {
     }
 
     private _renderWebGLProperties(gl: WebGLRenderingContext): void {
-        const enabled = gl.isEnabled(gl.CULL_FACE);
-        if (this._renderBothFaces && enabled) {
+        if (this._renderBothFaces) {
             gl.disable(gl.CULL_FACE);
-        } else if (!enabled) {
+        } else {
             gl.enable(gl.CULL_FACE);
         }
     }

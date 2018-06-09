@@ -11,10 +11,16 @@ const LightPerPixel = {
             #endif
         `,
 
+        defineNormals: `
+            #ifdef USE_LIGHT
+                vec4 normals = vec4(aVertexNormal, 0.0);
+            #endif
+        `,
+
         passVaryings: `
             #ifdef USE_LIGHT
-                vNormal = (uNormalMatrix * vec4(aVertexNormal, 0.0)).xyz;
-                vWorldPosition = (uNormalMatrix * vec4(aVertexPosition, 1.0)).xyz;
+                vNormal = (uNormalMatrix * normals).xyz;
+                vWorldPosition = (uNormalMatrix * position).xyz;
             #endif
         `
     },
