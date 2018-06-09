@@ -49,7 +49,6 @@ class App {
         const mat5 = new MaterialForward();
         const inst5 = new Instance(geo5, mat5);
         inst5.position.set(20.0, -2.0, 0.0);
-        inst5.removeLightLayer(0).addLightLayer(1);
         mat5.setColor(1.0, 1.0, 1.0, 1.0);
         mat5.receiveLight = true;
 
@@ -69,7 +68,6 @@ class App {
         const lightRed = new PointLight();
         lightRed.color.set(1.0, 0.0, 0.0);
         lightRed.position.set(10.0, 0.0, 0.0);
-        lightRed.layer = 1;
         scene.addLight(lightRed);
 
         scene.init();
@@ -110,7 +108,6 @@ class App {
         render.clear();
 
         this._updateRotation(inst);
-        inst.position.y += 0.1;
 
         scene.update();
 

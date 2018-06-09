@@ -5,15 +5,13 @@ export default class Vector4 {
     private _y                  : number;
     private _z                  : number;
     private _w                  : number;
+    private _xyz                : Vector3;
     private _onChange           : Array<Function>;
-
-    public static UP           = new Vector4(0, 1, 0, 0);
-    public static LEFT         = new Vector4(0, 0, -1, 0);
-    public static FORWARD      = new Vector4(1, 0, 0, 0);
 
     constructor(x: number, y: number, z: number, w: number) {
         this._onChange = [];
         
+        this._xyz = new Vector3(x, y, z);
         this.set(x, y, z, w);
     }
 
@@ -30,6 +28,12 @@ export default class Vector4 {
         this._w = w;
 
         this._callOnChange();
+
+        return this;
+    }
+
+    public copy(vector: Vector4): Vector4 {
+        this.set(vector.x, vector.y, vector.z, vector.w);
 
         return this;
     }
@@ -94,7 +98,7 @@ export default class Vector4 {
     }
 
     public get xyz(): Vector3 {
-        return new Vector3(this.x, this.y, this.z);
+        return this._xyz.set(this.x, this.y, this.z);
     }
 
     public get length(): number {

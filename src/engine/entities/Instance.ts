@@ -23,6 +23,7 @@ class Instance {
     protected _parent             : Instance;
     protected _children           : Array<Instance>
     protected _lightLayers        : Array<number>;
+    protected _globalPosition     : Vector4;
 
     public readonly id                  : string;
     public readonly position            : Vector3;
@@ -42,6 +43,7 @@ class Instance {
         this._parent = null;
         this._destroyed = false;
         this._lightLayers = [0];
+        this._globalPosition = new Vector4(0.0, 0.0, 0.0, 0.0);
 
         this.position = new Vector3(0.0);
         this.position.onChange = () => this.emmitNeedsUpdate();
@@ -235,10 +237,7 @@ class Instance {
     public get globalPosition(): Vector3 {
         if (!this._parent) { return this.position; }
         
-        const t = this._parent.getTransformation();
-        const p = t.multiplyVector(new Vector4(this.position.x, this.position.y, this.position.z, 1));
-
-        return p.xyz;
+        return this._globalPosition.xyz;
     }
 
     public get globalRotation(): Quaternion {
@@ -250,6 +249,12 @@ class Instance {
     public emmitNeedsUpdate(): void {
         for (let i=0,child;child=this._children[i];i++) {
             child.emmitNeedsUpdate();
+        }
+        
+        if (this._parent) {
+            this._globalPosition.set(this.position.x, this.position.y, this.position.z, 1)
+            const t = this._parent.getTransformation();
+            this._globalPosition = t.multiplyVector(this._globalPosition);
         }
 
         this._needsUpdate = true;
