@@ -4,6 +4,7 @@ import Scene from '../Scene';
 import Geometry from '../geometries/Geometry';
 import Material from '../materials/Material';
 import Component from '../Component';
+import Matrix3 from '../math/Matrix3';
 import Matrix4 from '../math/Matrix4';
 import Vector3 from '../math/Vector3';
 import Vector4 from '../math/Vector4';
@@ -16,6 +17,7 @@ class Instance {
     protected _material           : Material;
     protected _transform          : Matrix4;
     protected _worldMatrix        : Matrix4;
+    protected _normalMatrix       : Matrix3;
     protected _scene              : Scene;
     protected _components         : Array<Component>;
     protected _destroyed          : boolean;
@@ -28,12 +30,14 @@ class Instance {
     public readonly id                  : string;
     public readonly position            : Vector3;
     public readonly rotation            : Quaternion;
+    public readonly scale               : Vector3;
     
     constructor(geometry: Geometry = null, material: Material = null) {
         this.id = createUUID();
 
         this._transform = Matrix4.createIdentity();
         this._worldMatrix = Matrix4.createIdentity();
+        this._normalMatrix = Matrix3.createIdentity();
         this._needsUpdate = true;
         this._geometry = geometry;
         this._material = material;
@@ -50,6 +54,9 @@ class Instance {
 
         this.rotation = new Quaternion();
         this.rotation.onChange = () => this.emmitNeedsUpdate();
+
+        this.scale = new Vector3(1.0, 1.0, 1.0);
+        this.scale.onChange = () => this.emmitNeedsUpdate();
     }
     
     public setScene(scene: Scene): void {
@@ -76,13 +83,17 @@ class Instance {
             return this._transform;
         }
 
-        this._transform.copy(this.rotation.getRotationMatrix());
+        this._transform.setScale(this.scale.x, this.scale.y, this.scale.z);
+
+        this._transform.multiply(this.rotation.getRotationMatrix());
 
         this._transform.translate(this.position.x, this.position.y, this.position.z);
 
         if (this._parent) {
             this._transform.multiply(this._parent.getTransformation());
         }
+
+        this._normalMatrix.setFromMatrix4(this._transform).invert().transpose();
 
         this._needsUpdate = false;
 
@@ -93,6 +104,8 @@ class Instance {
         this.position.set(0, 0, 0);
         this.rotation.setIdentity();
         this._transform.setIdentity();
+        this._worldMatrix.setIdentity();
+        this._normalMatrix.setIdentity();
         this._geometry = null;
         this._material = null;
         this._needsUpdate = true;
@@ -212,6 +225,12 @@ class Instance {
 
     public get worldMatrix(): Matrix4 {
         return this._worldMatrix;
+    }
+
+    public get normalMatrix(): Matrix3 {
+        this.getTransformation();
+        
+        return this._normalMatrix;
     }
 
     public get geometry(): Geometry {

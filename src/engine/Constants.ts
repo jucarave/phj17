@@ -1,6 +1,7 @@
 export const VERTICE_SIZE           = 3;
 export const NORMALS_SIZE           = 3;
 export const TEXCOORD_SIZE          = 2;
+export const JOINTS_SIZE            = 4;
 
 export const PI_2                   = Math.PI / 2;
 export const PI2                    = Math.PI * 2;

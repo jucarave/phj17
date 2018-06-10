@@ -1,6 +1,36 @@
-import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Texture, CylinderGeometry } from '../../engine';
+import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, CylinderGeometry } from '../../engine';
 
 const keyboard = new Array(255);
+
+function addJoinWeightsToGeometry(geometry: CylinderGeometry, steps: number) {
+    for (let i=0;i<steps;i++) {
+        geometry.addJointWeights(0, 1.0, 1, 0.0);
+        geometry.addJointWeights(0, 1.0, 1, 0.0);
+        geometry.addJointWeights(0, 0.75, 1, 0.25);
+        geometry.addJointWeights(0, 0.75, 1, 0.25);
+    }
+
+    for (let i=0;i<steps;i++) {
+        geometry.addJointWeights(0, 0.75, 1, 0.25);
+        geometry.addJointWeights(0, 0.75, 1, 0.25);
+        geometry.addJointWeights(0, 0.5, 1, 0.5);
+        geometry.addJointWeights(0, 0.5, 1, 0.5);
+    }
+
+    for (let i=0;i<steps;i++) {
+        geometry.addJointWeights(0, 0.5, 1, 0.5);
+        geometry.addJointWeights(0, 0.5, 1, 0.5);
+        geometry.addJointWeights(0, 0.25, 1, 0.75);
+        geometry.addJointWeights(0, 0.25, 1, 0.75);
+    }
+
+    for (let i=0;i<steps;i++) {
+        geometry.addJointWeights(0, 0.25, 1, 0.75);
+        geometry.addJointWeights(0, 0.25, 1, 0.75);
+        geometry.addJointWeights(0, 0.0, 1, 1.0);
+        geometry.addJointWeights(0, 0.0, 1, 1.0);
+    }
+}
 
 class App {
     constructor() {
@@ -16,17 +46,24 @@ class App {
         camera.position.set(10, 10, 10);
         camera.rotation.lookToDirection(new Vector3(-10,-6,-10));
         
-        const geo = new CylinderGeometry(2.0, 8, 10, 3);
-        const text = new Texture('img/texture.png');
+        const geo = new CylinderGeometry(2.0, 8, 10, 5);
+        addJoinWeightsToGeometry(geo, 8);
+
         const mat = new MaterialForward();
         const inst = new Instance(geo, mat);
 
-        mat.texture = text;
-        mat.setCulling(true);
+        inst.scale.x = 2;
+        inst.scale.z = 0.5;
+
+        mat.receiveLight = true;
+        mat.addConfig("USE_ARMATURE");
         mat.setTextureUv(1/32,1/32,16/32,16/32);
 
         const scene = new Scene();
         scene.addGameObject(inst);
+        scene.directionalLight.ambientIntensity = 0.2;
+        scene.directionalLight.diffuseIntensity = 0.8;
+        scene.directionalLight.direction.set(-1, -1, -1);
 
         scene.init();
         

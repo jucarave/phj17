@@ -5,7 +5,11 @@ import ForwardShader from '../shaders/Forward';
 import Instance from '../entities/Instance';
 import Camera from '../entities/Camera';
 import Scene from '../Scene';
-import { VERTICE_SIZE, TEXCOORD_SIZE, NORMALS_SIZE } from '../Constants';
+import { VERTICE_SIZE, TEXCOORD_SIZE, NORMALS_SIZE, JOINTS_SIZE } from '../Constants';
+import { Matrix4 } from '..';
+
+let angle = 0,
+    dir = 1;
 
 class MaterialForward extends Material {
     private _color           : Array<number>;
@@ -33,7 +37,8 @@ class MaterialForward extends Material {
         gl.uniformMatrix4fv(program.uniforms["uPosition"], false, instance.worldMatrix.data);
 
         if (this._receiveLight) {
-            gl.uniformMatrix4fv(program.uniforms["uNormalMatrix"], false, instance.getTransformation().data);
+            gl.uniformMatrix3fv(program.uniforms["uNormalMatrix"], false, instance.normalMatrix.data);
+            gl.uniformMatrix4fv(program.uniforms["uModelMatrix"], false, instance.getTransformation().data);
         }
     }
 
@@ -80,6 +85,18 @@ class MaterialForward extends Material {
         if (this._receiveLight) {
             gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.normalsBuffer);
             gl.vertexAttribPointer(program.attributes["aVertexNormal"], NORMALS_SIZE, gl.FLOAT, false, 0, 0);
+        }
+
+        const inverseBindPose = Matrix4.createTranslate(0.0, -5.0, 0.0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.jointBuffer);
+        gl.vertexAttribPointer(program.attributes["aJointWeights"], JOINTS_SIZE, gl.FLOAT, false, 0, 0);
+        gl.uniformMatrix4fv(program.uniforms["uBones[0]"], false, Matrix4.createIdentity().data);
+        gl.uniformMatrix4fv(program.uniforms["uBones[1]"], false, inverseBindPose.multiply(Matrix4.createXRotation(angle*Math.PI/180).translate(0.0, 5.0, 0.0)).data);
+
+        angle += 1 * dir;
+        if ((angle >= 45 && dir == 1) || (angle <= -45 && dir == -1)) {
+            dir *= -1;
         }
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);

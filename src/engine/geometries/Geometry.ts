@@ -60,18 +60,18 @@ class Geometry {
         return this;
     }
 
+    public addJointWeights(jointIndex1: number, weight1: number, jointIndex2: number, weight2: number): Geometry {
+        this._jointWeights.push(jointIndex1, weight1, jointIndex2, weight2);
+
+        return this;
+    }
+
     public addTriangle(vert1: number, vert2: number, vert3: number): Geometry {
         if (this._vertices[vert1 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert1 + "] not found!")}
         if (this._vertices[vert2 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert2 + "] not found!")}
         if (this._vertices[vert3 * VERTICE_SIZE] === undefined) { throw new Error("Vertice [" + vert3 + "] not found!")}
 
         this._triangles.push(vert1, vert2, vert3);
-
-        return this;
-    }
-
-    public addJointWeight(jointIndex: number, weight: number): Geometry {
-        this._jointWeights.push(jointIndex, weight);
 
         return this;
     }

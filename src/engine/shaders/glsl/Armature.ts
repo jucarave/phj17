@@ -10,12 +10,16 @@ const Armature = {
 
         transformVertices: `
             #ifdef USE_ARMATURE
-                totalPosition = vec4(0.0);
+                vec4 totalPosition = vec4(0.0);
                 #ifdef USE_LIGHT
-                    totalNormals = vec4(0.0);
+                    vec3 totalNormals = vec3(0.0);
                 #endif
 
-                float jointWeights[] = { aJointWeights.x, aJointWeights.y, aJointWeights.z, aJointWeights.w };
+                float jointWeights[4];
+                jointWeights[0] = aJointWeights.x;
+                jointWeights[1] = aJointWeights.y;
+                jointWeights[2] = aJointWeights.z;
+                jointWeights[3] = aJointWeights.w;
 
                 for (int i=0;i<4;i+=2) {
                     int index = int(jointWeights[i]);
@@ -24,7 +28,7 @@ const Armature = {
                     totalPosition += (uBones[index] * vec4(aVertexPosition, 1.0)) * weight;
                     
                     #ifdef USE_LIGHT
-                        totalNormals += (uBones[index] * vec4(aVertexNormal, 0.0)) * weight;
+                        totalNormals += ((uBones[index] * vec4(aVertexNormal, 0.0)) * weight).xyz;
                     #endif
                 }
 

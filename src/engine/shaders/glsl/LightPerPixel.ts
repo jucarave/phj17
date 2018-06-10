@@ -4,7 +4,8 @@ const LightPerPixel = {
             #ifdef USE_LIGHT
                 attribute vec3 aVertexNormal;
 
-                uniform mat4 uNormalMatrix;
+                uniform mat3 uNormalMatrix;
+                uniform mat4 uModelMatrix;
 
                 varying vec3 vNormal;
                 varying vec3 vWorldPosition;
@@ -13,14 +14,14 @@ const LightPerPixel = {
 
         defineNormals: `
             #ifdef USE_LIGHT
-                vec4 normals = vec4(aVertexNormal, 0.0);
+                vec3 normals = aVertexNormal;
             #endif
         `,
 
         passVaryings: `
             #ifdef USE_LIGHT
-                vNormal = (uNormalMatrix * normals).xyz;
-                vWorldPosition = (uNormalMatrix * position).xyz;
+                vNormal = uNormalMatrix * normals;
+                vWorldPosition = (uModelMatrix * position).xyz;
             #endif
         `
     },
