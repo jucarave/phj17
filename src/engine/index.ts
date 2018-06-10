@@ -24,6 +24,7 @@ export { default as Material } from './materials/Material';
 
 export { default as Euler } from './math/Euler';
 export { default as Quaternion } from './math/Quaternion';
+export { default as Matrix3 } from './math/Matrix3';
 export { default as Matrix4 } from './math/Matrix4';
 export { default as Vector3 } from './math/Vector3';
 export { default as Vector4 } from './math/Vector4';

@@ -1,29 +1,31 @@
 import Vector4 from '../math/Vector4';
 
+const MATRIX_LENGTH = 16;
+
 class Matrix4 {
     public data                 : Array<number>;
     public inUse                : boolean;
 
     constructor(...values: Array<number>) {
-        this.data = new Array(16);
+        this.data = new Array(MATRIX_LENGTH);
 
         if (values.length == 0) { return; }
 
-        if (values.length != 16) {
-            throw new Error("Matrix4 needs 16 values to be created");
+        if (values.length != MATRIX_LENGTH) {
+            throw new Error(`Matrix4 needs ${MATRIX_LENGTH} values to be created`);
         }
 
-        for (let i=0;i<16;i++) {
+        for (let i=0;i<MATRIX_LENGTH;i++) {
             this.data[i] = values[i];
         }
     }
 
     public set(...values: Array<number>): Matrix4 {
-        if (values.length != 16) {
-            throw new Error("Matrix4 needs 16 values to be created");
+        if (values.length != MATRIX_LENGTH) {
+            throw new Error(`Matrix4 needs ${MATRIX_LENGTH} values to be created`);
         }
 
-        for (let i=0;i<16;i++) {
+        for (let i=0;i<MATRIX_LENGTH;i++) {
             this.data[i] = values[i];
         }
 
@@ -31,7 +33,7 @@ class Matrix4 {
     }
 
     public copy(matrix: Matrix4): Matrix4 {
-        for (let i=0;i<16;i++) {
+        for (let i=0;i<MATRIX_LENGTH;i++) {
             this.data[i] = matrix.data[i];
         }
 
@@ -126,7 +128,7 @@ class Matrix4 {
     public printDebug(): void {
         let str: string = "";
 
-        for (let i=0;i<16;i++) {
+        for (let i=0;i<MATRIX_LENGTH;i++) {
             let n = this.data[i];
 
             if (i % 4 == 0) { 
@@ -141,9 +143,11 @@ class Matrix4 {
 
     public invert(): Matrix4 {
         const m = this.data,
-            determinant = this.determinant,
+            determinant = this.determinant;
 
-            m00 = m[4+2]*m[8+3]*m[12+1] - m[4+3]*m[8+2]*m[12+1] + m[4+3]*m[8+1]*m[12+2] - m[4+1]*m[8+3]*m[12+2] - m[4+2]*m[8+1]*m[12+3] + m[4+1]*m[8+2]*m[12+3],
+        if (determinant == 0) return null;
+
+        const m00 = m[4+2]*m[8+3]*m[12+1] - m[4+3]*m[8+2]*m[12+1] + m[4+3]*m[8+1]*m[12+2] - m[4+1]*m[8+3]*m[12+2] - m[4+2]*m[8+1]*m[12+3] + m[4+1]*m[8+2]*m[12+3],
             m01 = m[3]*m[8+2]*m[12+1] - m[2]*m[8+3]*m[12+1] - m[3]*m[8+1]*m[12+2] + m[1]*m[8+3]*m[12+2] + m[2]*m[8+1]*m[12+3] - m[1]*m[8+2]*m[12+3],
             m02 = m[2]*m[4+3]*m[12+1] - m[3]*m[4+2]*m[12+1] + m[3]*m[4+1]*m[12+2] - m[1]*m[4+3]*m[12+2] - m[2]*m[4+1]*m[12+3] + m[1]*m[4+2]*m[12+3],
             m03 = m[3]*m[4+2]*m[8+1] - m[2]*m[4+3]*m[8+1] - m[3]*m[4+1]*m[8+2] + m[1]*m[4+3]*m[8+2] + m[2]*m[4+1]*m[8+3] - m[1]*m[4+2]*m[8+3],
