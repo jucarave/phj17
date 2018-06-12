@@ -9,11 +9,15 @@ export { default as Scene } from './Scene';
 export { default as Texture } from './Texture';
 export * from './Utils';
 
+export { default as Armature } from './animation/Armature';
+export { default as Joint } from './animation/Joint';
+
 export { default as Instance } from './entities/Instance';
 export { default as Camera } from './entities/Camera';
 export { default as Text } from './entities/Text';
 
 export { default as CubeGeometry } from './geometries/CubeGeometry';
+export { default as JSONGeometry } from './geometries/JSONGeometry';
 export { default as PlaneGeometry } from './geometries/PlaneGeometry';
 export { default as WallGeometry } from './geometries/WallGeometry';
 export { default as CylinderGeometry } from './geometries/CylinderGeometry';

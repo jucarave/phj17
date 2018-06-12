@@ -1,4 +1,6 @@
-import Vector4 from '../math/Vector4';
+import Vector4 from './Vector4';
+import Quaternion from './Quaternion';
+import Vector3 from './Vector3';
 
 const MATRIX_LENGTH = 16;
 
@@ -189,6 +191,58 @@ class Matrix4 {
         return this;
     }
 
+    public getQuaternion(): Quaternion {
+        const q = new Quaternion(),
+            m = this.data,
+            tr = m[0] + m[5] + m[10];
+
+        if (tr > 0) { 
+            const S = Math.sqrt(tr+1.0) * 2;
+            q.s = 0.25 * S;
+            q.imaginary.set(
+                (m[8+1] - m[4+2]) / S,
+                (m[0+2] - m[8+0]) / S, 
+                (m[4+0] - m[0+1]) / S
+            ); 
+        } else if ((m[0] > m[4+1]) && (m[0] > m[8+2])) { 
+            const S = Math.sqrt(1.0 + m[0] - m[4+1] - m[8+2]) * 2;
+            q.s = (m[8+1] - m[4+2]) / S;
+            q.imaginary.set(
+                0.25 * S,
+                (m[1] + m[4]) / S,
+                (m[2] + m[8]) / S
+            );
+        } else if (m[4+1] > m[8+2]) { 
+            const S = Math.sqrt(1.0 + m[4+1] - m[0] - m[8+2]) * 2;
+            q.s = (m[2] - m[8]) / S;
+            q.imaginary.set(
+                (m[1] + m[4]) / S, 
+                0.25 * S,
+                (m[4+2] + m[8+1]) / S
+            );
+        } else { 
+            const S = Math.sqrt(1.0 + m[8+2] - m[0] - m[4+1]) * 2;
+            q.s = (m[4] - m[1]) / S;
+            q.imaginary.set(
+                (m[2] + m[8]) / S,
+                (m[4+2] + m[8+1]) / S,
+                0.25 * S
+            );
+        }
+
+        return q;
+    }
+
+    public getTranslation(): Vector3 {
+        const m = this.data;
+
+        return new Vector3(
+            m[3],
+            m[7],
+            m[11]
+        );
+    }
+
     public get determinant(): number {
         const m = this.data;
 
@@ -296,6 +350,16 @@ class Matrix4 {
              S, C, 0, 0,
              0, 0, 1, 0,
              0, 0, 0, 1
+        );
+    }
+
+    public static createFromArray(data: Array<number>): Matrix4 {
+        const d = data;
+        return new Matrix4(
+            d[0], d[1], d[2], d[3],
+            d[4], d[5], d[6], d[7],
+            d[8], d[9], d[10], d[11],
+            d[12], d[13], d[14], d[15]
         );
     }
 }

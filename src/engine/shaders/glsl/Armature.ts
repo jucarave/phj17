@@ -1,15 +1,15 @@
 const Armature = {
     vertexShader: {
         definitions: `
-            #ifdef USE_ARMATURE
+            #ifdef USE_SKIN
                 attribute vec4 aJointWeights;
 
-                uniform mat4 uBones[2];
+                uniform mat4 uJoints[2];
             #endif
         `,
 
         transformVertices: `
-            #ifdef USE_ARMATURE
+            #ifdef USE_SKIN
                 vec4 totalPosition = vec4(0.0);
                 #ifdef USE_LIGHT
                     vec3 totalNormals = vec3(0.0);
@@ -25,10 +25,10 @@ const Armature = {
                     int index = int(jointWeights[i]);
                     float weight = jointWeights[i + 1];
 
-                    totalPosition += (uBones[index] * vec4(aVertexPosition, 1.0)) * weight;
+                    totalPosition += (uJoints[index] * vec4(aVertexPosition, 1.0)) * weight;
                     
                     #ifdef USE_LIGHT
-                        totalNormals += ((uBones[index] * vec4(aVertexNormal, 0.0)) * weight).xyz;
+                        totalNormals += ((uJoints[index] * vec4(aVertexNormal, 0.0)) * weight).xyz;
                     #endif
                 }
 

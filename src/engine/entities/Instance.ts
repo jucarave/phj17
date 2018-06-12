@@ -11,6 +11,7 @@ import Vector4 from '../math/Vector4';
 import Quaternion from '../math/Quaternion';
 import { createUUID } from '../Utils';
 import PointLight from '../lights/PointLight';
+import Armature from '../animation/Armature';
 
 class Instance {
     protected _geometry           : Geometry;
@@ -26,6 +27,7 @@ class Instance {
     protected _children           : Array<Instance>
     protected _lightLayers        : Array<number>;
     protected _globalPosition     : Vector4;
+    protected _armature           : Armature;
 
     public readonly id                  : string;
     public readonly position            : Vector3;
@@ -48,6 +50,7 @@ class Instance {
         this._destroyed = false;
         this._lightLayers = [0];
         this._globalPosition = new Vector4(0.0, 0.0, 0.0, 0.0);
+        this._armature = null;
 
         this.position = new Vector3(0.0);
         this.position.onChange = () => this.emmitNeedsUpdate();
@@ -263,6 +266,16 @@ class Instance {
         if (!this._parent) { return this.rotation; }
 
         return this.rotation.clone().multiplyQuaternion(this._parent.globalRotation);
+    }
+
+    public set armature(armature: Armature) {
+        (armature != null)? this._material.addConfig("USE_SKIN") : this._material.removeConfig("USE_SKIN");
+
+        this._armature = armature;
+    }
+
+    public get armature(): Armature {
+        return this._armature;
     }
 
     public emmitNeedsUpdate(): void {

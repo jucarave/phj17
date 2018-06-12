@@ -1,35 +1,23 @@
-import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, CylinderGeometry } from '../../engine';
+import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Joint, Armature, loadJSON, JSONGeometry } from '../../engine';
+import { JSONModel } from '../../engine/geometries/JSONGeometry';
 
-const keyboard = new Array(255);
+const keyboard = new Array(255)
+let topJoint: Joint;
 
-function addJoinWeightsToGeometry(geometry: CylinderGeometry, steps: number) {
-    for (let i=0;i<steps;i++) {
-        geometry.addJointWeights(0, 1.0, 1, 0.0);
-        geometry.addJointWeights(0, 1.0, 1, 0.0);
-        geometry.addJointWeights(0, 0.75, 1, 0.25);
-        geometry.addJointWeights(0, 0.75, 1, 0.25);
-    }
+let loadedInst: Instance;
+function loadModel(scene: Scene) {
+    loadJSON("data/cube.json", (model: JSONModel) => {
+        const geo = new JSONGeometry(model);
+        const mat = new MaterialForward();
+        loadedInst = new Instance(geo, mat);
 
-    for (let i=0;i<steps;i++) {
-        geometry.addJointWeights(0, 0.75, 1, 0.25);
-        geometry.addJointWeights(0, 0.75, 1, 0.25);
-        geometry.addJointWeights(0, 0.5, 1, 0.5);
-        geometry.addJointWeights(0, 0.5, 1, 0.5);
-    }
+        mat.receiveLight = true;
 
-    for (let i=0;i<steps;i++) {
-        geometry.addJointWeights(0, 0.5, 1, 0.5);
-        geometry.addJointWeights(0, 0.5, 1, 0.5);
-        geometry.addJointWeights(0, 0.25, 1, 0.75);
-        geometry.addJointWeights(0, 0.25, 1, 0.75);
-    }
+        loadedInst.armature = Armature.createArmatureFromJSONModel(model);
+        topJoint = loadedInst.armature.joints[0];
 
-    for (let i=0;i<steps;i++) {
-        geometry.addJointWeights(0, 0.25, 1, 0.75);
-        geometry.addJointWeights(0, 0.25, 1, 0.75);
-        geometry.addJointWeights(0, 0.0, 1, 1.0);
-        geometry.addJointWeights(0, 0.0, 1, 1.0);
-    }
+        scene.addGameObject(loadedInst);
+    });
 }
 
 class App {
@@ -46,28 +34,16 @@ class App {
         camera.position.set(10, 10, 10);
         camera.rotation.lookToDirection(new Vector3(-10,-6,-10));
         
-        const geo = new CylinderGeometry(2.0, 8, 10, 5);
-        addJoinWeightsToGeometry(geo, 8);
-
-        const mat = new MaterialForward();
-        const inst = new Instance(geo, mat);
-
-        inst.scale.x = 2;
-        inst.scale.z = 0.5;
-
-        mat.receiveLight = true;
-        mat.addConfig("USE_ARMATURE");
-        mat.setTextureUv(1/32,1/32,16/32,16/32);
-
         const scene = new Scene();
-        scene.addGameObject(inst);
         scene.directionalLight.ambientIntensity = 0.2;
         scene.directionalLight.diffuseIntensity = 0.8;
         scene.directionalLight.direction.set(-1, -1, -1);
 
+        loadModel(scene);
+
         scene.init();
         
-        this._loop(render, camera, inst, scene);
+        this._loop(render, camera, loadedInst, scene);
     }
 
     private _handleKeyboard(key: number, status: number): void {
@@ -94,6 +70,14 @@ class App {
             inst.rotation.rotateZ(-angle);
         }
 
+        if (keyboard[79]) {
+            topJoint.rotation.rotateZ(angle);
+            loadedInst.armature.updatePose();
+        } else if (keyboard[76]) {
+            topJoint.rotation.rotateZ(-angle);
+            loadedInst.armature.updatePose();
+        }
+
         if (keyboard[82]) {
             inst.rotation.setIdentity();
         }
@@ -108,7 +92,7 @@ class App {
 
         scene.render(render, camera);
 
-        requestAnimationFrame(() => this._loop(render, camera, inst, scene));
+        requestAnimationFrame(() => this._loop(render, camera, loadedInst, scene));
     }
 }
 

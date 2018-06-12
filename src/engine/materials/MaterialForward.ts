@@ -6,10 +6,6 @@ import Instance from '../entities/Instance';
 import Camera from '../entities/Camera';
 import Scene from '../Scene';
 import { VERTICE_SIZE, TEXCOORD_SIZE, NORMALS_SIZE, JOINTS_SIZE } from '../Constants';
-import { Matrix4 } from '..';
-
-let angle = 0,
-    dir = 1;
 
 class MaterialForward extends Material {
     private _color           : Array<number>;
@@ -87,19 +83,23 @@ class MaterialForward extends Material {
             gl.vertexAttribPointer(program.attributes["aVertexNormal"], NORMALS_SIZE, gl.FLOAT, false, 0, 0);
         }
 
-        const inverseBindPose = Matrix4.createTranslate(0.0, -5.0, 0.0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
+    }
+
+    private _renderArmature(renderer: Renderer, instance: Instance): void {
+        if (!instance.armature) { return; }
+        
+        const gl = renderer.GL,
+            program = this.shader.getProgram(renderer),
+            bufferMap = instance.geometry.getBuffer(renderer);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.jointBuffer);
         gl.vertexAttribPointer(program.attributes["aJointWeights"], JOINTS_SIZE, gl.FLOAT, false, 0, 0);
-        gl.uniformMatrix4fv(program.uniforms["uBones[0]"], false, Matrix4.createIdentity().data);
-        gl.uniformMatrix4fv(program.uniforms["uBones[1]"], false, inverseBindPose.multiply(Matrix4.createXRotation(angle*Math.PI/180).translate(0.0, 5.0, 0.0)).data);
 
-        angle += 1 * dir;
-        if ((angle >= 45 && dir == 1) || (angle <= -45 && dir == -1)) {
-            dir *= -1;
+        const joints = instance.armature.joints;
+        for (let i=0,joint;joint=joints[i];i++) {
+            gl.uniformMatrix4fv(program.uniforms[`uJoints[${i}]`], false, joint.animationMatrix.data);
         }
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferMap.indexBuffer);
     }
 
     private _renderLights(renderer: Renderer, instance: Instance, scene: Scene): void {
@@ -156,6 +156,7 @@ class MaterialForward extends Material {
         this._renderMaterialProperties(renderer);
         this._renderLights(renderer, instance, scene);
         this._renderGeometryProperties(renderer, instance);
+        this._renderArmature(renderer, instance);
 
         const gl = renderer.GL,
             geometry = instance.geometry;

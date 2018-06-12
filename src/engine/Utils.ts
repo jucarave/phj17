@@ -75,3 +75,9 @@ export function httpRequest(url: string, callback: Function): void {
 
     http.send();
 }
+
+export function loadJSON(url: string, callback: Function): void {
+    httpRequest(url, (responseText: string) => {
+        callback(JSON.parse(responseText));
+    });
+}
