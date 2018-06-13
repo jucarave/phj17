@@ -16,6 +16,9 @@ function loadModel(scene: Scene) {
         loadedInst.armature = Armature.createArmatureFromJSONModel(model);
         topJoint = loadedInst.armature.joints[0];
 
+        topJoint.rotation.rotateZ(45*Math.PI/180);
+        loadedInst.armature.updatePose();
+
         scene.addGameObject(loadedInst);
     });
 }
