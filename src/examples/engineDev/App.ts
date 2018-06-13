@@ -1,12 +1,12 @@
-import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Joint, Armature, loadJSON, JSONGeometry } from '../../engine';
+import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry } from '../../engine';
 import { JSONModel } from '../../engine/geometries/JSONGeometry';
 
 const keyboard = new Array(255)
-let topJoint: Joint;
+let currentJoint = 0;
 
 let loadedInst: Instance;
 function loadModel(scene: Scene) {
-    loadJSON("data/cube.json", (model: JSONModel) => {
+    loadJSON("data/creature.json", (model: JSONModel) => {
         const geo = new JSONGeometry(model);
         const mat = new MaterialForward();
         loadedInst = new Instance(geo, mat);
@@ -14,9 +14,6 @@ function loadModel(scene: Scene) {
         mat.receiveLight = true;
 
         loadedInst.armature = Armature.createArmatureFromJSONModel(model);
-        topJoint = loadedInst.armature.joints[0];
-
-        topJoint.rotation.rotateZ(45*Math.PI/180);
         loadedInst.armature.updatePose();
 
         scene.addGameObject(loadedInst);
@@ -24,8 +21,7 @@ function loadModel(scene: Scene) {
 }
 
 class App {
-    constructor() {
-        const render = new Renderer(854, 480);
+    constructor() {const render = new Renderer(854, 480);
         document.getElementById("divGame").appendChild(render.canvas);
 
         Input.init(render.canvas);
@@ -73,12 +69,21 @@ class App {
             inst.rotation.rotateZ(-angle);
         }
 
-        if (keyboard[79]) {
-            topJoint.rotation.rotateZ(angle);
-            loadedInst.armature.updatePose();
-        } else if (keyboard[76]) {
-            topJoint.rotation.rotateZ(-angle);
-            loadedInst.armature.updatePose();
+        if (loadedInst) {
+            const joint = loadedInst.armature.joints[currentJoint];
+            if (keyboard[79]) {
+                joint.rotation.rotateZ(angle);
+                loadedInst.armature.updatePose();
+            } else if (keyboard[76]) {
+                joint.rotation.rotateZ(-angle);
+                loadedInst.armature.updatePose();
+            }
+        }
+
+        if (keyboard[32] == 1) {
+            keyboard[32] = 2;
+            currentJoint += 1;
+            if (currentJoint >= loadedInst.armature.joints.length) { currentJoint = 0; }
         }
 
         if (keyboard[82]) {

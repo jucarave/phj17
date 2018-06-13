@@ -34,23 +34,22 @@ class Joint {
     }
 
     public updateAnimationMatrix(parentTransformationMatrix: Matrix4): void {
-        const transformMatrix = this.rotation.getRotationMatrix()
-            .multiply(Matrix4.createTranslate(this.position.x, this.position.y, this.position.z));
+        const transformMatrix = Matrix4.createIdentity().copy(parentTransformationMatrix)
+            .multiply(this.rotation.getRotationMatrix()
+                .translate(this.position.x, this.position.y, this.position.z)
+            );
 
-        transformMatrix.multiply(parentTransformationMatrix);
+        this._animationMatrix.copy(transformMatrix)
+            .multiply(this._invBindMatrix);
 
-        this._animationMatrix.copy(this._invBindMatrix)
-            .multiply(transformMatrix);
-
-            for (let i=0,child;child=this.children[i];i++) {
-                child.updateAnimationMatrix(transformMatrix);
-            }
+        for (let i=0,child;child=this.children[i];i++) {
+            child.updateAnimationMatrix(transformMatrix);
+        }
     }
 
     public calculateBindMatrix(parentMatrix: Matrix4): Joint {
         this._bindMatrix.copy(parentMatrix)
-            .multiply(this.rotation.getRotationMatrix())
-            .multiply(Matrix4.createTranslate(this.position.x, this.position.y, this.position.z));
+            .multiply(this.rotation.getRotationMatrix().translate(this.position.x, this.position.y, this.position.z));
         
         this._invBindMatrix.copy(this._bindMatrix)
             .invert();

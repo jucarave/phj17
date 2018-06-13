@@ -126,7 +126,7 @@ function parseJoints(joints) {
     var ret = [];
     
     for (var i=0,joint;joint=joints[i];i++) {
-        var name = joint._attributes.name;
+        var name = joint._attributes.sid;
         var matrix = parseData(joint.matrix._text.split(" "), 1);
 
         var childs = null;
@@ -153,10 +153,11 @@ module.exports = {
         var libraryGeometries = result.COLLADA.library_geometries;
         var libraryControllers = result.COLLADA.library_controllers;
         var libraryVisualScenes = result.COLLADA.library_visual_scenes;
+        var rootJoint = libraryVisualScenes.visual_scene.node[0].node;
         
         parseMesh(libraryGeometries.geometry);
-        parseWeights(libraryControllers.controller);
-        JSONModel.skin.joints = parseJoints([libraryVisualScenes.visual_scene.node[0].node])[0];
+        if (libraryControllers) parseWeights(libraryControllers.controller);
+        if (rootJoint) JSONModel.skin.joints = parseJoints([rootJoint])[0];
 
         var out = file.replace(".dae", ".json");
 

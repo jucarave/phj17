@@ -4,7 +4,7 @@ const Armature = {
             #ifdef USE_SKIN
                 attribute vec4 aJointWeights;
 
-                uniform mat4 uJoints[2];
+                uniform mat4 uJoints[20];
             #endif
         `,
 

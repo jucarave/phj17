@@ -134,9 +134,9 @@ class Matrix4 {
             let n = this.data[i];
 
             if (i % 4 == 0) { 
-                str += "\n" + n.toFixed(2); 
+                str += "\n" + n.toFixed(4); 
             } else {
-                str += " " + n.toFixed(2);
+                str += " " + n.toFixed(4);
             }
         }
 
