@@ -34,13 +34,12 @@ class Joint {
     }
 
     public updateAnimationMatrix(parentTransformationMatrix: Matrix4): void {
-        const transformMatrix = Matrix4.createIdentity().copy(parentTransformationMatrix)
-            .multiply(this.rotation.getRotationMatrix()
-                .translate(this.position.x, this.position.y, this.position.z)
-            );
+        const transformMatrix = this.rotation.getRotationMatrix()
+            .translate(this.position.x, this.position.y, this.position.z)
+            .multiply(parentTransformationMatrix);
 
-        this._animationMatrix.copy(transformMatrix)
-            .multiply(this._invBindMatrix);
+        this._animationMatrix.copy(this._invBindMatrix)
+            .multiply(transformMatrix);
 
         for (let i=0,child;child=this.children[i];i++) {
             child.updateAnimationMatrix(transformMatrix);
@@ -48,8 +47,8 @@ class Joint {
     }
 
     public calculateBindMatrix(parentMatrix: Matrix4): Joint {
-        this._bindMatrix.copy(parentMatrix)
-            .multiply(this.rotation.getRotationMatrix().translate(this.position.x, this.position.y, this.position.z));
+        this._bindMatrix.copy(this.rotation.getRotationMatrix().translate(this.position.x, this.position.y, this.position.z))
+            .multiply(parentMatrix);
         
         this._invBindMatrix.copy(this._bindMatrix)
             .invert();

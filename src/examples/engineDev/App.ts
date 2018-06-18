@@ -6,7 +6,7 @@ let currentJoint = 0;
 
 let loadedInst: Instance;
 function loadModel(scene: Scene) {
-    loadJSON("data/creature.json", (model: JSONModel) => {
+    loadJSON("data/animTest.json", (model: JSONModel) => {
         const geo = new JSONGeometry(model);
         const mat = new MaterialForward();
         loadedInst = new Instance(geo, mat);
@@ -15,6 +15,8 @@ function loadModel(scene: Scene) {
 
         loadedInst.armature = Armature.createArmatureFromJSONModel(model);
         loadedInst.armature.updatePose();
+
+        loadedInst.rotation.rotateX(90*Math.PI/180);
 
         scene.addGameObject(loadedInst);
     });
@@ -72,10 +74,10 @@ class App {
         if (loadedInst) {
             const joint = loadedInst.armature.joints[currentJoint];
             if (keyboard[79]) {
-                joint.rotation.rotateZ(angle);
+                joint.rotation.rotateX(angle);
                 loadedInst.armature.updatePose();
             } else if (keyboard[76]) {
-                joint.rotation.rotateZ(-angle);
+                joint.rotation.rotateX(-angle);
                 loadedInst.armature.updatePose();
             }
         }

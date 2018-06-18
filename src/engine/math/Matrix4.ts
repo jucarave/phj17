@@ -237,9 +237,9 @@ class Matrix4 {
         const m = this.data;
 
         return new Vector3(
-            m[3],
-            m[7],
-            m[11]
+            m[12],
+            m[13],
+            m[14]
         );
     }
 

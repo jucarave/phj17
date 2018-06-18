@@ -35,7 +35,7 @@ class Armature {
         let ret: Array<Joint> = [];
 
         for (let i=0,jointModel;jointModel=joints[i];i++) {
-            const bindMatrix = Matrix4.createFromArray(jointModel.bindMatrix),
+            const bindMatrix = Matrix4.createFromArray(jointModel.bindMatrix).transpose(),
                 joint = new Joint(jointModel.name, jointModel.index, bindMatrix.getTranslation(), bindMatrix.getQuaternion());
             
             ret.push(joint);
