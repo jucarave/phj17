@@ -72,11 +72,11 @@ class Animation3D {
     }
 
     public get currentKeyframe(): KeyFrame {
-        return this._keyframes[this.frameIndex << 0];
+        return this._keyframes[this.frameIndex];
     }
 
     public get nextFrame(): KeyFrame {
-        let frame = (this.frameIndex << 0) + 1;
+        let frame = this.frameIndex + 1;
         if (frame >= this._keyframes.length) { frame =  0; }
 
         return this._keyframes[frame];

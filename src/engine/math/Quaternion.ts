@@ -7,6 +7,7 @@ class Quaternion {
     private _axisX               : Vector3;
     private _axisY               : Vector3;
     private _axisZ               : Vector3;
+    private _rotationMatrix      : Matrix4;
     
     public _onChange             : Array<Function>;
     public local                 : boolean;
@@ -18,6 +19,8 @@ class Quaternion {
         this._axisX = Vector3.RIGHT.clone();
         this._axisY = Vector3.DOWN.clone();
         this._axisZ = Vector3.BACK.clone();
+
+        this._rotationMatrix = Matrix4.createIdentity();
 
         this._onChange = [];
 
@@ -117,7 +120,7 @@ class Quaternion {
     }
 
     public getRotationMatrix(): Matrix4 {
-        const ret = Matrix4.createIdentity(),
+        const ret = this._rotationMatrix.setIdentity(),
         
             qx = this._imaginary.x,
             qy = this._imaginary.y,
