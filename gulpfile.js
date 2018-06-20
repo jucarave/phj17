@@ -1,10 +1,12 @@
 var gulp = require('gulp');
 var bundle = require('./tasks/bundle');
-var daeToJSON = require('./tasks/daeToJSON');
+var parseDAEModel = require('./tasks/parseDAEModel');
+var parseDAEAnimations = require('./tasks/parseDAEAnimations');
 
 gulp.task("bundle", bundle.build);
 gulp.task("watch", bundle.watch);
 
-gulp.task("daeToJSON", daeToJSON.convert);
+gulp.task("parseDAEModel", parseDAEModel.convert);
+gulp.task("parseDAEAnimations", parseDAEAnimations.convert);
 
 gulp.task("default", ["bundle"]);

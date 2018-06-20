@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry } from '../../engine';
+import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry, Animation3D } from '../../engine';
 import { JSONModel } from '../../engine/geometries/JSONGeometry';
 
 const keyboard = new Array(255)
@@ -19,6 +19,11 @@ function loadModel(scene: Scene) {
         loadedInst.rotation.rotateX(90*Math.PI/180);
 
         scene.addGameObject(loadedInst);
+
+        loadJSON("data/animTest-animation.json", (model: any) => {
+            const animation = Animation3D.createFromJSONAnimation(model.animations);
+            loadedInst.armature.animation = animation;
+        });
     });
 }
 

@@ -1,10 +1,12 @@
 import Joint from './Joint';
+import Animation3D from './Animation3D';
 import Matrix4 from '../math/Matrix4';
 import { JSONModel, JSONJoint } from '../geometries/JSONGeometry';
 
 class Armature {
     private _root           : Joint;
     private _rootMatrix     : Matrix4;
+    private _animation      : Animation3D;
     
     public readonly joints         : Array<Joint>;
 
@@ -12,6 +14,24 @@ class Armature {
         this._root = rootJoint;
         this._rootMatrix = Matrix4.createIdentity();
         this.joints = [];
+        this._animation = null;
+    }
+
+    public update(): Armature {
+        if (!this._animation) { return this; }
+
+        this._animation.update();
+
+        for (let i=0,len=this.joints.length;i<len;i++) {
+            const joint = this.joints[i];
+
+            joint.position.copy(this._animation.getPosition(joint.name));
+            joint.rotation.copy(this._animation.getRotation(joint.name));
+        }
+
+        this.updatePose();
+        
+        return this;
     }
 
     public updatePose(): Armature {
@@ -29,6 +49,14 @@ class Armature {
         }
 
         return this;
+    }
+
+    public get animation(): Animation3D {
+        return this._animation;
+    }
+
+    public set animation(animation: Animation3D) {
+        this._animation = animation;
     }
 
     private static getModelJoints(joints: Array<JSONJoint>): Array<Joint> {

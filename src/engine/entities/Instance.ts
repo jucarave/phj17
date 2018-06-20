@@ -127,6 +127,10 @@ class Instance {
         for (let i=0,component;component=this._components[i];i++) {
             component.update();
         };
+
+        if (this._armature) {
+            this._armature.update();
+        }
     }
 
     public destroy(): void {
