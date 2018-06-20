@@ -15,6 +15,8 @@ interface AnimationJoints {
 class Animation3D {
     private _keyframes          : Array<KeyFrame>;
     private _time               : number;
+    private _position           : Vector3;
+    private _rotation           : Quaternion;
     
     public frameIndex           : number;
     public speed                : number;
@@ -22,17 +24,35 @@ class Animation3D {
     constructor(keyframes: Array<KeyFrame>) {
         this._keyframes = keyframes;
         this._time = 0;
+        this._position = new Vector3();
+        this._rotation = new Quaternion();
 
         this.frameIndex = 0;
         this.speed = 1 / 60;
     }
 
     public getPosition(jointName: string): Vector3 {
-        return this.currentKeyframe.getJoint(jointName).position;
+        const ckf = this.currentKeyframe,
+            nkf = this.nextFrame,
+            
+            time = (this._time - ckf.time) / (nkf.time - ckf.time);
+
+        this._position.copy(this.currentKeyframe.getJoint(jointName).position);
+        this._position.lerp(nkf.getJoint(jointName).position, time);
+        
+        return this._position;
     }
 
     public getRotation(jointName: string): Quaternion {
-        return this.currentKeyframe.getJoint(jointName).rotation;
+        const ckf = this.currentKeyframe,
+            nkf = this.nextFrame,
+            
+            time = (this._time - ckf.time) / (nkf.time - ckf.time);
+
+        this._rotation.copy(this.currentKeyframe.getJoint(jointName).rotation);
+        this._rotation.slerp(nkf.getJoint(jointName).rotation, time);
+        
+        return this._rotation;
     }
 
     public update(): Animation3D {
@@ -56,7 +76,7 @@ class Animation3D {
     }
 
     public get nextFrame(): KeyFrame {
-        let frame = this.frameIndex << 0;
+        let frame = (this.frameIndex << 0) + 1;
         if (frame >= this._keyframes.length) { frame =  0; }
 
         return this._keyframes[frame];

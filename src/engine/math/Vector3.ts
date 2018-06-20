@@ -104,6 +104,16 @@ export default class Vector3 {
         return this;
     }
 
+    public lerp(v: Vector3, time: number): Vector3 {
+        this.set(
+            this.x + (v.x - this.x) * time,
+            this.y + (v.y - this.y) * time,
+            this.z + (v.z - this.z) * time
+        );
+        
+        return this;
+    }
+
     public clone(): Vector3 {
         return new Vector3(this.x, this.y, this.z);
     }

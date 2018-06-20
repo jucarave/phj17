@@ -163,6 +163,42 @@ class Quaternion {
         this.rotateX(-pitch);
     }
 
+    public slerp(q: Quaternion, time: number): Quaternion {
+        const im = this._imaginary,
+            qIm = q.imaginary,
+            cosHalfTheta = this._s * q.s + Vector3.dot(im, qIm);
+
+        if (Math.abs(cosHalfTheta) >= 1.0) {
+            return this;
+        }
+
+        const halfTheta = Math.acos(cosHalfTheta),
+            sinHalfTheta = Math.sqrt(1.0 - cosHalfTheta*cosHalfTheta);
+
+        if (Math.abs(sinHalfTheta) < 0.001) {
+            this._s = this._s * 0.5 + q.s * 0.5;
+            this._imaginary.set(
+                im.x * 0.5 + qIm.x * 0.5,
+                im.y * 0.5 + qIm.y * 0.5,
+                im.z * 0.5 + qIm.z * 0.5
+            );
+
+            return this;
+        }
+
+        const ratioA = Math.sin((1 - time) * halfTheta) / sinHalfTheta,
+            ratioB = Math.sin(time * halfTheta) / sinHalfTheta;
+
+        this._s = this._s * ratioA + q.s * ratioB;
+        this._imaginary.set(
+            im.x * ratioA + qIm.x * ratioB,
+            im.y * ratioA + qIm.y * ratioB,
+            im.z * ratioA + qIm.z * ratioB
+        );
+
+        return this;
+    }
+
     public clone(): Quaternion {
         return new Quaternion(this._s, this._imaginary.clone());
     }
