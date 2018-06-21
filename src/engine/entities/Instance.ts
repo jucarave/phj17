@@ -12,6 +12,8 @@ import Quaternion from '../math/Quaternion';
 import { createUUID } from '../Utils';
 import PointLight from '../lights/PointLight';
 import Armature from '../animation/Armature';
+import Animator from '../animation/Animator';
+import AnimatorBaked from '../animation/AnimatorBaked';
 
 class Instance {
     protected _geometry           : Geometry;
@@ -280,6 +282,12 @@ class Instance {
 
     public get armature(): Armature {
         return this._armature;
+    }
+
+    public set animator(animator: Animator|AnimatorBaked) {
+        ((<AnimatorBaked>animator).texture)? this._material.addConfig("USE_BAKED_ANIMATIONS") : this._material.removeConfig("USE_BAKED_ANIMATIONS");
+
+        this._armature.animation = animator;
     }
 
     public emmitNeedsUpdate(): void {

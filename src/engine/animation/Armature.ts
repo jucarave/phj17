@@ -1,12 +1,13 @@
 import Joint from './Joint';
 import Animator from './Animator';
+import AnimatorBaked from './AnimatorBaked';
 import Matrix4 from '../math/Matrix4';
 import { JSONModel, JSONJoint } from '../geometries/JSONGeometry';
 
 class Armature {
     private _root           : Joint;
     private _rootMatrix     : Matrix4;
-    private _animation      : Animator;
+    private _animation      : Animator|AnimatorBaked;
     
     public readonly joints         : Array<Joint>;
 
@@ -18,15 +19,16 @@ class Armature {
     }
 
     public update(): Armature {
-        if (!this._animation) { return this; }
+        if (!this._animation || (<AnimatorBaked>this._animation).texture) { return this; }
 
-        this._animation.update();
+        const animator = <Animator>this._animation;
+        animator.update();
 
         for (let i=0,len=this.joints.length;i<len;i++) {
             const joint = this.joints[i];
 
-            joint.position.copy(this._animation.getPosition(joint.name));
-            joint.rotation.copy(this._animation.getRotation(joint.name));
+            joint.position.copy(animator.getPosition(joint.name));
+            joint.rotation.copy(animator.getRotation(joint.name));
         }
 
         this.updatePose();
@@ -51,11 +53,11 @@ class Armature {
         return this;
     }
 
-    public get animation(): Animator {
+    public get animation(): Animator|AnimatorBaked {
         return this._animation;
     }
 
-    public set animation(animation: Animator) {
+    public set animation(animation: Animator|AnimatorBaked) {
         this._animation = animation;
     }
 

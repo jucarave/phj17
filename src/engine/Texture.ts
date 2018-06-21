@@ -1,5 +1,6 @@
 import Renderer from './Renderer';
 import Vector4 from './math/Vector4';
+import {createUUID } from './Utils';
 
 interface RendererTextureMap {
     [index: string]             : WebGLTexture;
@@ -9,21 +10,35 @@ class Texture {
     private _src               : string;
     private _img               : HTMLImageElement;
     private _canvas            : HTMLCanvasElement;
+    private _imageData         : ImageData;
     private _ready             : boolean;
     private _textureMap        : RendererTextureMap;
 
-    constructor(src: string|HTMLCanvasElement, callback?: Function) {
+    public readonly id         : string;
+
+    constructor(src: string|HTMLCanvasElement|ImageData, callback?: Function) {
+        this.id = createUUID();
+
         this._textureMap = {};
         this._ready = false;
         
         if ((<HTMLCanvasElement>src).getContext) {
             this._canvas = <HTMLCanvasElement>src;
             this._img = null;
+            this._imageData = null;
+            this._src = null;
+
+            this._ready = true;
+        } else if ((<ImageData>src).data) {
+            this._imageData = <ImageData>src;
+            this._canvas = null;
+            this._img = null;
             this._src = null;
 
             this._ready = true;
         } else {
             this._canvas = null;
+            this._imageData = null;
             this._src = <string>src;
 
             this._img = new Image();
@@ -48,7 +63,7 @@ class Texture {
         const texture = this._textureMap[renderer.id];
 
         gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, (this._canvas)? this._canvas : this._img);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._canvas || this._img || this._imageData);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -82,16 +97,53 @@ class Texture {
         return this._textureMap[renderer.id];
     }
 
+    public plotPixel(x: number, y: number, color: Vector4): Texture {
+        if (this._imageData == null) { throw new Error("Can only plot to a imageData texture"); }
+
+        const ind = (x + y * this._imageData.width) * 4;
+        
+        this._imageData.data[ind] = color.x;
+        this._imageData.data[ind + 1] = color.y;
+        this._imageData.data[ind + 2] = color.z;
+        this._imageData.data[ind + 3] = color.w;
+
+        return this;
+    }
+
     public get isReady(): boolean {
         return this._ready;
     }
 
     public get width(): number {
-        return (this._canvas)? this._canvas.width : this._img.width;
+        if (this._canvas) {
+            return this._canvas.width;
+        } else if (this._imageData) {
+            return this._imageData.width;
+        } else {
+            return this._img.width;
+        }
     }
 
     public get height(): number {
-        return (this._canvas)? this._canvas.height : this._img.height;
+        if (this._canvas) {
+            return this._canvas.height;
+        } else if (this._imageData) {
+            return this._imageData.height;
+        } else {
+            return this._img.height;
+        }
+    }
+
+    public static createDataTexture(width: number, height: number): Texture {
+        const canvas = document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d"),
+            data = ctx.createImageData(width, height);
+
+        return new Texture(data);
     }
 }
 

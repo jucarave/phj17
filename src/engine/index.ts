@@ -10,6 +10,7 @@ export { default as Texture } from './Texture';
 export * from './Utils';
 
 export { default as Animator } from './animation/Animator';
+export { default as AnimatorBaked } from './animation/AnimatorBaked';
 export { default as Armature } from './animation/Armature';
 export { default as KeyFrame } from './animation/KeyFrame';
 export { default as Joint } from './animation/Joint';

@@ -4,7 +4,11 @@ const Armature = {
             #ifdef USE_SKIN
                 attribute vec3 aJointWeights;
 
-                uniform mat4 uJoints[20];
+                #ifdef USE_BAKED_ANIMATIONS
+                    uniform sampler2D uJointsTexture;
+                #else
+                    uniform mat4 uJoints[20];
+                #endif
             #endif
         `,
 
@@ -24,14 +28,24 @@ const Armature = {
 
                     if (weight == 0.0) { continue; }
 
-                    totalPosition += (uJoints[index] * vec4(aVertexPosition, 1.0)) * weight;
+                    #ifdef USE_BAKED_ANIMATIONS
+                        mat4 joint = mat4(1.0);
+                    #else
+                        mat4 joint = uJoints[index];
+                    #endif
+
+                    totalPosition += (joint * vec4(aVertexPosition, 1.0)) * weight;
                     
                     #ifdef USE_LIGHT
-                        totalNormals += ((uJoints[index] * vec4(aVertexNormal, 0.0)) * weight).xyz;
+                        totalNormals += ((joint * vec4(aVertexNormal, 0.0)) * weight).xyz;
                     #endif
                 }
 
                 position = totalPosition;
+                #ifdef USE_BAKED_ANIMATIONS
+                    position.z += texture2D(uJointsTexture, vec2(0.0, 0.0)).r * 3.0;
+                #endif
+
                 #ifdef USE_LIGHT
                     normals = totalNormals;
                 #endif

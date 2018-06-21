@@ -1,9 +1,16 @@
 import { createUUID } from './Utils';
 import Shader from './shaders/Shader';
+import Texture from './Texture';
+
+interface TextureCache {
+    [index: string]     : { id: string, position: number };
+}
 
 interface CachedGL {
     program             : WebGLProgram;
     materialId          : string;
+    textures            : TextureCache;
+    texturesCount       : number;
 }
 
 class Renderer {
@@ -21,7 +28,9 @@ class Renderer {
 
         this._cache = {
             program: null,
-            materialId: null
+            materialId: null,
+            textures: {},
+            texturesCount: 0
         };
     }
 
@@ -83,6 +92,32 @@ class Renderer {
         }
 
         this._cache.materialId = materialId;
+        return true;
+    }
+
+    public bindTexture(texture: Texture, type: string, uniform: WebGLUniformLocation): boolean {
+        const gl = this._gl;
+
+        if (this._cache.textures[type] != null) {
+            if (this._cache.textures[type].id == texture.id) {
+                return false;
+            }
+
+            this._cache.textures[type].id = texture.id;
+        } else {
+            this._cache.textures[type] = {
+                id: texture.id,
+                position: this._cache.texturesCount
+            };
+
+            this._cache.texturesCount++;
+
+            gl.activeTexture(gl.TEXTURE0 + this._cache.textures[type].position);
+        }
+
+        gl.bindTexture(gl.TEXTURE_2D, texture.getTexture(this));
+        gl.uniform1i(uniform, this._cache.textures[type].position);
+
         return true;
     }
 

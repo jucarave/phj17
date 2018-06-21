@@ -5,6 +5,7 @@ import ForwardShader from '../shaders/Forward';
 import Instance from '../entities/Instance';
 import Camera from '../entities/Camera';
 import Scene from '../Scene';
+import AnimatorBaked from '../animation/AnimatorBaked';
 import { VERTICE_SIZE, TEXCOORD_SIZE, NORMALS_SIZE, JOINTS_SIZE } from '../Constants';
 
 class MaterialForward extends Material {
@@ -45,9 +46,7 @@ class MaterialForward extends Material {
             program = this.shader.getProgram(renderer);
 
         if (this._texture != null) {
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this._texture.getTexture(renderer));
-            gl.uniform1i(program.uniforms["uTexture"], 0);
+            renderer.bindTexture(this._texture, "baseTexture", program.uniforms["uTexture"]);
 
             gl.uniform4fv(program.uniforms["uUV"], this._uv);
             gl.uniform2fv(program.uniforms["uRepeat"], this._repeat);
@@ -96,9 +95,16 @@ class MaterialForward extends Material {
         gl.bindBuffer(gl.ARRAY_BUFFER, bufferMap.jointBuffer);
         gl.vertexAttribPointer(program.attributes["aJointWeights"], JOINTS_SIZE, gl.FLOAT, false, 0, 0);
 
-        const joints = instance.armature.joints;
-        for (let i=0,joint;joint=joints[i];i++) {
-            gl.uniformMatrix4fv(program.uniforms[`uJoints[${i}]`], false, joint.animationMatrix.data);
+        const animator = instance.armature.animation;
+
+        if (animator && (<AnimatorBaked>animator).texture) {
+            const bakedTexture = (<AnimatorBaked>animator).texture;
+            renderer.bindTexture(bakedTexture, "joints", program.uniforms["uJointsTexture"]);
+        } else {
+            const joints = instance.armature.joints;
+            for (let i=0,joint;joint=joints[i];i++) {
+                gl.uniformMatrix4fv(program.uniforms[`uJoints[${i}]`], false, joint.animationMatrix.data);
+            }   
         }
     }
 
