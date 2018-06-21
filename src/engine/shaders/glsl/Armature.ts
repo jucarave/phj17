@@ -22,6 +22,8 @@ const Armature = {
 
                     int index = int(jointPart);
 
+                    if (weight == 0.0) { continue; }
+
                     totalPosition += (uJoints[index] * vec4(aVertexPosition, 1.0)) * weight;
                     
                     #ifdef USE_LIGHT

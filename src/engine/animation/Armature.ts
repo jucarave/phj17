@@ -1,12 +1,12 @@
 import Joint from './Joint';
-import Animation3D from './Animation3D';
+import Animator from './Animator';
 import Matrix4 from '../math/Matrix4';
 import { JSONModel, JSONJoint } from '../geometries/JSONGeometry';
 
 class Armature {
     private _root           : Joint;
     private _rootMatrix     : Matrix4;
-    private _animation      : Animation3D;
+    private _animation      : Animator;
     
     public readonly joints         : Array<Joint>;
 
@@ -51,11 +51,11 @@ class Armature {
         return this;
     }
 
-    public get animation(): Animation3D {
+    public get animation(): Animator {
         return this._animation;
     }
 
-    public set animation(animation: Animation3D) {
+    public set animation(animation: Animator) {
         this._animation = animation;
     }
 

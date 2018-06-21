@@ -9,7 +9,7 @@ export { default as Scene } from './Scene';
 export { default as Texture } from './Texture';
 export * from './Utils';
 
-export { default as Animation3D } from './animation/Animation3D';
+export { default as Animator } from './animation/Animator';
 export { default as Armature } from './animation/Armature';
 export { default as KeyFrame } from './animation/KeyFrame';
 export { default as Joint } from './animation/Joint';

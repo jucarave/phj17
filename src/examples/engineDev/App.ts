@@ -1,5 +1,6 @@
-import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry, Animation3D } from '../../engine';
+import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry, Animator } from '../../engine';
 import { JSONModel } from '../../engine/geometries/JSONGeometry';
+declare var Stats: any;
 
 const keyboard = new Array(255)
 let currentJoint = 0;
@@ -21,13 +22,15 @@ function loadModel(scene: Scene) {
         scene.addGameObject(loadedInst);
 
         loadJSON("data/animTest-animation.json", (model: any) => {
-            const animation = Animation3D.createFromJSONAnimation(model.animations);
+            const animation = Animator.createFromJSONAnimation(model.animations);
             loadedInst.armature.animation = animation;
         });
     });
 }
 
 class App {
+    private _stats = new Stats();
+
     constructor() {const render = new Renderer(854, 480);
         document.getElementById("divGame").appendChild(render.canvas);
 
@@ -46,6 +49,9 @@ class App {
         scene.directionalLight.direction.set(-1, -1, -1);
 
         loadModel(scene);
+
+        this._stats.showPanel(1);
+        document.body.appendChild(this._stats.dom);
 
         scene.init();
         
@@ -99,6 +105,7 @@ class App {
     }
 
     private _loop(render: Renderer, camera: Camera, inst: Instance, scene: Scene): void {
+        this._stats.begin();
         render.clear();
 
         this._updateRotation(inst);
@@ -108,6 +115,7 @@ class App {
         scene.render(render, camera);
 
         requestAnimationFrame(() => this._loop(render, camera, loadedInst, scene));
+        this._stats.end();
     }
 }
 

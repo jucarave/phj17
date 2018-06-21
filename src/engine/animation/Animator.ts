@@ -12,7 +12,7 @@ interface AnimationJoints {
                     }>
 }
 
-class Animation3D {
+class Animator {
     private _keyframes          : Array<KeyFrame>;
     private _time               : number;
     private _position           : Vector3;
@@ -55,7 +55,7 @@ class Animation3D {
         return this._rotation;
     }
 
-    public update(): Animation3D {
+    public update(): Animator {
         const nextFrame = this.nextFrame;
 
         this._time += this.speed;
@@ -86,7 +86,7 @@ class Animation3D {
         return this._keyframes;
     }
 
-    public static createFromJSONAnimation(jsonObject: Array<AnimationJoints>): Animation3D {
+    public static createFromJSONAnimation(jsonObject: Array<AnimationJoints>): Animator {
         const len = jsonObject[0].keyframes.length;
 
         let keyframes: Array<KeyFrame> = [];
@@ -102,8 +102,8 @@ class Animation3D {
             keyframes.push(keyframe);
         }
 
-        return new Animation3D(keyframes);
+        return new Animator(keyframes);
     }
 }
 
-export default Animation3D;
+export default Animator;
