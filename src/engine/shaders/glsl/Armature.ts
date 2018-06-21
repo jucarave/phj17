@@ -2,7 +2,7 @@ const Armature = {
     vertexShader: {
         definitions: `
             #ifdef USE_SKIN
-                attribute vec4 aJointWeights;
+                attribute vec3 aJointWeights;
 
                 uniform mat4 uJoints[20];
             #endif
@@ -15,15 +15,12 @@ const Armature = {
                     vec3 totalNormals = vec3(0.0);
                 #endif
 
-                float jointWeights[4];
-                jointWeights[0] = aJointWeights.x;
-                jointWeights[1] = aJointWeights.y;
-                jointWeights[2] = aJointWeights.z;
-                jointWeights[3] = aJointWeights.w;
+                for (int i=0;i<3;i+=1) {
+                    float jointWeight = aJointWeights[i];
+                    float jointPart = floor(jointWeight / 10.0);
+                    float weight = jointWeight - jointPart * 10.0;
 
-                for (int i=0;i<4;i+=2) {
-                    int index = int(jointWeights[i]);
-                    float weight = jointWeights[i + 1];
+                    int index = int(jointPart);
 
                     totalPosition += (uJoints[index] * vec4(aVertexPosition, 1.0)) * weight;
                     

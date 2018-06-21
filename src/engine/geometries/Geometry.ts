@@ -60,8 +60,12 @@ class Geometry {
         return this;
     }
 
-    public addJointWeights(jointIndex1: number, weight1: number, jointIndex2: number, weight2: number): Geometry {
-        this._jointWeights.push(jointIndex1, weight1, jointIndex2, weight2);
+    public addJointWeights(jointIndex1: number = 0, weight1: number = 0, jointIndex2: number = 0, weight2: number = 0, jointIndex3: number = 0, weight3: number = 0): Geometry {
+        const x = jointIndex1 * 10 + weight1,
+            y = jointIndex2 * 10 + weight2,
+            z = jointIndex3 * 10 + weight3;
+
+        this._jointWeights.push(x, y, z);
 
         return this;
     }
