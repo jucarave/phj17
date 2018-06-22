@@ -1,6 +1,7 @@
 import Texture from '../Texture';
-import Matrix4 from '../math/Matrix4';
 import Vector4 from '../math/Vector4';
+import Instance from '../entities/Instance';
+import Animator from './Animator';
 
 class AnimatorBaked {
     private _texture            : Texture;
@@ -29,18 +30,32 @@ class AnimatorBaked {
         return new Vector4(r, g, b, a);
     }
 
-    public static bakeAnimator(): AnimatorBaked {
-        const animator = new AnimatorBaked(64, 64),
-            texture = animator.texture;
+    public static bakeAnimator(animator: Animator, instance: Instance): AnimatorBaked {
+        const textureSize = 128,
+            animatorBaked = new AnimatorBaked(textureSize, textureSize),
+            texture = animatorBaked.texture,
+            armature = instance.armature;
 
-        const mat = Matrix4.createXRotation(45*Math.PI/180);
-        for (let i=0;i<16;i++) {
-            texture.plotPixel(i, 0, AnimatorBaked.numberToColor(mat.data[i]));
+        animator.setFrame(0);
+        armature.update();
+
+        let ind = 0;
+        const length = armature.joints.length;
+
+        for (let j=0;j<length;j++) {
+            const mat = armature.joints[j].animationMatrix;
+
+            for (let i=0;i<16;i++) {
+                const x = ind % textureSize,
+                    y = Math.floor(ind / textureSize);
+
+                texture.plotPixel(x, y, AnimatorBaked.numberToColor(mat.data[i]));
+
+                ind += 1;
+            }
         }
 
-        console.log(texture);
-
-        return animator;
+        return animatorBaked;
     }
 }
 

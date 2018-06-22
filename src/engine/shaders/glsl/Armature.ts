@@ -1,28 +1,18 @@
 const getJoint = `
     mat4 joint = mat4(1.0);
     
-    float xAdd = 1.0 / 64.0;
-    float x = 0.0;
+    float ind = offset;
 
-    joint[0][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[1][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[2][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[3][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    for (int x=0;x<4;x++) {
+        for (int y=0;y<4;y++) {
+            float tx = mod(ind, ANIMATION_TEXTURE_SIZE) / ANIMATION_TEXTURE_SIZE;
+            float ty = floor(ind / ANIMATION_TEXTURE_SIZE) / ANIMATION_TEXTURE_SIZE;
 
-    joint[0][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[1][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[2][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[3][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-
-    joint[0][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[1][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[2][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[3][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-
-    joint[0][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[1][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[2][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
-    joint[3][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+            joint[x][y] = colorToNumber(texture2D(uJointsTexture, vec2(tx, ty))); 
+            
+            ind++;
+        }
+    }
 `;
 
 const Armature = {
@@ -32,6 +22,7 @@ const Armature = {
                 attribute vec3 aJointWeights;
 
                 #ifdef USE_BAKED_ANIMATIONS
+                    #define ANIMATION_TEXTURE_SIZE 128.0
                     uniform sampler2D uJointsTexture;
                 #else
                     uniform mat4 uJoints[20];
@@ -67,6 +58,7 @@ const Armature = {
                     if (weight == 0.0) { continue; }
 
                     #ifdef USE_BAKED_ANIMATIONS
+                        float offset = 16.0 * float(index);
                         ${getJoint}
                     #else
                         mat4 joint = uJoints[index];

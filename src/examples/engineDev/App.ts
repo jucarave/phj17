@@ -12,7 +12,7 @@ function loadModel(scene: Scene) {
         const mat = new MaterialForward();
         loadedInst = new Instance(geo, mat);
 
-        mat.receiveLight = false;
+        mat.receiveLight = true;
 
         loadedInst.armature = Armature.createArmatureFromJSONModel(model);
         loadedInst.armature.updatePose();
@@ -25,7 +25,7 @@ function loadModel(scene: Scene) {
             const animation = Animator.createFromJSONAnimation(model.animations);
             loadedInst.animator = animation;
 
-            loadedInst.animator = AnimatorBaked.bakeAnimator();
+            loadedInst.animator = AnimatorBaked.bakeAnimator(animation, loadedInst);
         });
     });
 }

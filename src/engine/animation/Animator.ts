@@ -71,6 +71,13 @@ class Animator {
         return this;
     }
 
+    public setFrame(frameIndex: number): Animator {
+        this.frameIndex = frameIndex;
+        this._time = this._keyframes[this.frameIndex].time;
+        
+        return this;
+    }
+
     public get currentKeyframe(): KeyFrame {
         return this._keyframes[this.frameIndex];
     }
