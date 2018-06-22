@@ -33,7 +33,7 @@ class AnimatorBaked {
         const animator = new AnimatorBaked(64, 64),
             texture = animator.texture;
 
-        const mat = Matrix4.createZRotation(45*Math.PI/180);
+        const mat = Matrix4.createXRotation(45*Math.PI/180);
         for (let i=0;i<16;i++) {
             texture.plotPixel(i, 0, AnimatorBaked.numberToColor(mat.data[i]));
         }

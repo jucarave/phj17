@@ -12,7 +12,7 @@ function loadModel(scene: Scene) {
         const mat = new MaterialForward();
         loadedInst = new Instance(geo, mat);
 
-        mat.receiveLight = true;
+        mat.receiveLight = false;
 
         loadedInst.armature = Armature.createArmatureFromJSONModel(model);
         loadedInst.armature.updatePose();

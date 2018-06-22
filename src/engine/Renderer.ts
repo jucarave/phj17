@@ -58,6 +58,15 @@ class Renderer {
         this._gl = gl;
     }
 
+    private _clearCache(): void {
+        this._cache = {
+            program: null,
+            materialId: null,
+            textures: {},
+            texturesCount: 0
+        };
+    }
+
     public clear(): void {
         let gl = this._gl;
 
@@ -83,6 +92,7 @@ class Renderer {
             }
         }
 
+        this._clearCache();
         return true;
     }
 

@@ -1,3 +1,30 @@
+const getJoint = `
+    mat4 joint = mat4(1.0);
+    
+    float xAdd = 1.0 / 64.0;
+    float x = 0.0;
+
+    joint[0][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[1][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[2][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[3][0] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+
+    joint[0][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[1][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[2][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[3][1] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+
+    joint[0][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[1][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[2][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[3][2] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+
+    joint[0][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[1][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[2][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+    joint[3][3] = colorToNumber(texture2D(uJointsTexture, vec2(x, 0.0))); x += xAdd;
+`;
+
 const Armature = {
     vertexShader: {
         definitions: `
@@ -8,6 +35,17 @@ const Armature = {
                     uniform sampler2D uJointsTexture;
                 #else
                     uniform mat4 uJoints[20];
+                #endif
+
+                #ifdef USE_BAKED_ANIMATIONS
+                    float colorToNumber(vec4 color) {
+                        float r = color.r * 255.0;
+                        float g = color.g * 255.0;
+                        float b = color.b * 255.0;
+                        float a = color.a * 255.0;
+
+                        return (g + b / 100.0 + a / 10000.0) * (r - 1.0);
+                    }
                 #endif
             #endif
         `,
@@ -29,7 +67,7 @@ const Armature = {
                     if (weight == 0.0) { continue; }
 
                     #ifdef USE_BAKED_ANIMATIONS
-                        mat4 joint = mat4(1.0);
+                        ${getJoint}
                     #else
                         mat4 joint = uJoints[index];
                     #endif
@@ -42,9 +80,7 @@ const Armature = {
                 }
 
                 position = totalPosition;
-                #ifdef USE_BAKED_ANIMATIONS
-                    position.z += texture2D(uJointsTexture, vec2(0.0, 0.0)).r * 3.0;
-                #endif
+                
 
                 #ifdef USE_LIGHT
                     normals = totalNormals;
