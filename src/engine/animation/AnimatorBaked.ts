@@ -2,9 +2,14 @@ import Texture from '../Texture';
 import Vector4 from '../math/Vector4';
 import Instance from '../entities/Instance';
 import Animator from './Animator';
+import Matrix3 from '../math/Matrix3';
 
 class AnimatorBaked {
     private _texture            : Texture;
+    private _frameIndex         : number;
+    private _framesNumber       : number;
+
+    public speed                : number;
 
     constructor(width: number|Texture, height?: number) {
         if ((<Texture>width).getTexture) {
@@ -12,48 +17,84 @@ class AnimatorBaked {
         } else {
             this._texture = Texture.createDataTexture(<number> width, height);
         }
+
+        this._frameIndex = 0;
+        this.speed = 24 / 60;
+    }
+
+    public update(): AnimatorBaked {
+        this._frameIndex += this.speed;
+        if (this._frameIndex >= this._framesNumber) {
+            this._frameIndex = 0;
+        }
+
+        return this;
     }
 
     public get texture(): Texture {
         return this._texture;
     }
 
+    public get textureOffset(): number {
+        return (this._frameIndex << 0) * 12;
+    }
+
     private static numberToColor(num: number): Vector4 {
-        const r = (num >= 0)? 2 : 0;
-
-        num = Math.abs(num);
+        num += 127;
         
-        const g = num << 0,
-            b = ((num - g) * 100) << 0,
-            a = ((((num - g) * 100) - b) * 100) << 0;
+        const r = num << 0,
+            g = ((num - r) * 100) << 0,
+            b = ((((num - r) * 100) - g) * 100) << 0;
 
-        return new Vector4(r, g, b, a);
+        return new Vector4(r, g, b, 255);
     }
 
     public static bakeAnimator(animator: Animator, instance: Instance): AnimatorBaked {
-        const textureSize = 128,
+        const textureSize = 64,
             animatorBaked = new AnimatorBaked(textureSize, textureSize),
             texture = animatorBaked.texture,
             armature = instance.armature;
 
+        armature.animation = animator;
         animator.setFrame(0);
-        armature.update();
+        animator.speed = 1 / 24;
 
         let ind = 0;
-        const length = armature.joints.length;
+        const jointsLength = armature.joints.length,
+            lastFrame = animator.lastFrameNumber,
+            firstFrame = animator.firstFrameNumber,
+            
+            rotMat = Matrix3.createIdentity();
 
-        for (let j=0;j<length;j++) {
-            const mat = armature.joints[j].animationMatrix;
+        for (let k=firstFrame;k<lastFrame;k++) {
+            for (let j=0;j<jointsLength;j++) {
+                const mat = armature.joints[j].animationMatrix;
 
-            for (let i=0;i<16;i++) {
-                const x = ind % textureSize,
-                    y = Math.floor(ind / textureSize);
+                rotMat.setFromMatrix4(mat);
 
-                texture.plotPixel(x, y, AnimatorBaked.numberToColor(mat.data[i]));
+                for (let i=0;i<9;i++) {
+                    const x = ind % textureSize,
+                        y = Math.floor(ind / textureSize);
 
-                ind += 1;
+                    texture.plotPixel(x, y, AnimatorBaked.numberToColor(rotMat.data[i]));
+
+                    ind += 1;
+                }
+
+                for (let i=0;i<3;i++) {
+                    const x = ind % textureSize,
+                        y = Math.floor(ind / textureSize);
+
+                    texture.plotPixel(x, y, AnimatorBaked.numberToColor(mat.data[12 + i]));
+
+                    ind += 1;
+                }
             }
+
+            armature.update();
         }
+
+        animatorBaked._framesNumber = lastFrame - firstFrame;
 
         return animatorBaked;
     }

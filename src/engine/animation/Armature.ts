@@ -19,10 +19,12 @@ class Armature {
     }
 
     public update(): Armature {
-        if (!this._animation || (<AnimatorBaked>this._animation).texture) { return this; }
+        if (!this._animation) { return this; }
+
+        this._animation.update();
+        if ((<AnimatorBaked>this._animation).texture) { return this; }
 
         const animator = <Animator>this._animation;
-        animator.update();
 
         for (let i=0,len=this.joints.length;i<len;i++) {
             const joint = this.joints[i];

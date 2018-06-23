@@ -100,6 +100,8 @@ class MaterialForward extends Material {
         if (animator && (<AnimatorBaked>animator).texture) {
             const bakedTexture = (<AnimatorBaked>animator).texture;
             renderer.bindTexture(bakedTexture, "joints", program.uniforms["uJointsTexture"]);
+
+            gl.uniform1f(program.uniforms['uAnimationOffset'], (<AnimatorBaked>animator).textureOffset * instance.armature.joints.length);
         } else {
             const joints = instance.armature.joints;
             for (let i=0,joint;joint=joints[i];i++) {

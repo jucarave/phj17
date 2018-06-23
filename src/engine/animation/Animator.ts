@@ -93,6 +93,14 @@ class Animator {
         return this._keyframes;
     }
 
+    public get firstFrameNumber(): number {
+        return Math.round(this._keyframes[0].time / this.speed);
+    }
+
+    public get lastFrameNumber(): number {
+        return Math.round(this._keyframes[this._keyframes.length - 1].time / this.speed);
+    }
+
     public static createFromJSONAnimation(jsonObject: Array<AnimationJoints>): Animator {
         const len = jsonObject[0].keyframes.length;
 
