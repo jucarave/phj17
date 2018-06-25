@@ -1,3 +1,5 @@
+import { BAKED_JOINTS_TEXTURE_SIZE } from '../../Constants';
+
 const getJoint = `
     mat4 joint = mat4(1.0);
 
@@ -31,7 +33,7 @@ const Armature = {
                 attribute vec3 aJointWeights;
 
                 #ifdef USE_BAKED_ANIMATIONS
-                    #define ANIMATION_TEXTURE_SIZE 64.0
+                    #define ANIMATION_TEXTURE_SIZE ${BAKED_JOINTS_TEXTURE_SIZE.toFixed(1)}
 
                     uniform sampler2D uJointsTexture;
                     uniform float uAnimationOffset;

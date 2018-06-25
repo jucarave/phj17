@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry, Animator, AnimatorBaked } from '../../engine';
+import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry, AnimatorBaked, Texture } from '../../engine';
 import { JSONModel } from '../../engine/geometries/JSONGeometry';
 declare var Stats: any;
 
@@ -21,12 +21,17 @@ function loadModel(scene: Scene) {
 
         scene.addGameObject(loadedInst);
 
-        loadJSON("data/animTest-animation.json", (model: any) => {
+        /*loadJSON("data/animTest-animation.json", (model: any) => {
             const animation = Animator.createFromJSONAnimation(model.animations);
             loadedInst.animator = animation;
 
             loadedInst.animator = AnimatorBaked.bakeAnimator(animation, loadedInst);
-        });
+        });*/
+
+        const animator = new AnimatorBaked(new Texture("img/animations.png"));
+        animator.framesNumber = 100 * (24/60);
+
+        loadedInst.animator = animator;
     });
 }
 

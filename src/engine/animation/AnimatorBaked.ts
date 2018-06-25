@@ -3,13 +3,14 @@ import Vector4 from '../math/Vector4';
 import Instance from '../entities/Instance';
 import Animator from './Animator';
 import Matrix3 from '../math/Matrix3';
+import { BAKED_JOINTS_TEXTURE_SIZE, BAKED_JOINTS_TEXTURE_DATA } from '../Constants';
 
 class AnimatorBaked {
     private _texture            : Texture;
-    private _frameIndex         : number;
-    private _framesNumber       : number;
-
+    
     public speed                : number;
+    public frameIndex         : number;
+    public framesNumber       : number;
 
     constructor(width: number|Texture, height?: number) {
         if ((<Texture>width).getTexture) {
@@ -18,14 +19,15 @@ class AnimatorBaked {
             this._texture = Texture.createDataTexture(<number> width, height);
         }
 
-        this._frameIndex = 0;
+        this.frameIndex = 0;
+        this.framesNumber = 1;
         this.speed = 24 / 60;
     }
 
     public update(): AnimatorBaked {
-        this._frameIndex += this.speed;
-        if (this._frameIndex >= this._framesNumber) {
-            this._frameIndex = 0;
+        this.frameIndex += this.speed;
+        if (this.frameIndex >= this.framesNumber) {
+            this.frameIndex = 0;
         }
 
         return this;
@@ -36,7 +38,7 @@ class AnimatorBaked {
     }
 
     public get textureOffset(): number {
-        return (this._frameIndex << 0) * 12;
+        return (this.frameIndex << 0) * BAKED_JOINTS_TEXTURE_DATA;
     }
 
     private static numberToColor(num: number): Vector4 {
@@ -50,7 +52,7 @@ class AnimatorBaked {
     }
 
     public static bakeAnimator(animator: Animator, instance: Instance): AnimatorBaked {
-        const textureSize = 64,
+        const textureSize = BAKED_JOINTS_TEXTURE_SIZE,
             animatorBaked = new AnimatorBaked(textureSize, textureSize),
             texture = animatorBaked.texture,
             armature = instance.armature;
@@ -85,7 +87,7 @@ class AnimatorBaked {
                     const x = ind % textureSize,
                         y = Math.floor(ind / textureSize);
 
-                    texture.plotPixel(x, y, AnimatorBaked.numberToColor(mat.data[12 + i]));
+                    texture.plotPixel(x, y, AnimatorBaked.numberToColor(mat.data[BAKED_JOINTS_TEXTURE_DATA + i]));
 
                     ind += 1;
                 }
@@ -94,7 +96,7 @@ class AnimatorBaked {
             armature.update();
         }
 
-        animatorBaked._framesNumber = lastFrame - firstFrame;
+        animatorBaked.framesNumber = lastFrame - firstFrame;
 
         return animatorBaked;
     }

@@ -6,3 +6,6 @@ export const JOINTS_SIZE            = 3;
 export const PI_2                   = Math.PI / 2;
 export const PI2                    = Math.PI * 2;
 export const PI3_2                  = Math.PI * 3 / 2;
+
+export const BAKED_JOINTS_TEXTURE_DATA = 12;
+export const BAKED_JOINTS_TEXTURE_SIZE = 64;

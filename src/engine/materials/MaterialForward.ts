@@ -97,7 +97,7 @@ class MaterialForward extends Material {
 
         const animator = instance.armature.animation;
 
-        if (animator && (<AnimatorBaked>animator).texture) {
+        if (animator && (<AnimatorBaked>animator).texture && (<AnimatorBaked>animator).texture.isReady) {
             const bakedTexture = (<AnimatorBaked>animator).texture;
             renderer.bindTexture(bakedTexture, "joints", program.uniforms["uJointsTexture"]);
 
