@@ -1,4 +1,4 @@
-import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry, AnimatorBaked, Texture } from '../../engine';
+import { Renderer, Camera, Scene, MaterialForward, Instance, Input, Vector3, Armature, loadJSON, JSONGeometry, Animator, AnimatorBaked } from '../../engine';
 import { JSONModel } from '../../engine/geometries/JSONGeometry';
 declare var Stats: any;
 
@@ -7,7 +7,7 @@ let currentJoint = 0;
 
 let loadedInst: Instance;
 function loadModel(scene: Scene) {
-    loadJSON("data/animTest.json", (model: JSONModel) => {
+    loadJSON("data/thingWithBones.json", (model: JSONModel) => {
         const geo = new JSONGeometry(model);
         const mat = new MaterialForward();
         loadedInst = new Instance(geo, mat);
@@ -21,17 +21,18 @@ function loadModel(scene: Scene) {
 
         scene.addGameObject(loadedInst);
 
-        /*loadJSON("data/animTest-animation.json", (model: any) => {
+        loadJSON("data/thingWithBones-animation.json", (model: any) => {
             const animation = Animator.createFromJSONAnimation(model.animations);
             loadedInst.animator = animation;
 
-            loadedInst.animator = AnimatorBaked.bakeAnimator(animation, loadedInst);
-        });*/
+            const animator = AnimatorBaked.bakeAnimator(animation, loadedInst);
+            loadedInst.animator = animator;
+        });
 
-        const animator = new AnimatorBaked(new Texture("img/animations.png"));
+        /*const animator = new AnimatorBaked(new Texture("img/animations.png"));
         animator.framesNumber = 100 * (24/60);
 
-        loadedInst.animator = animator;
+        loadedInst.animator = animator;*/
     });
 }
 
@@ -47,7 +48,7 @@ class App {
 
         const camera = Camera.createPerspective(90, 854/480, 0.1, 1000.0);
         camera.rotation.local = true;
-        camera.position.set(10, 10, 10);
+        camera.position.set(5, 5, 5);
         camera.rotation.lookToDirection(new Vector3(-10,-6,-10));
         
         const scene = new Scene();

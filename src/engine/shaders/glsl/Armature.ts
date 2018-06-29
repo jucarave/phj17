@@ -38,7 +38,7 @@ const Armature = {
                     uniform sampler2D uJointsTexture;
                     uniform float uAnimationOffset;
                 #else
-                    uniform mat4 uJoints[20];
+                    uniform mat4 uJoints[40];
                 #endif
 
                 #ifdef USE_BAKED_ANIMATIONS

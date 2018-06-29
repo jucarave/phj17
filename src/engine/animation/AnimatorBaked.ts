@@ -21,7 +21,7 @@ class AnimatorBaked {
 
         this.frameIndex = 0;
         this.framesNumber = 1;
-        this.speed = 24 / 60;
+        this.speed = 30 / 60;
     }
 
     public update(): AnimatorBaked {
@@ -59,7 +59,7 @@ class AnimatorBaked {
 
         armature.animation = animator;
         animator.setFrame(0);
-        animator.speed = 1 / 24;
+        animator.speed = 1 / 30;
 
         let ind = 0;
         const jointsLength = armature.joints.length,

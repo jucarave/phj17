@@ -167,12 +167,19 @@ class Quaternion {
     }
 
     public slerp(q: Quaternion, time: number): Quaternion {
-        const im = this._imaginary,
-            qIm = q.imaginary,
+        const im = this._imaginary;
+
+        let qIm = q.imaginary,
             cosHalfTheta = this._s * q.s + Vector3.dot(im, qIm);
 
         if (Math.abs(cosHalfTheta) >= 1.0) {
             return this;
+        }
+
+        if (cosHalfTheta < 0.0) {
+            q = q.clone().multiplyScalar(-1);
+            qIm = q.imaginary;
+            cosHalfTheta = -cosHalfTheta;
         }
 
         const halfTheta = Math.acos(cosHalfTheta),
